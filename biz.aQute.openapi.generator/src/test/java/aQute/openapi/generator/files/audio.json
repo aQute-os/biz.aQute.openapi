@@ -1,0 +1,415 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"title": "Audio",
+		"description": "This is my audio API for keeping track of audio files I create, and find across the internet. It doesn't store the audio currently, just provides a pointer to where it exists, and some meta data to support.",
+		"termsOfService": "http://stack.network/terms-of-service.html",
+		"version": "v1"
+	},
+	"host": "audio.api.kinlane.com",
+	"basePath": "/",
+	"schemes": ["http"],
+	"produces": ["application/json"],
+	"consumes": ["application/json"],
+	"paths": {
+		"/audio/": {
+			"get": {
+				"summary": "Get All Audio",
+				"description": "pulls all audio, with filter by keyword",
+				"operationId": "getAudio",
+				"parameters": [{
+					"in": "query",
+					"name": "appid",
+					"description": "your appid for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "appkey",
+					"description": "your appkey for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "query",
+					"description": "a text query to search across audio",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Audio"],
+				"security": []
+			},
+			"post": {
+				"summary": "Add Audio",
+				"description": "add a new audio",
+				"operationId": "addAudio",
+				"parameters": [{
+					"in": "formData",
+					"name": "appid",
+					"description": "your appid for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "appkey",
+					"description": "your appkey for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "creator",
+					"description": "creator of the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "description",
+					"description": "description of the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "name",
+					"description": "name of the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "thumbnailUrl",
+					"description": "thumbnailUrl of the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "url",
+					"description": "url of the audio",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Audio"],
+				"security": []
+			}
+		},
+		"/audio/{audio_id}/": {
+			"delete": {
+				"summary": "Delete Audio",
+				"description": "deletes an audio",
+				"operationId": "deleteAudio",
+				"parameters": [{
+					"in": "query",
+					"name": "appid",
+					"description": "your appid for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "appkey",
+					"description": "your appkey for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "path",
+					"name": "audio_id",
+					"description": "unique id for the audio",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Audio"],
+				"security": []
+			},
+			"get": {
+				"summary": "Get Audio",
+				"description": "Returns the audio detail",
+				"operationId": "getAudio",
+				"parameters": [{
+					"in": "query",
+					"name": "appid",
+					"description": "your appid for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "appkey",
+					"description": "your appkey for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "path",
+					"name": "audio_id",
+					"description": "unique id for the audio",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Audio"],
+				"security": []
+			},
+			"put": {
+				"summary": "Update Audio",
+				"description": "update audio",
+				"operationId": "updateAudio",
+				"parameters": [{
+					"in": "formData",
+					"name": "appid",
+					"description": "your appid for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "appkey",
+					"description": "your appkey for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "path",
+					"name": "audio_id",
+					"description": "unique id for the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "creator",
+					"description": "creator of the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "description",
+					"description": "description of the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "name",
+					"description": "name of the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "thumbnailUrl",
+					"description": "thumbnailUrl of the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "url",
+					"description": "url of the audio",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Audio"],
+				"security": []
+			}
+		},
+		"/audio/{audio_id}/tags/": {
+			"get": {
+				"summary": "Get Tags for Audio",
+				"description": "Returns the tags for an audio",
+				"operationId": "getaudioTags",
+				"parameters": [{
+					"in": "query",
+					"name": "appid",
+					"description": "your appid for accessing the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "appkey",
+					"description": "your appkey for accessing the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "path",
+					"name": "audio_id",
+					"description": "id for audio",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Audio"],
+				"security": []
+			},
+			"post": {
+				"summary": "Add Tag for Audio",
+				"description": "add tag for audio",
+				"operationId": "addPeopleTag",
+				"parameters": [{
+					"in": "formData",
+					"name": "appid",
+					"description": "your appid for accessing the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "appkey",
+					"description": "your appkey for accessing the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "path",
+					"name": "audio_id",
+					"description": "id for the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "tag",
+					"description": "tag name",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Audio"],
+				"security": []
+			}
+		},
+		"/audio/{audio_id}/tags/{tag}/": {
+			"delete": {
+				"summary": "Delete Tag for Audio",
+				"description": "deletes a tag applied to audio",
+				"operationId": "deleteaudioTag",
+				"parameters": [{
+					"in": "query",
+					"name": "appid",
+					"description": "your appid for accessing the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "appkey",
+					"description": "your appkey for accessing the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "path",
+					"name": "audio_id",
+					"description": "id for the audio",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "path",
+					"name": "tag",
+					"description": "tag to remove from audio",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Audio"],
+				"security": []
+			}
+		}
+	},
+	"definitions": {
+		"audio": {
+			"properties": {
+				"id": {
+					"description": "This is a default description.",
+					"type": "delete"
+				},
+				"name": {
+					"description": "This is a default description.",
+					"type": "delete"
+				},
+				"description": {
+					"description": "This is a default description.",
+					"type": "delete"
+				},
+				"url": {
+					"description": "This is a default description.",
+					"type": "delete"
+				},
+				"thumbnailUrl": {
+					"description": "This is a default description.",
+					"type": "delete"
+				},
+				"creator": {
+					"description": "This is a default description.",
+					"type": "delete"
+				},
+				"audio_id": {
+					"description": "This is a default description.",
+					"type": "delete"
+				}
+			}
+		},
+		"tag": {
+			"properties": {
+				"tag_id": {
+					"description": "This is a default description.",
+					"type": "delete"
+				},
+				"tag": {
+					"description": "This is a default description.",
+					"type": "delete"
+				},
+				"api_count": {
+					"description": "This is a default description.",
+					"type": "delete"
+				}
+			}
+		}
+	}
+}

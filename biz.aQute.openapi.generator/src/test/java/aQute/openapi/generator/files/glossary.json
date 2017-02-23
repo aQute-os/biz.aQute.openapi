@@ -1,0 +1,353 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"title": "Glossary",
+		"description": "This is an API glossary, allowing me to add definitions for key terms and phrases used in the API space.",
+		"termsOfService": "http://stack.network/terms-of-service.html",
+		"version": "v1"
+	},
+	"host": "glossary.api.kinlane.com",
+	"basePath": "/",
+	"schemes": ["http"],
+	"produces": ["application/json"],
+	"consumes": ["application/json"],
+	"paths": {
+		"/glossary/": {
+			"get": {
+				"summary": "glossary terms",
+				"description": "glossary terms",
+				"operationId": "getGlossaryTerms",
+				"parameters": [{
+					"in": "query",
+					"name": "appid",
+					"description": "your appid for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "appkey",
+					"description": "your appkey for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "query",
+					"description": "a text query to search across glossary",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Glossary"],
+				"security": []
+			},
+			"post": {
+				"summary": "add glossary",
+				"description": "add glossary",
+				"operationId": "addGlossary",
+				"parameters": [{
+					"in": "formData",
+					"name": "appid",
+					"description": "your appid for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "appkey",
+					"description": "your appkey for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "definition",
+					"description": "description of the glossary",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "term",
+					"description": "name of the glossary",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Glossary"],
+				"security": []
+			}
+		},
+		"/glossary/{glossary_id}/": {
+			"delete": {
+				"summary": "delete glossary term",
+				"description": "delete glossary term",
+				"operationId": "deleteGlossaryTerm",
+				"parameters": [{
+					"in": "query",
+					"name": "appid",
+					"description": "your appid for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "appkey",
+					"description": "your appkey for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "path",
+					"name": "glossary_id",
+					"description": "id for the glossary term",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Glossary"],
+				"security": []
+			},
+			"get": {
+				"summary": "glossary term",
+				"description": "glossary term",
+				"operationId": "getGlossaryTerm",
+				"parameters": [{
+					"in": "query",
+					"name": "appid",
+					"description": "your appid for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "appkey",
+					"description": "your appkey for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "path",
+					"name": "glossary_id",
+					"description": "id for the glossary term",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Glossary"],
+				"security": []
+			},
+			"put": {
+				"summary": "update glossary",
+				"description": "update glossary",
+				"operationId": "updateGlossaryTerm",
+				"parameters": [{
+					"in": "formData",
+					"name": "appid",
+					"description": "your appid for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "appkey",
+					"description": "your appkey for accessing the API",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "definition",
+					"description": "description of the glossary",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "path",
+					"name": "glossary_id",
+					"description": "id for the glossary term",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "term",
+					"description": "name of the glossary",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Glossary"],
+				"security": []
+			}
+		},
+		"/glossary/{glossary_id}/tags/": {
+			"get": {
+				"summary": "glossary tags",
+				"description": "glossary tags",
+				"operationId": "getglossaryTags",
+				"parameters": [{
+					"in": "query",
+					"name": "appid",
+					"description": "your appid for accessing the glossary",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "appkey",
+					"description": "your appkey for accessing the glossary",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "path",
+					"name": "glossary_id",
+					"description": "id for glossary",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Tags"],
+				"security": []
+			},
+			"post": {
+				"summary": "add glossary term",
+				"description": "add glossary term",
+				"operationId": "addGlossaryTag",
+				"parameters": [{
+					"in": "formData",
+					"name": "appid",
+					"description": "your appid for accessing the glossary",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "appkey",
+					"description": "your appkey for accessing the glossary",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "path",
+					"name": "glossary_id",
+					"description": "id for the glossary",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "formData",
+					"name": "tag",
+					"description": "tag name",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Tags"],
+				"security": []
+			}
+		},
+		"/glossary/{glossary_id}/tags/{tag}": {
+			"delete": {
+				"summary": "delete glossary tag",
+				"description": "delete glossary tag",
+				"operationId": "deleteglossaryTag",
+				"parameters": [{
+					"in": "query",
+					"name": "appid",
+					"description": "your appid for accessing the glossary",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "query",
+					"name": "appkey",
+					"description": "your appkey for accessing the glossary",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "path",
+					"name": "glossary_id",
+					"description": "id for the glossary",
+					"type": "string",
+					"format": "string"
+				},
+				{
+					"in": "path",
+					"name": "tag",
+					"description": "tag to remove from glossary",
+					"type": "string",
+					"format": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"tags": ["Tags"],
+				"security": []
+			}
+		}
+	},
+	"definitions": {
+		"glossary": {
+			"properties": {
+				"term": {
+					"description": "This is a default description.",
+					"type": "delete"
+				},
+				"definition": {
+					"description": "This is a default description.",
+					"type": "delete"
+				}
+			}
+		},
+		"tag": {
+			"properties": {
+				"tag_id": {
+					"description": "This is a default description.",
+					"type": "delete"
+				},
+				"tag": {
+					"description": "This is a default description.",
+					"type": "delete"
+				},
+				"api_count": {
+					"description": "This is a default description.",
+					"type": "delete"
+				}
+			}
+		}
+	}
+}

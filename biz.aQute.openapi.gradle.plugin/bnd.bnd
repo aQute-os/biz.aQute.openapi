@@ -1,0 +1,8 @@
+Private-Package: aQute.openapi.gradle.plugin
+-conditionalpackage: \
+	aQute.openapi.*, \
+	aQute.lib*, \
+	aQute.bnd.*, \
+	org.osgi.*, \
+	aQute.service.*, \
+	aQute.json.*

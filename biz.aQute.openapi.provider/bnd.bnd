@@ -1,0 +1,3 @@
+-sources: true
+Export-Package: aQute.openapi.provider
+-conditionalpackage: aQute.lib*, aQute.json.util

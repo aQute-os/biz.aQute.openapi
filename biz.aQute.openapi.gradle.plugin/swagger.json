@@ -1,0 +1,4811 @@
+{
+	"swagger": "2.0",
+	"info": 
+	{
+		"version": "v1",
+		"title": "Sma.Sp.WebUi.Api"
+	},
+
+	"basePath": "/api/v1",
+	"schemes": 
+	[
+		"http"
+	],
+
+	"paths": 
+	{
+		"/accessToken": 
+		{
+			"post": 
+			{
+				"tags": 
+				[
+					"AccessTokenApi"
+				],
+
+				"summary": "Generate an access token.",
+				"description": "The endpoint to validate users credentials and generate an access token.",
+				"operationId": "AccessTokenPost",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "username",
+						"in": "query",
+						"description": "The username.",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "password",
+						"in": "query",
+						"description": "The password.",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"$ref": "#/definitions/TokenResult"
+						}
+					},
+
+					"0": 
+					{
+						"description": "Unexpected error"
+					}
+				}
+			}
+		},
+
+		"/accessToken/refresh": 
+		{
+			"post": 
+			{
+				"tags": 
+				[
+					"AccessTokenApi"
+				],
+
+				"summary": "Refresh an access token.",
+				"description": "The endpoint to refresh an access token.",
+				"operationId": "Refresh",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"$ref": "#/definitions/TokenResult"
+						}
+					},
+
+					"0": 
+					{
+						"description": "Unexpected error"
+					}
+				}
+			}
+		},
+
+		"/companies/{companyId}": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"CompanyApi"
+				],
+
+				"summary": "Gets company and address information for a specific company id.",
+				"description": "Gets company and address information by the company id",
+				"operationId": "GetCompanyById",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "companyId",
+						"in": "path",
+						"description": "The id of the company.",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "Company information",
+						"schema": 
+						{
+							"$ref": "#/definitions/CompanyAndAddressResponse"
+						}
+					},
+
+					"404": 
+					{
+						"description": "Not found"
+					}
+				}
+			}
+		},
+
+		"/companies": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"CompanyApi"
+				],
+
+				"summary": "Returns a list of all companies or gets the id of a specific company or  .",
+				"description": "Lists all companies if name query is empty otherwise company with specific name",
+				"operationId": "Search",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "name",
+						"in": "query",
+						"description": "The name.",
+						"required": false,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "Found companies",
+						"schema": 
+						{
+							"type": "array",
+							"items": 
+							{
+								"$ref": "#/definitions/CompanyResponse"
+							}
+						}
+					}
+				}
+			},
+
+			"post": 
+			{
+				"tags": 
+				[
+					"CompanyApi"
+				],
+
+				"summary": "Creates a new company.",
+				"description": "Creates a new company",
+				"operationId": "CreateCompany",
+				"consumes": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "company",
+						"in": "body",
+						"description": "The company.",
+						"required": true,
+						"schema": 
+						{
+							"$ref": "#/definitions/CompanyPostRequest"
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "Information of the new created company",
+						"schema": 
+						{
+							"$ref": "#/definitions/CompanyAndAddressResponse"
+						}
+					}
+				}
+			}
+		},
+
+		"/companies/{companyId}/members": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"CompanyMemberApi"
+				],
+
+				"summary": "Gets the members of a company.",
+				"description": "Returns a list of members for specific company",
+				"operationId": "GetCompanyMembers",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "companyId",
+						"in": "path",
+						"description": "Numerical company id.",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "The company members",
+						"schema": 
+						{
+							"type": "array",
+							"items": 
+							{
+								"$ref": "#/definitions/CompanyMemberDataResponse"
+							}
+						}
+					}
+				}
+			},
+
+			"post": 
+			{
+				"tags": 
+				[
+					"CompanyMemberApi"
+				],
+
+				"summary": "Creates the company member.",
+				"description": "Creates a member for a specific company",
+				"operationId": "CreateCompanyMember",
+				"consumes": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "companyId",
+						"in": "path",
+						"description": "Numerical company id.",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					},
+
+					{
+						"name": "memberData",
+						"in": "body",
+						"description": "Numerical member data.",
+						"required": true,
+						"schema": 
+						{
+							"$ref": "#/definitions/CompanyMemberDataPostRequest"
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "The company member",
+						"schema": 
+						{
+							"$ref": "#/definitions/CompanyMemberDataResponse"
+						}
+					}
+				}
+			}
+		},
+
+		"/companies/{companyId}/members/{memberId}": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"CompanyMemberApi"
+				],
+
+				"summary": "Gets a specific membership of a company.",
+				"description": "Gets a specific membership for a specific plant",
+				"operationId": "GetCompanyMember",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "companyId",
+						"in": "path",
+						"description": "Numerical company id.",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					},
+
+					{
+						"name": "memberId",
+						"in": "path",
+						"description": "Numerical member id.",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"$ref": "#/definitions/CompanyMemberDataResponse"
+						}
+					}
+				}
+			}
+		},
+
+		"/components/{componentId}": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"ComponentApi"
+				],
+
+				"summary": "Gets the component by id.",
+				"description": "Components are e.g. device, plant, subplant, etc.",
+				"operationId": "GetComponentById",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "componentId",
+						"in": "path",
+						"description": "The component id.",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"$ref": "#/definitions/ComponentResponse"
+						}
+					},
+
+					"404": 
+					{
+						"description": "Component not found"
+					}
+				}
+			}
+		},
+
+		"/customermessages/search": 
+		{
+			"post": 
+			{
+				"tags": 
+				[
+					"CustomerMessageApi"
+				],
+
+				"summary": "Gets recursiv customer messages for a portfolio, plant, subplant or device.",
+				"description": "This endpoint returns a limited list of customer messages recursive for a portfolio, plant, subplant or single device\r\nin descending order from request property \"from\".\r\n            \r\nTo fetch more items use the property marker of the last returned CustomerMessageResponse object. \r\nThis marker can be passed as reference in the request property \"marker\". Both request properties \"from\" and\r\n\"marker\" can not be passed at the same request, otherwise a 400 bad request will be returned.\r\n            \r\nThe request property \"componentId\" addresses the root component (plant, subplant or device) and all underlying components of the request.\r\nIf \"componentId\" is null or empty, the customer messages of the the complete portfolio (user-dependend) and all underlying components will be returned as a limited list.",
+				"operationId": "GetCustomerMessages",
+				"consumes": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "queryRequest",
+						"in": "body",
+						"description": "",
+						"required": true,
+						"schema": 
+						{
+							"$ref": "#/definitions/CustomerMessageQueryRequest"
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"type": "array",
+							"items": 
+							{
+								"$ref": "#/definitions/CustomerMessageResponse"
+							}
+						}
+					}
+				}
+			}
+		},
+
+		"/dashboard/widgets": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"DashboardApi"
+				],
+
+				"summary": "Returns a list of available widget definitions for passed componentId.",
+				"description": "Returns a list of widget definitions, that are available for current user. A widget definition does not\r\ncontain data of the widget. Depend on the widget type (e.g. EnergyAndPower or Weather) the client has to\r\nquery further endpoints to collect the necessary data for the widget visualization. If parameter \"componentId\" is set, \r\nwidgets related to this component (e.g. plant, device, subplant, etc.) will be returned, otherwise available \r\nwidgets for all authorized components (Portfolio) will be returned.",
+				"operationId": "GetWidgets",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "componentId",
+						"in": "query",
+						"description": "The id of the component. Components are plants, plant-groups, devices and sub-plants.",
+						"required": false,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "List of available widgets.",
+						"schema": 
+						{
+							"type": "array",
+							"items": 
+							{
+								"$ref": "#/definitions/WidgetResponse"
+							}
+						}
+					},
+
+					"404": 
+					{
+						"description": "ComponentId not found or not authorized"
+					}
+				}
+			}
+		},
+
+		"/plants/{plantId}/devices/{deviceId}": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"DeviceApi"
+				],
+
+				"summary": "Gets device information for a specific device.",
+				"description": "Returns a device by the device id.",
+				"operationId": "GetDeviceById",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "Numerical plant Id.",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "deviceId",
+						"in": "path",
+						"description": "Numerical device id.",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"$ref": "#/definitions/DeviceResponse"
+						}
+					}
+				}
+			}
+		},
+
+		"/plants/{plantId}/devices": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"DeviceApi"
+				],
+
+				"summary": "Devices of the plant and its subplants.",
+				"description": "Returns a list of devices belongs to the passed plant id.",
+				"operationId": "GetDevicesForPlant",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "Numerical plant id.",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"type": "array",
+							"items": 
+							{
+								"$ref": "#/definitions/DeviceResponse"
+							}
+						}
+					}
+				}
+			}
+		},
+
+		"/plants/{plantId}/availabledevices": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"DeviceApi"
+				],
+
+				"summary": "Gets all devices in plant that are not assigned to any subplant",
+				"operationId": "GetUnassignedDevicesForPlant",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "Numerical plant id.",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"type": "array",
+							"items": 
+							{
+								"$ref": "#/definitions/DeviceResponse"
+							}
+						}
+					}
+				}
+			}
+		},
+
+		"/components/{componentId}/forecast/weather": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"ForecastApi"
+				],
+
+				"summary": "Returns the weather forecast..",
+				"description": "Queries weather forecast for the defined component.",
+				"operationId": "Get",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "componentId",
+						"in": "path",
+						"description": "The id of the component. Components are plants, plant-groups, devices and sub-plants.",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "startTodayUtc",
+						"in": "query",
+						"description": "The start datetime in utc of the day related to the plants location.",
+						"required": true,
+						"type": "string",
+						"format": "date-time"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "Weather forecast response object.",
+						"schema": 
+						{
+							"$ref": "#/definitions/WeatherForecastResponse"
+						}
+					},
+
+					"404": 
+					{
+						"description": "ComponentId not found or not authorized."
+					}
+				}
+			}
+		},
+
+		"/measurements/search": 
+		{
+			"post": 
+			{
+				"tags": 
+				[
+					"MeasurementApi"
+				],
+
+				"summary": "Measurements of plants, devices, sub-plants, etc.",
+				"description": "Returns list of measurements.",
+				"operationId": "Query",
+				"consumes": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "queryRequest",
+						"in": "body",
+						"description": "Information about the requested measurements.",
+						"required": true,
+						"schema": 
+						{
+							"$ref": "#/definitions/MeasurementQueryRequest"
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "A list of measurements.",
+						"schema": 
+						{
+							"type": "array",
+							"items": 
+							{
+								"$ref": "#/definitions/MeasurementResult"
+							}
+						}
+					},
+
+					"0": 
+					{
+						"description": "Unexpected error"
+					}
+				}
+			}
+		},
+
+		"/measurements/live": 
+		{
+			"post": 
+			{
+				"tags": 
+				[
+					"MeasurementApi"
+				],
+
+				"summary": "Live Measurement data of plants, devices, sub-plants, etc.",
+				"operationId": "LiveQuery",
+				"consumes": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "pollRequests",
+						"in": "body",
+						"description": "The request informations used to poll.",
+						"required": true,
+						"schema": 
+						{
+							"type": "array",
+							"items": 
+							{
+								"$ref": "#/definitions/LiveDataPollRequestItem"
+							}
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"type": "array",
+							"items": 
+							{
+								"$ref": "#/definitions/MeasurementResult"
+							}
+						}
+					}
+				}
+			}
+		},
+
+		"/navigation/menuitems": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"NavigationApi"
+				],
+
+				"summary": "Returns the menu items.",
+				"description": "Menu item describes an element for feature navigation. If componentId is not set, menu items for \r\nportfolio will be returned.",
+				"operationId": "GetMenuItems",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "componentId",
+						"in": "query",
+						"description": "The id of the component. Components are plants, plant-groups, devices and sub-plants.",
+						"required": false,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"$ref": "#/definitions/MenuItemsResponse"
+						}
+					},
+
+					"404": 
+					{
+						"description": "Component not found"
+					}
+				}
+			}
+		},
+
+		"/navigation": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"NavigationApi"
+				],
+
+				"summary": "Returns child navigation items of the passed parent component id or root elements if parentId is not set.",
+				"description": "Navigation items describes elements for navigating within a plant related to passed parent component id.",
+				"operationId": "GetNavigation",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "parentId",
+						"in": "query",
+						"description": "The id of the parent component. Components are plants, plant-groups, devices and sub-plants.",
+						"required": false,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"type": "array",
+							"items": 
+							{
+								"$ref": "#/definitions/NavigationItem"
+							}
+						}
+					},
+
+					"404": 
+					{
+						"description": "Component not found"
+					}
+				}
+			}
+		},
+
+		"/parameters/search": 
+		{
+			"post": 
+			{
+				"tags": 
+				[
+					"ParameterApi"
+				],
+
+				"summary": "Gets all or the requested parameters of a plants, a devices, a sub-plants, etc.",
+				"description": "Returns list of Parameters.",
+				"operationId": "Post",
+				"consumes": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "queryRequest",
+						"in": "body",
+						"description": "Information about the requested Parameters.",
+						"required": true,
+						"schema": 
+						{
+							"$ref": "#/definitions/ParameterQueryRequest"
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "A list of Parameters.",
+						"schema": 
+						{
+							"type": "array",
+							"items": 
+							{
+								"$ref": "#/definitions/ParameterResult"
+							}
+						}
+					},
+
+					"0": 
+					{
+						"description": "Unexpected error"
+					}
+				}
+			}
+		},
+
+		"/parameters/{componentId}": 
+		{
+			"post": 
+			{
+				"tags": 
+				[
+					"ParameterApi"
+				],
+
+				"summary": "Sets the given parameters of the device",
+				"description": "Updates all given parameters for a specific component (e.g. plant, device, etc.)",
+				"operationId": "Post",
+				"consumes": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"produces": 
+				[
+					
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "componentId",
+						"in": "path",
+						"description": "Identifier for the component. (e.g. plant or device)",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "parameterRequest",
+						"in": "body",
+						"description": "The parameter request with on or more parameters.",
+						"required": true,
+						"schema": 
+						{
+							"$ref": "#/definitions/ParameterDataRequest"
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"204": 
+					{
+						"description": "No Content"
+					},
+
+					"200": 
+					{
+						"description": "OK"
+					},
+
+					"400": 
+					{
+						"description": "BadRequest"
+					}
+				}
+			}
+		},
+
+		"/plants/{plantId}": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"PlantApi"
+				],
+
+				"summary": "Get plant by plant id.",
+				"description": "Returns the plant information for the specific plant id",
+				"operationId": "GetByPlantId",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "Numerical plant id.",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"$ref": "#/definitions/PlantResponse"
+						}
+					}
+				}
+			},
+
+			"put": 
+			{
+				"tags": 
+				[
+					"PlantApi"
+				],
+
+				"summary": "Update of the plant information",
+				"description": "Update the plant information for the specific plant id",
+				"operationId": "UpdatePlant",
+				"consumes": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"produces": 
+				[
+					
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "Numerical plant id.",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "plant",
+						"in": "body",
+						"description": "Plant information.",
+						"required": true,
+						"schema": 
+						{
+							"$ref": "#/definitions/PlantRequest"
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"204": 
+					{
+						"description": "No Content"
+					}
+				}
+			}
+		},
+
+		"/plants/{plantId}/members": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"PlantMemberApi"
+				],
+
+				"summary": "Gets the plant memberships for a specific plant.",
+				"description": "Returns a list of membership informations for specific plant",
+				"operationId": "GetMembershipByPlantId",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "Numerical plant Id.",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"type": "array",
+							"items": 
+							{
+								"$ref": "#/definitions/PlantMemberDataResponse"
+							}
+						}
+					}
+				}
+			},
+
+			"post": 
+			{
+				"tags": 
+				[
+					"PlantMemberApi"
+				],
+
+				"summary": "Creates membership for a plant.",
+				"description": "Creates a plant membership for a user with a specific role",
+				"operationId": "CreateMembership",
+				"consumes": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "Numerical plant id.",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "data",
+						"in": "body",
+						"description": "The membership request.",
+						"required": true,
+						"schema": 
+						{
+							"$ref": "#/definitions/PlantMemberDataRequest"
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"$ref": "#/definitions/PlantMemberDataResponse"
+						}
+					}
+				}
+			}
+		},
+
+		"/plants/{plantId}/members/{memberId}": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"PlantMemberApi"
+				],
+
+				"summary": "Gets the plant membership for a specific plant and membership id.",
+				"description": "Gets the membership information for specific plant filtered with a specific membership id",
+				"operationId": "GetMembership",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "Numerical plant id.",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "memberId",
+						"in": "path",
+						"description": "Numerical membership id.",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"$ref": "#/definitions/PlantMemberDataResponse"
+						}
+					}
+				}
+			},
+
+			"put": 
+			{
+				"tags": 
+				[
+					"PlantMemberApi"
+				],
+
+				"operationId": "GetMembership",
+				"consumes": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"produces": 
+				[
+					
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "memberId",
+						"in": "path",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					},
+
+					{
+						"name": "data",
+						"in": "body",
+						"required": true,
+						"schema": 
+						{
+							"$ref": "#/definitions/PlantMemberDataRequest"
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"204": 
+					{
+						"description": "No Content"
+					}
+				}
+			},
+
+			"delete": 
+			{
+				"tags": 
+				[
+					"PlantMemberApi"
+				],
+
+				"summary": "Deletes a plant membership.",
+				"description": "Deletes a plant membership of a specific plant for a specific memebership id",
+				"operationId": "DeleteMembership",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "Numerical plant id.",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "memberId",
+						"in": "path",
+						"description": "Numerical membership id.",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					}
+				],
+
+				"responses": 
+				{
+					"204": 
+					{
+						"description": "No Content"
+					}
+				}
+			}
+		},
+
+		"/roles": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"RoleApi"
+				],
+
+				"operationId": "GetAvailableRoles",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"type": "array",
+							"items": 
+							{
+								"$ref": "#/definitions/RoleResponse"
+							}
+						}
+					}
+				}
+			}
+		},
+
+		"/roles/{id}": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"RoleApi"
+				],
+
+				"operationId": "GetRoleById",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"$ref": "#/definitions/RoleResponse"
+						}
+					}
+				}
+			}
+		},
+
+		"/plants/{plantId}/subplants": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"SubPlantsApi"
+				],
+
+				"summary": "Gets a list of sub plant for a specific plant.",
+				"description": "Returns a list of all sub plants for the requested plant",
+				"operationId": "GetSubPlantsForPlant",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "Numerical Plant Id.",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "Deleted Subplant",
+						"schema": 
+						{
+							"$ref": "#/definitions/SubPlantResponse"
+						}
+					},
+
+					"404": 
+					{
+						"description": "Resource not found"
+					}
+				}
+			},
+
+			"post": 
+			{
+				"tags": 
+				[
+					"SubPlantsApi"
+				],
+
+				"summary": "Create a sub plant for a specific plant",
+				"operationId": "CreateSubPlant",
+				"consumes": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "Numerical plant Id.",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "request",
+						"in": "body",
+						"description": "Request with the sub plant name.",
+						"required": true,
+						"schema": 
+						{
+							"$ref": "#/definitions/SubPlantRequest"
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "Created new Subplant",
+						"schema": 
+						{
+							"$ref": "#/definitions/SubPlantResponse"
+						}
+					},
+
+					"400": 
+					{
+						"description": "Request is invalid"
+					},
+
+					"409": 
+					{
+						"description": "Request conflics with other resource"
+					}
+				}
+			}
+		},
+
+		"/plants/{plantId}/subplants/{subplantId}": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"SubPlantsApi"
+				],
+
+				"summary": "Gets the sub plant information for a specific sub plant id in a specific plant",
+				"operationId": "GetSubPlant",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "Numerical Plant Id.",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "subplantId",
+						"in": "path",
+						"description": "Numerical Sub plant Id (= subplantId of the sub plant) .",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "Deleted Subplant",
+						"schema": 
+						{
+							"$ref": "#/definitions/SubPlantResponse"
+						}
+					},
+
+					"404": 
+					{
+						"description": "Resource not found"
+					}
+				}
+			},
+
+			"put": 
+			{
+				"tags": 
+				[
+					"SubPlantsApi"
+				],
+
+				"summary": "Updates the name of a sub plant",
+				"operationId": "UpdateSubPlant",
+				"consumes": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"produces": 
+				[
+					
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "Numerical Plant Id for the requested update.",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "subplantId",
+						"in": "path",
+						"description": "Numerical Sub plant Id (= subplantId of the sub plant) for the requested update.",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "request",
+						"in": "body",
+						"description": "The request.",
+						"required": true,
+						"schema": 
+						{
+							"$ref": "#/definitions/SubPlantRequest"
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"204": 
+					{
+						"description": "Updated Subplant"
+					},
+
+					"404": 
+					{
+						"description": "Resource not found"
+					},
+
+					"409": 
+					{
+						"description": "Request conflics with other resource"
+					}
+				}
+			},
+
+			"delete": 
+			{
+				"tags": 
+				[
+					"SubPlantsApi"
+				],
+
+				"summary": "Deletes a sub plant for a specific plant",
+				"operationId": "DeleteSubPlant",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "Numerical Plant Id for the requested deletion.",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "subplantId",
+						"in": "path",
+						"description": "Numerical Sub plant Id (= subplantId of the sub plant) for the requested deletion.",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"204": 
+					{
+						"description": "Deleted Subplant"
+					},
+
+					"404": 
+					{
+						"description": "Resource not found"
+					}
+				}
+			}
+		},
+
+		"/plants/{plantId}/subplants/{subplantId}/devices/{deviceId}": 
+		{
+			"post": 
+			{
+				"tags": 
+				[
+					"SubPlantsMemberApi"
+				],
+
+				"summary": "Add device to subplant",
+				"operationId": "AddDeviceToSubPlant",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "The id of the plant",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "subplantId",
+						"in": "path",
+						"description": "The id of the subplant",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "deviceId",
+						"in": "path",
+						"description": "The id of the device to add",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"204": 
+					{
+						"description": "Added device to subplant"
+					},
+
+					"404": 
+					{
+						"description": "Resource not found"
+					},
+
+					"409": 
+					{
+						"description": "Request conflics with other resource"
+					}
+				}
+			},
+
+			"delete": 
+			{
+				"tags": 
+				[
+					"SubPlantsMemberApi"
+				],
+
+				"summary": "Removes device from subplant",
+				"operationId": "RemoveDeviceFromSubPlant",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "The id of the plant",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "subplantId",
+						"in": "path",
+						"description": "The id of the subplant",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "deviceId",
+						"in": "path",
+						"description": "The id of the device to add",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"204": 
+					{
+						"description": "Removed device from subplant"
+					},
+
+					"404": 
+					{
+						"description": "Resource not found"
+					}
+				}
+			}
+		},
+
+		"/plants/{plantId}/subplants/{subplantId}/devices": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"SubPlantsMemberApi"
+				],
+
+				"summary": "Gets all devices assigned to subplant",
+				"operationId": "GetSubPlantDevices",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "plantId",
+						"in": "path",
+						"description": "The id of the plant",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "subplantId",
+						"in": "path",
+						"description": "The id of the subplant",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "Assigned devices"
+					},
+
+					"404": 
+					{
+						"description": "Resource not found"
+					}
+				}
+			}
+		},
+
+		"/termsofusedocs": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"TermsOfUse"
+				],
+
+				"summary": "Gets the terms of use docs.",
+				"operationId": "GetTermsOfUseDocs",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "cultureName",
+						"in": "query",
+						"description": "The culture name.",
+						"required": true,
+						"type": "string"
+					},
+
+					{
+						"name": "termsOfUseTypes",
+						"in": "query",
+						"description": "The terms of use document types comma-separated list, e.g. TermsOfUse, DataPrivacy, ProfessionalPackage.",
+						"required": false,
+						"type": "string"
+					},
+
+					{
+						"name": "onlyNewest",
+						"in": "query",
+						"description": "If only newest doc releases should be returned, true by default.",
+						"required": false,
+						"type": "boolean"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"type": "array",
+							"items": 
+							{
+								"$ref": "#/definitions/TermsOfUseDocResponse"
+							}
+						}
+					}
+				}
+			}
+		},
+
+		"/termsofusedocs/{termsOfUseDocId}": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"TermsOfUse"
+				],
+
+				"summary": "Gets the terms of use content document.",
+				"operationId": "GetTermsOfUseDoc",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "termsOfUseDocId",
+						"in": "path",
+						"description": "The terms of use document id.",
+						"required": true,
+						"type": "integer",
+						"format": "int32"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"$ref": "#/definitions/TermsOfUseDocContentResponse"
+						}
+					}
+				}
+			}
+		},
+
+		"/termsofusedocs/{termsOfUseDocId}/confirmations": 
+		{
+			"post": 
+			{
+				"tags": 
+				[
+					"TermsOfUse"
+				],
+
+				"summary": "Confirms terms of use for specified user and document id.",
+				"operationId": "Confirm",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "termsOfUseDocId",
+						"in": "path",
+						"description": "The terms of use document id.",
+						"required": true,
+						"type": "integer",
+						"format": "int32"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"$ref": "#/definitions/ConfirmationResponse"
+						}
+					}
+				}
+			}
+		},
+
+		"/useractivationtoken": 
+		{
+			"put": 
+			{
+				"tags": 
+				[
+					"UserActivationTokenApi"
+				],
+
+				"summary": "Activate user for the specific token.",
+				"description": "The user gets his activation token (e.g. via email) after registration. After that he can activate his user account with this specific token.",
+				"operationId": "Put",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "token",
+						"in": "query",
+						"description": "Unique activation token for the user.",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "User Activation",
+						"schema": 
+						{
+							"type": "boolean"
+						}
+					},
+
+					"404": 
+					{
+						"description": "Not found"
+					}
+				}
+			}
+		},
+
+		"/users/{userId}": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"UserApi"
+				],
+
+				"summary": "Gets the user by id.",
+				"description": "Gets the user by his id.",
+				"operationId": "GetUserById",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "userId",
+						"in": "path",
+						"description": "Numerical Id of the user.",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "User account information",
+						"schema": 
+						{
+							"$ref": "#/definitions/UserAccountResponse"
+						}
+					},
+
+					"404": 
+					{
+						"description": "Not found"
+					}
+				}
+			},
+
+			"put": 
+			{
+				"tags": 
+				[
+					"UserApi"
+				],
+
+				"summary": "Updates the User.",
+				"operationId": "UpdateUser",
+				"consumes": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"produces": 
+				[
+					
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "userId",
+						"in": "path",
+						"description": "Identifier for the user.",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					},
+
+					{
+						"name": "item",
+						"in": "body",
+						"description": "true to item.",
+						"required": true,
+						"schema": 
+						{
+							"$ref": "#/definitions/UserUpdateRequest"
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"204": 
+					{
+						"description": "No Content"
+					}
+				}
+			}
+		},
+
+		"/users": 
+		{
+			"get": 
+			{
+				"tags": 
+				[
+					"UserApi"
+				],
+
+				"summary": "Gets the user by identifier.",
+				"description": "Gets the user by his user identifier/email address.",
+				"operationId": "GetUserByIdentifier",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "identifier",
+						"in": "query",
+						"description": "The identifier/email of the requested user.",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "User account information",
+						"schema": 
+						{
+							"$ref": "#/definitions/UserAccountResponse"
+						}
+					},
+
+					"404": 
+					{
+						"description": "Not found"
+					}
+				}
+			},
+
+			"post": 
+			{
+				"tags": 
+				[
+					"UserApi"
+				],
+
+				"summary": "Creates a new user",
+				"operationId": "Post",
+				"consumes": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"parameters": 
+				[
+					{
+						"name": "user",
+						"in": "body",
+						"description": "The user creation request.",
+						"required": true,
+						"schema": 
+						{
+							"$ref": "#/definitions/UserCreationRequest"
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "User id",
+						"schema": 
+						{
+							"format": "int64",
+							"type": "integer"
+						}
+					},
+
+					"400": 
+					{
+						"description": "Bad Request"
+					}
+				}
+			}
+		}
+	},
+
+	"definitions": 
+	{
+		"TokenResult": 
+		{
+			"description": "",
+			"type": "object",
+			"properties": 
+			{
+				"accessToken": 
+				{
+					"description": "The generated authentication token.",
+					"type": "string"
+				},
+
+				"expireDateTime": 
+				{
+					"format": "date-time",
+					"description": "The timestamp of token expiration.",
+					"type": "string"
+				}
+			}
+		},
+
+		"CompanyAndAddressResponse": 
+		{
+			"description": "The company and address response.",
+			"required": 
+			[
+				"companyId",
+				"name"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"countryName": 
+				{
+					"description": "Gets or sets the country name.",
+					"type": "string"
+				},
+
+				"city": 
+				{
+					"description": "Gets or sets the city.",
+					"type": "string"
+				},
+
+				"zipCode": 
+				{
+					"description": "Gets or sets the zip code.",
+					"type": "string"
+				},
+
+				"street": 
+				{
+					"description": "Gets or sets the street.",
+					"type": "string"
+				},
+
+				"streetNo": 
+				{
+					"description": "Gets or sets the street no.",
+					"type": "string"
+				},
+
+				"postOfficeBox": 
+				{
+					"description": "Gets or sets the post office box.",
+					"type": "string"
+				},
+
+				"taxIdNumber": 
+				{
+					"description": "Gets or sets the tax id number.",
+					"type": "string"
+				},
+
+				"businessPartnerId": 
+				{
+					"description": "Gets or sets the business partner id.",
+					"type": "string"
+				},
+
+				"weblink": 
+				{
+					"description": "Gets or sets the weblink.",
+					"type": "string"
+				},
+
+				"email": 
+				{
+					"description": "Gets or sets the email.",
+					"type": "string"
+				},
+
+				"phoneNumber": 
+				{
+					"description": "Gets or sets the phone number.",
+					"type": "string"
+				},
+
+				"faxNumber": 
+				{
+					"description": "Gets or sets the fax number.",
+					"type": "string"
+				},
+
+				"description": 
+				{
+					"description": "Gets or sets the company description.",
+					"type": "string"
+				},
+
+				"companyId": 
+				{
+					"format": "int64",
+					"description": "Unique company id.",
+					"type": "integer"
+				},
+
+				"name": 
+				{
+					"description": "Name of the company.",
+					"type": "string"
+				}
+			}
+		},
+
+		"CompanyResponse": 
+		{
+			"description": "The company response.",
+			"required": 
+			[
+				"companyId",
+				"name"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"companyId": 
+				{
+					"format": "int64",
+					"description": "Unique company id.",
+					"type": "integer"
+				},
+
+				"name": 
+				{
+					"description": "Name of the company.",
+					"type": "string"
+				}
+			}
+		},
+
+		"CompanyPostRequest": 
+		{
+			"required": 
+			[
+				"name",
+				"countryName",
+				"city"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"name": 
+				{
+					"description": "Name of the comapny.",
+					"type": "string"
+				},
+
+				"countryName": 
+				{
+					"description": "Country where the company is located.",
+					"type": "string"
+				},
+
+				"city": 
+				{
+					"description": "City where the company is located.",
+					"type": "string"
+				},
+
+				"zipCode": 
+				{
+					"description": "Zip code of the city where the company is located.",
+					"type": "string"
+				},
+
+				"street": 
+				{
+					"description": "Street where the company is located.",
+					"type": "string"
+				},
+
+				"streetNo": 
+				{
+					"description": "Street number of the company.",
+					"type": "string"
+				},
+
+				"postOfficeBox": 
+				{
+					"description": "Post office box of the company.",
+					"type": "string"
+				},
+
+				"taxIdNumber": 
+				{
+					"description": "Tax id number of the company.",
+					"type": "string"
+				},
+
+				"businessPartnerId": 
+				{
+					"description": "Business partner id of the company.",
+					"type": "string"
+				},
+
+				"weblink": 
+				{
+					"description": "Weblink of the company.",
+					"type": "string"
+				},
+
+				"email": 
+				{
+					"description": "Contact email of the company.",
+					"type": "string"
+				},
+
+				"phoneNumber": 
+				{
+					"description": "Phone number of the company.",
+					"type": "string"
+				},
+
+				"faxNumber": 
+				{
+					"description": "Fax number of the company.",
+					"type": "string"
+				},
+
+				"description": 
+				{
+					"description": "Additonal description of the company.",
+					"type": "string"
+				}
+			}
+		},
+
+		"CompanyMemberDataResponse": 
+		{
+			"type": "object",
+			"properties": 
+			{
+				"memberId": 
+				{
+					"format": "int64",
+					"type": "integer"
+				},
+
+				"userId": 
+				{
+					"format": "int64",
+					"type": "integer"
+				},
+
+				"roleId": 
+				{
+					"format": "int64",
+					"type": "integer"
+				}
+			}
+		},
+
+		"CompanyMemberDataPostRequest": 
+		{
+			"type": "object",
+			"properties": 
+			{
+				"userId": 
+				{
+					"format": "int64",
+					"type": "integer"
+				},
+
+				"roleId": 
+				{
+					"format": "int64",
+					"type": "integer"
+				}
+			}
+		},
+
+		"ComponentResponse": 
+		{
+			"description": "Component response object. Component is e.g. a device, plant, subplant, etc.",
+			"required": 
+			[
+				"componentId"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"componentId": 
+				{
+					"description": "Unique identifier of the component.",
+					"type": "string"
+				},
+
+				"name": 
+				{
+					"description": "Name of the component.",
+					"type": "string"
+				},
+
+				"componentTags": 
+				{
+					"description": "Defines the tags of the component, e.g. Pv, Battery, Generic, EnergyAndPowerOut, EnergyAndPowerInOut.",
+					"type": "array",
+					"items": 
+					{
+						"enum": 
+						[
+							"Pv",
+							"Battery",
+							"Generic",
+							"EnergyAndPowerOut",
+							"EnergyAndPowerInOut"
+						],
+
+						"type": "string"
+					}
+				}
+			}
+		},
+
+		"CustomerMessageQueryRequest": 
+		{
+			"description": "",
+			"type": "object",
+			"properties": 
+			{
+				"componentId": 
+				{
+					"description": "The component id (e.g. deviceId, plantId, subPlantId) OR null for complete portfolio of the user",
+					"type": "string"
+				},
+
+				"from": 
+				{
+					"format": "date-time",
+					"description": "The from date time in utc. Messages will be returned in descending date order from this date time. If from is set, marker has not to be transfered.",
+					"type": "string"
+				},
+
+				"marker": 
+				{
+					"description": "The marker of the message, where the fetching has to be proceed. If marker is set, from has not to be transfered.",
+					"type": "string"
+				}
+			}
+		},
+
+		"CustomerMessageResponse": 
+		{
+			"description": "The customer message response object.",
+			"required": 
+			[
+				"marker",
+				"timestamp",
+				"deviceName",
+				"deviceSerialnumber",
+				"deviceId",
+				"messageId",
+				"messageTag",
+				"traceLevel",
+				"eventTypeExtension"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"marker": 
+				{
+					"description": "Gets the unique marker of the message. This marker can be used to determine the starting position of the search.",
+					"type": "string"
+				},
+
+				"timestamp": 
+				{
+					"format": "date-time",
+					"description": "Gets or sets the timestamp.",
+					"type": "string"
+				},
+
+				"deviceName": 
+				{
+					"description": "Gets the device name.",
+					"type": "string"
+				},
+
+				"deviceSerialnumber": 
+				{
+					"description": "Gets the serial number of the device.",
+					"type": "string"
+				},
+
+				"deviceId": 
+				{
+					"description": "Gets or sets the device id.",
+					"type": "string"
+				},
+
+				"plantId": 
+				{
+					"description": "Gets the plant id. Do not have to be displayed when requested component is a plant.",
+					"type": "string"
+				},
+
+				"plantName": 
+				{
+					"description": "Gets the plant name. Do not have to be displayed when requested component is a plant.",
+					"type": "string"
+				},
+
+				"messageId": 
+				{
+					"format": "int32",
+					"description": "Gets the message id.",
+					"type": "integer"
+				},
+
+				"messageTag": 
+				{
+					"format": "int32",
+					"description": "Gets the message tag. Represents the resource id for the message text.",
+					"type": "integer"
+				},
+
+				"traceLevel": 
+				{
+					"description": "Gets the trace level.",
+					"enum": 
+					[
+						"None",
+						"Info",
+						"Warn",
+						"Error"
+					],
+
+					"type": "string"
+				},
+
+				"eventTypeExtension": 
+				{
+					"description": "Gets the event type extension, e.g. none, incomming, outgoing.",
+					"enum": 
+					[
+						"None",
+						"Incoming",
+						"Outgoing"
+					],
+
+					"type": "string"
+				},
+
+				"messageGroupTag": 
+				{
+					"format": "int32",
+					"description": "Gets the message group tag. Has to be translated by the resources for the message groups.",
+					"type": "integer"
+				},
+
+				"arguments": 
+				{
+					"description": "Gets the arguments.",
+					"type": "array",
+					"items": 
+					{
+						"$ref": "#/definitions/ArgumentResponse"
+					}
+				}
+			}
+		},
+
+		"ArgumentResponse": 
+		{
+			"description": "The argument response object.",
+			"required": 
+			[
+				"position",
+				"value",
+				"valueType"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"position": 
+				{
+					"format": "int32",
+					"description": "The argument position in the resource text.",
+					"type": "integer"
+				},
+
+				"value": 
+				{
+					"description": "The argument value.",
+					"type": "string"
+				},
+
+				"valueType": 
+				{
+					"description": "The type of the value, e.g. string, int, double, timestamp.",
+					"enum": 
+					[
+						"String",
+						"Double",
+						"Integer",
+						"Timestamp",
+						"TagId"
+					],
+
+					"type": "string"
+				}
+			}
+		},
+
+		"WidgetResponse": 
+		{
+			"description": "The widget response object.",
+			"required": 
+			[
+				"widgetType"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"widgetType": 
+				{
+					"description": "Type of the widget element.",
+					"enum": 
+					[
+						"EnergyAndPower",
+						"Weather",
+						"PerformanceRatio"
+					],
+
+					"type": "string"
+				}
+			}
+		},
+
+		"DeviceResponse": 
+		{
+			"description": "The device response.",
+			"type": "object",
+			"properties": 
+			{
+				"deviceId": 
+				{
+					"description": "Gets or sets the device id.",
+					"type": "string"
+				},
+
+				"plantId": 
+				{
+					"description": "Referenced plant.",
+					"type": "string"
+				},
+
+				"name": 
+				{
+					"description": "Name of the device.",
+					"type": "string"
+				},
+
+				"serial": 
+				{
+					"description": "Serial number of the device.",
+					"type": "string"
+				}
+			}
+		},
+
+		"WeatherForecastResponse": 
+		{
+			"description": "The weather forecast response object.",
+			"required": 
+			[
+				"now",
+				"tomorrow"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"now": 
+				{
+					"$ref": "#/definitions/WeatherForecastLatestResponse",
+					"description": "The response object for latest weather."
+				},
+
+				"tomorrow": 
+				{
+					"$ref": "#/definitions/WeatherForecastDayResponse",
+					"description": "The response object for tomorrow."
+				}
+			}
+		},
+
+		"WeatherForecastLatestResponse": 
+		{
+			"description": "The weather forecast object for latest timestamp.",
+			"required": 
+			[
+				"time",
+				"iconId",
+				"temperature"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"time": 
+				{
+					"format": "date-time",
+					"description": "Utc timestamp of the returned weather.",
+					"type": "string"
+				},
+
+				"iconId": 
+				{
+					"format": "int32",
+					"description": "Id of the weather icon. E.g. 2 = Cloudy, 61 = half rainy and half sunny. The corresponding night icon is 100 higher, e.g. 161 = half rainy and half clear sky.",
+					"type": "integer"
+				},
+
+				"temperature": 
+				{
+					"format": "double",
+					"description": "Temperature in degree celsius (°C).",
+					"type": "number"
+				}
+			}
+		},
+
+		"WeatherForecastDayResponse": 
+		{
+			"description": "The weather forecast object for a whole day.",
+			"required": 
+			[
+				"date",
+				"iconId",
+				"minTemperature",
+				"maxTemperature"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"date": 
+				{
+					"format": "date-time",
+					"description": "The date of the weather.",
+					"type": "string"
+				},
+
+				"iconId": 
+				{
+					"format": "int32",
+					"description": "Id of the weather icon. E.g. 2 = Cloudy, 61 = half rainy and half sunny. The corresponding night icon is 100 higher, e.g. 161 = half rainy and half clear sky.",
+					"type": "integer"
+				},
+
+				"minTemperature": 
+				{
+					"format": "double",
+					"description": "The minmum temperature of the day.",
+					"type": "number"
+				},
+
+				"maxTemperature": 
+				{
+					"format": "double",
+					"description": "The maximum temperature of the day.",
+					"type": "number"
+				}
+			}
+		},
+
+		"MeasurementQueryRequest": 
+		{
+			"description": "Request object to query measurements.",
+			"required": 
+			[
+				"queryItems"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"dateTimeBegin": 
+				{
+					"format": "date-time",
+					"description": "Begin time stamp of the measurement query (utc).",
+					"type": "string"
+				},
+
+				"dateTimeEnd": 
+				{
+					"format": "date-time",
+					"description": "End time stamp of the measurement query (utc).",
+					"type": "string"
+				},
+
+				"queryItems": 
+				{
+					"description": "List of query items.",
+					"type": "array",
+					"items": 
+					{
+						"$ref": "#/definitions/MeasurementQueryItemRequest"
+					}
+				}
+			}
+		},
+
+		"MeasurementQueryItemRequest": 
+		{
+			"description": "",
+			"required": 
+			[
+				"componentId"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"componentId": 
+				{
+					"description": "Unique identifier of the component, e.g. plantId, deviceId, etc. Multiple components can be passed as comma-separated list.",
+					"type": "string"
+				},
+
+				"channelId": 
+				{
+					"description": "Referenced channel.",
+					"type": "string"
+				},
+
+				"resolution": 
+				{
+					"description": "Resolution of the interval (FiveMinutes, OneDay, OneWeek, etc.).",
+					"type": "string"
+				},
+
+				"timezone": 
+				{
+					"description": "Gets or sets the timezone (IANA time tone id).",
+					"type": "string"
+				},
+
+				"aggregate": 
+				{
+					"description": "Requested aggregation function (min, max, mean, etc.).",
+					"type": "string"
+				},
+
+				"multiAggregate": 
+				{
+					"description": "Gets or sets the aggregation function, if multiple components are requested.",
+					"type": "string"
+				}
+			}
+		},
+
+		"MeasurementResult": 
+		{
+			"description": "The measurement result object.",
+			"required": 
+			[
+				"componentId",
+				"values"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"componentId": 
+				{
+					"description": "Unique identifier of the component.",
+					"type": "string"
+				},
+
+				"channelId": 
+				{
+					"description": "Referenced channel id.",
+					"type": "string"
+				},
+
+				"values": 
+				{
+					"description": "Values of the requested device and channel.",
+					"type": "array",
+					"items": 
+					{
+						"$ref": "#/definitions/MeasurementValueResult"
+					}
+				}
+			}
+		},
+
+		"MeasurementValueResult": 
+		{
+			"description": "",
+			"required": 
+			[
+				"time",
+				"value"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"time": 
+				{
+					"format": "date-time",
+					"description": "Time stamp of the measurement.",
+					"type": "string"
+				},
+
+				"value": 
+				{
+					"format": "double",
+					"description": "Value of the measurement.",
+					"type": "number"
+				}
+			}
+		},
+
+		"LiveDataPollRequestItem": 
+		{
+			"description": "The live data poll request.",
+			"type": "object",
+			"properties": 
+			{
+				"componentId": 
+				{
+					"description": "Gets or sets the component id, can also be a csv list of component ids.",
+					"type": "string"
+				},
+
+				"channelId": 
+				{
+					"description": "Gets or sets the channel id.",
+					"type": "string"
+				},
+
+				"multiAggregate": 
+				{
+					"description": "Gets or sets the multi aggregate (Avg, Sum, Min, Max).",
+					"type": "string"
+				}
+			}
+		},
+
+		"MenuItemsResponse": 
+		{
+			"description": "Response object for menu items.",
+			"required": 
+			[
+				"componentType"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"componentType": 
+				{
+					"description": "Defines the component type of this navigation item (Portfolio, PlantGroup, Plant, SubPlant, Device).",
+					"enum": 
+					[
+						"Portfolio",
+						"Plant",
+						"Device",
+						"SubPlant"
+					],
+
+					"type": "string"
+				},
+
+				"name": 
+				{
+					"description": "Name of the navigation item.",
+					"type": "string"
+				},
+
+				"componentId": 
+				{
+					"description": "Unique identifier of the component.",
+					"type": "string"
+				},
+
+				"menuItems": 
+				{
+					"description": "Menu items for current component.",
+					"type": "array",
+					"items": 
+					{
+						"$ref": "#/definitions/MenuItem"
+					}
+				}
+			}
+		},
+
+		"MenuItem": 
+		{
+			"description": "The menu item for the vertical navigation.",
+			"required": 
+			[
+				"menuItemType"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"menuItemType": 
+				{
+					"description": "Defined menu item type (Dashboard, Monitoring, Analyse, Configuration).",
+					"enum": 
+					[
+						"GroupDashboard",
+						"GroupMonitoring",
+						"GroupAnalyse",
+						"GroupConfiguration",
+						"ViewEnergyAndPower",
+						"ViewCurrentMeasurementValues",
+						"ViewCustomerMessages",
+						"ViewParameters",
+						"ViewPermissions"
+					],
+
+					"type": "string"
+				},
+
+				"subItems": 
+				{
+					"description": "Sub menu items of the current menu item.",
+					"type": "array",
+					"items": 
+					{
+						"$ref": "#/definitions/MenuItem"
+					}
+				}
+			}
+		},
+
+		"NavigationItem": 
+		{
+			"description": "The navigation item to navigation between plants, devices, etc.",
+			"required": 
+			[
+				"componentType",
+				"name",
+				"componentId"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"componentType": 
+				{
+					"description": "Defines the component type of this navigation item (Portfolio, PlantGroup, Plant, SubPlant, Device).",
+					"enum": 
+					[
+						"Portfolio",
+						"Plant",
+						"Device",
+						"SubPlant"
+					],
+
+					"type": "string"
+				},
+
+				"name": 
+				{
+					"description": "Name of the navigation item.",
+					"type": "string"
+				},
+
+				"componentId": 
+				{
+					"description": "Unique identifier of the component.",
+					"type": "string"
+				}
+			}
+		},
+
+		"ParameterQueryRequest": 
+		{
+			"description": "",
+			"required": 
+			[
+				"queryItems"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"queryItems": 
+				{
+					"description": "List of query items.",
+					"type": "array",
+					"items": 
+					{
+						"$ref": "#/definitions/ParameterQueryItemRequest"
+					}
+				}
+			}
+		},
+
+		"ParameterQueryItemRequest": 
+		{
+			"description": "",
+			"required": 
+			[
+				"componentId"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"channelId": 
+				{
+					"description": "Referenced channel.",
+					"type": "string"
+				},
+
+				"componentId": 
+				{
+					"description": "Unique identifier of the component, e.g. plantId, deviceId, etc. Multiple components can be passed as comma-separated list.",
+					"type": "string"
+				}
+			}
+		},
+
+		"ParameterResult": 
+		{
+			"description": "",
+			"required": 
+			[
+				"componentId",
+				"values"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"componentId": 
+				{
+					"description": "Unique identifier of the component.",
+					"type": "string"
+				},
+
+				"values": 
+				{
+					"description": "Values of the requested device and channel.",
+					"type": "array",
+					"items": 
+					{
+						"$ref": "#/definitions/ParameterValueResult"
+					}
+				}
+			}
+		},
+
+		"ParameterValueResult": 
+		{
+			"description": "",
+			"required": 
+			[
+				"channelId",
+				"timestamp",
+				"value"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"channelId": 
+				{
+					"description": "Unique identifier of the channel.",
+					"type": "string"
+				},
+
+				"timestamp": 
+				{
+					"format": "date-time",
+					"description": "Timestamp of the parameter modification.",
+					"type": "string"
+				},
+
+				"value": 
+				{
+					"description": "Value of the parameter.",
+					"type": "string"
+				},
+
+				"min": 
+				{
+					"format": "double",
+					"description": "Current minimum of the parameter.",
+					"type": "number"
+				},
+
+				"max": 
+				{
+					"format": "double",
+					"description": "Current maximum of the parameter.",
+					"type": "number"
+				},
+
+				"possibleValues": 
+				{
+					"description": "Possible values of a enum.",
+					"type": "array",
+					"items": 
+					{
+						"type": "string"
+					}
+				},
+
+				"state": 
+				{
+					"description": "Current state of the parameter (\"queued\", \"confirmed\"",
+					"type": "string"
+				}
+			}
+		},
+
+		"ParameterDataRequest": 
+		{
+			"description": "",
+			"required": 
+			[
+				"values"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"values": 
+				{
+					"description": "List of parameters.",
+					"type": "array",
+					"items": 
+					{
+						"$ref": "#/definitions/ParameterDataItem"
+					}
+				}
+			}
+		},
+
+		"ParameterDataItem": 
+		{
+			"description": "",
+			"required": 
+			[
+				"channelId",
+				"timestamp",
+				"value"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"channelId": 
+				{
+					"description": "Identifier of the parameter",
+					"type": "string"
+				},
+
+				"timestamp": 
+				{
+					"format": "date-time",
+					"description": "Timestamp of the last parameter modification or creation",
+					"type": "string"
+				},
+
+				"value": 
+				{
+					"description": "Parameter value.",
+					"type": "string"
+				}
+			}
+		},
+
+		"PlantResponse": 
+		{
+			"description": "",
+			"required": 
+			[
+				"plantId",
+				"ownerId",
+				"ownerIdentifier",
+				"name",
+				"countryName",
+				"city",
+				"zipCode"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"plantId": 
+				{
+					"description": "Unique identifier representing a specific plant.",
+					"type": "string"
+				},
+
+				"peakPower": 
+				{
+					"format": "double",
+					"description": "Peak power of plant.",
+					"type": "number"
+				},
+
+				"ownerId": 
+				{
+					"format": "int64",
+					"description": "Unique owner id.",
+					"type": "integer"
+				},
+
+				"ownerIdentifier": 
+				{
+					"description": "Owner identifier.",
+					"type": "string"
+				},
+
+				"name": 
+				{
+					"description": "Name of the plant.",
+					"type": "string"
+				},
+
+				"countryName": 
+				{
+					"description": "Country where the plant is located.",
+					"type": "string"
+				},
+
+				"city": 
+				{
+					"description": "City where the plant is located.",
+					"type": "string"
+				},
+
+				"zipCode": 
+				{
+					"description": "Zip code of the city.",
+					"type": "string"
+				},
+
+				"street": 
+				{
+					"description": "Street where the plant is located.",
+					"type": "string"
+				},
+
+				"streetNo": 
+				{
+					"description": "Street number.",
+					"type": "string"
+				},
+
+				"federalState": 
+				{
+					"type": "string"
+				},
+
+				"description": 
+				{
+					"description": "Additional description.",
+					"type": "string"
+				},
+
+				"trackingH": 
+				{
+					"description": "Tracking h.",
+					"type": "boolean"
+				},
+
+				"trackingV": 
+				{
+					"description": "Tracking v.",
+					"type": "boolean"
+				},
+
+				"azimuth": 
+				{
+					"format": "int32",
+					"description": "Azimuth.",
+					"type": "integer"
+				},
+
+				"collectorSlope": 
+				{
+					"format": "int32",
+					"description": "Grade.",
+					"type": "integer"
+				},
+
+				"timezone": 
+				{
+					"description": "Timezone.",
+					"type": "string"
+				},
+
+				"longitude": 
+				{
+					"format": "double",
+					"description": "Longitude.",
+					"type": "number"
+				},
+
+				"latitude": 
+				{
+					"format": "double",
+					"description": "Latitude.",
+					"type": "number"
+				},
+
+				"elevation": 
+				{
+					"format": "int32",
+					"description": "Height nn (Elevation).",
+					"type": "integer"
+				}
+			}
+		},
+
+		"PlantRequest": 
+		{
+			"description": "The plant request.",
+			"required": 
+			[
+				"name",
+				"countryName",
+				"city",
+				"zipCode"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"name": 
+				{
+					"description": "Name of the plant.",
+					"type": "string"
+				},
+
+				"countryName": 
+				{
+					"description": "Country where the plant is located.",
+					"type": "string"
+				},
+
+				"city": 
+				{
+					"description": "City where the plant is located.",
+					"type": "string"
+				},
+
+				"zipCode": 
+				{
+					"description": "Zip code of the city.",
+					"type": "string"
+				},
+
+				"street": 
+				{
+					"description": "Street where the plant is located.",
+					"type": "string"
+				},
+
+				"streetNo": 
+				{
+					"description": "Street number.",
+					"type": "string"
+				},
+
+				"federalState": 
+				{
+					"type": "string"
+				},
+
+				"description": 
+				{
+					"description": "Additional description.",
+					"type": "string"
+				},
+
+				"trackingH": 
+				{
+					"description": "Tracking h.",
+					"type": "boolean"
+				},
+
+				"trackingV": 
+				{
+					"description": "Tracking v.",
+					"type": "boolean"
+				},
+
+				"azimuth": 
+				{
+					"format": "int32",
+					"description": "Azimuth.",
+					"type": "integer"
+				},
+
+				"collectorSlope": 
+				{
+					"format": "int32",
+					"description": "Grade.",
+					"type": "integer"
+				},
+
+				"timezone": 
+				{
+					"description": "Timezone.",
+					"type": "string"
+				},
+
+				"longitude": 
+				{
+					"format": "double",
+					"description": "Longitude.",
+					"type": "number"
+				},
+
+				"latitude": 
+				{
+					"format": "double",
+					"description": "Latitude.",
+					"type": "number"
+				},
+
+				"elevation": 
+				{
+					"format": "int32",
+					"description": "Height nn (Elevation).",
+					"type": "integer"
+				}
+			}
+		},
+
+		"PlantMemberDataRequest": 
+		{
+			"description": "The plant member data post request.",
+			"required": 
+			[
+				"userId",
+				"roleId"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"userId": 
+				{
+					"format": "int64",
+					"description": "Unique user id.",
+					"type": "integer"
+				},
+
+				"roleId": 
+				{
+					"format": "int64",
+					"description": "Role id, e.g (User = 1, Installer, etc).",
+					"type": "integer"
+				}
+			}
+		},
+
+		"PlantMemberDataResponse": 
+		{
+			"description": "The plant member data response.",
+			"required": 
+			[
+				"memberId",
+				"plantId",
+				"userId",
+				"roleId"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"memberId": 
+				{
+					"format": "int64",
+					"description": "Unique member id corresponding to the plant and the user.",
+					"type": "integer"
+				},
+
+				"plantId": 
+				{
+					"description": "Unique plant id.",
+					"type": "string"
+				},
+
+				"identifier": 
+				{
+					"description": "Gets or sets the identifier.",
+					"type": "string"
+				},
+
+				"firstName": 
+				{
+					"description": "Gets or sets the person's first name.",
+					"type": "string"
+				},
+
+				"lastName": 
+				{
+					"description": "Gets or sets the person's last name.",
+					"type": "string"
+				},
+
+				"userId": 
+				{
+					"format": "int64",
+					"description": "Unique user id.",
+					"type": "integer"
+				},
+
+				"roleId": 
+				{
+					"format": "int64",
+					"description": "Role id, e.g (User = 1, Installer, etc).",
+					"type": "integer"
+				}
+			}
+		},
+
+		"RoleResponse": 
+		{
+			"type": "object",
+			"properties": 
+			{
+				"id": 
+				{
+					"format": "int64",
+					"type": "integer"
+				},
+
+				"name": 
+				{
+					"type": "string"
+				},
+
+				"tagId": 
+				{
+					"format": "int32",
+					"type": "integer"
+				}
+			}
+		},
+
+		"SubPlantRequest": 
+		{
+			"required": 
+			[
+				"name"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"name": 
+				{
+					"description": "Name of the sub plant.",
+					"type": "string"
+				},
+
+				"countryName": 
+				{
+					"description": "Country where the plant is located.",
+					"type": "string"
+				},
+
+				"city": 
+				{
+					"description": "City where the plant is located.",
+					"type": "string"
+				},
+
+				"zipCode": 
+				{
+					"description": "Zip code of the city.",
+					"type": "string"
+				},
+
+				"street": 
+				{
+					"description": "Street where the plant is located.",
+					"type": "string"
+				},
+
+				"streetNo": 
+				{
+					"description": "Street number.",
+					"type": "string"
+				},
+
+				"federalState": 
+				{
+					"type": "string"
+				},
+
+				"description": 
+				{
+					"description": "Additional description.",
+					"type": "string"
+				},
+
+				"trackingH": 
+				{
+					"description": "Tracking h.",
+					"type": "boolean"
+				},
+
+				"trackingV": 
+				{
+					"description": "Tracking v.",
+					"type": "boolean"
+				},
+
+				"azimuth": 
+				{
+					"format": "int32",
+					"description": "Azimuth.",
+					"type": "integer"
+				},
+
+				"collectorSlope": 
+				{
+					"format": "int32",
+					"description": "Grade.",
+					"type": "integer"
+				},
+
+				"timezone": 
+				{
+					"description": "Timezone.",
+					"type": "string"
+				},
+
+				"longitude": 
+				{
+					"format": "double",
+					"description": "Longitude.",
+					"type": "number"
+				},
+
+				"latitude": 
+				{
+					"format": "double",
+					"description": "Latitude.",
+					"type": "number"
+				},
+
+				"elevation": 
+				{
+					"format": "int32",
+					"description": "Height nn (Elevation).",
+					"type": "integer"
+				}
+			}
+		},
+
+		"SubPlantResponse": 
+		{
+			"description": "The sub plant response.",
+			"required": 
+			[
+				"componentId",
+				"name"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"componentId": 
+				{
+					"description": "Unique sub plant id (=component id).",
+					"type": "string"
+				},
+
+				"parentId": 
+				{
+					"description": "Unique parent id (e.g. plant id)",
+					"type": "string"
+				},
+
+				"name": 
+				{
+					"description": "Name of the sub plant.",
+					"type": "string"
+				},
+
+				"countryName": 
+				{
+					"description": "Country where the plant is located.",
+					"type": "string"
+				},
+
+				"city": 
+				{
+					"description": "City where the plant is located.",
+					"type": "string"
+				},
+
+				"zipCode": 
+				{
+					"description": "Zip code of the city.",
+					"type": "string"
+				},
+
+				"street": 
+				{
+					"description": "Street where the plant is located.",
+					"type": "string"
+				},
+
+				"streetNo": 
+				{
+					"description": "Street number.",
+					"type": "string"
+				},
+
+				"federalState": 
+				{
+					"type": "string"
+				},
+
+				"description": 
+				{
+					"description": "Additional description.",
+					"type": "string"
+				},
+
+				"trackingH": 
+				{
+					"description": "Tracking h.",
+					"type": "boolean"
+				},
+
+				"trackingV": 
+				{
+					"description": "Tracking v.",
+					"type": "boolean"
+				},
+
+				"azimuth": 
+				{
+					"format": "int32",
+					"description": "Azimuth.",
+					"type": "integer"
+				},
+
+				"collectorSlope": 
+				{
+					"format": "int32",
+					"description": "Grade.",
+					"type": "integer"
+				},
+
+				"timezone": 
+				{
+					"description": "Timezone.",
+					"type": "string"
+				},
+
+				"longitude": 
+				{
+					"format": "double",
+					"description": "Longitude.",
+					"type": "number"
+				},
+
+				"latitude": 
+				{
+					"format": "double",
+					"description": "Latitude.",
+					"type": "number"
+				},
+
+				"elevation": 
+				{
+					"format": "int32",
+					"description": "Height nn (Elevation).",
+					"type": "integer"
+				}
+			}
+		},
+
+		"TermsOfUseDocResponse": 
+		{
+			"description": "Document for a terms of use.",
+			"type": "object",
+			"properties": 
+			{
+				"id": 
+				{
+					"format": "int32",
+					"description": "Gets or sets the unique id of the document.",
+					"type": "integer"
+				},
+
+				"cultureName": 
+				{
+					"description": "Gets or sets the culture name of the document.",
+					"type": "string"
+				},
+
+				"termsOfUseType": 
+				{
+					"description": "Gets or sets the type of the terms of use, e.g. DataPrivacy.",
+					"enum": 
+					[
+						"TermsOfUse",
+						"DataPrivacy"
+					],
+
+					"type": "string"
+				}
+			}
+		},
+
+		"TermsOfUseDocContentResponse": 
+		{
+			"description": "Content of a terms of use document.",
+			"type": "object",
+			"properties": 
+			{
+				"documentContent": 
+				{
+					"description": "Content of the terms of use document in html format.",
+					"type": "string"
+				},
+
+				"id": 
+				{
+					"format": "int32",
+					"description": "Gets or sets the unique id of the document.",
+					"type": "integer"
+				},
+
+				"cultureName": 
+				{
+					"description": "Gets or sets the culture name of the document.",
+					"type": "string"
+				},
+
+				"termsOfUseType": 
+				{
+					"description": "Gets or sets the type of the terms of use, e.g. DataPrivacy.",
+					"enum": 
+					[
+						"TermsOfUse",
+						"DataPrivacy"
+					],
+
+					"type": "string"
+				}
+			}
+		},
+
+		"ConfirmationResponse": 
+		{
+			"description": "Response object for terms of use confirmation.",
+			"type": "object",
+			"properties": 
+			{
+				"confirmationId": 
+				{
+					"format": "int64",
+					"description": "Gets or sets the unique confirmation id.",
+					"type": "integer"
+				}
+			}
+		},
+
+		"UserAccountResponse": 
+		{
+			"description": "",
+			"required": 
+			[
+				"cultureName",
+				"identifier",
+				"userId",
+				"title",
+				"firstName",
+				"lastName"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"cultureName": 
+				{
+					"description": "Culture Name see ISO standards [(ISO 639-1)-(3166-2)], e.g. \"de-DE\".",
+					"type": "string"
+				},
+
+				"address": 
+				{
+					"$ref": "#/definitions/UserAddressInfoResponse",
+					"description": "Further address information."
+				},
+
+				"activated": 
+				{
+					"description": "Activiation value indicating whether the user is activated or not.",
+					"type": "boolean"
+				},
+
+				"identifier": 
+				{
+					"description": "Unique identifier/email address of the user.",
+					"type": "string"
+				},
+
+				"userId": 
+				{
+					"format": "int64",
+					"description": "Unique id of the user.",
+					"type": "integer"
+				},
+
+				"title": 
+				{
+					"description": "User's title, e.g. \"Dr.\".",
+					"type": "string"
+				},
+
+				"firstName": 
+				{
+					"description": "User's first name.",
+					"type": "string"
+				},
+
+				"lastName": 
+				{
+					"description": "User's last name.",
+					"type": "string"
+				},
+
+				"companyId": 
+				{
+					"format": "int64",
+					"description": "Unique identifier of the company.",
+					"type": "integer"
+				},
+
+				"company": 
+				{
+					"description": "Name of the company.",
+					"type": "string"
+				}
+			}
+		},
+
+		"UserAddressInfoResponse": 
+		{
+			"description": "A user address information response.",
+			"type": "object",
+			"properties": 
+			{
+				"country": 
+				{
+					"description": "Country where the user lives.",
+					"type": "string"
+				},
+
+				"zipCode": 
+				{
+					"description": "Zip code of the city where the user lives.",
+					"type": "string"
+				},
+
+				"city": 
+				{
+					"description": "City where the user lives.",
+					"type": "string"
+				},
+
+				"street": 
+				{
+					"description": "Gets or sets the street.",
+					"type": "string"
+				},
+
+				"phoneNumber": 
+				{
+					"description": "Phone number of the user.",
+					"type": "string"
+				}
+			}
+		},
+
+		"UserUpdateRequest": 
+		{
+			"description": "",
+			"type": "object",
+			"properties": 
+			{
+				"identifier": 
+				{
+					"description": "Gets or sets the identifier.",
+					"type": "string"
+				},
+
+				"firstName": 
+				{
+					"description": "Gets or sets the person's first name.",
+					"type": "string"
+				},
+
+				"lastName": 
+				{
+					"description": "Gets or sets the person's last name.",
+					"type": "string"
+				},
+
+				"password": 
+				{
+					"description": "Gets or sets the password.",
+					"type": "string"
+				},
+
+				"cultureName": 
+				{
+					"description": "Gets or sets the name of the culture.",
+					"type": "string"
+				},
+
+				"title": 
+				{
+					"description": "Gets or sets the title.",
+					"type": "string"
+				},
+
+				"country": 
+				{
+					"description": "Gets or sets the country.",
+					"type": "string"
+				},
+
+				"zipCode": 
+				{
+					"description": "Gets or sets the zip code.",
+					"type": "string"
+				},
+
+				"city": 
+				{
+					"description": "Gets or sets the city.",
+					"type": "string"
+				},
+
+				"street": 
+				{
+					"description": "Gets or sets the street.",
+					"type": "string"
+				},
+
+				"phoneNumber": 
+				{
+					"description": "Gets or sets the phone number.",
+					"type": "string"
+				}
+			}
+		},
+
+		"UserInfoResponse": 
+		{
+			"description": "",
+			"required": 
+			[
+				"identifier",
+				"userId",
+				"title",
+				"firstName",
+				"lastName"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"identifier": 
+				{
+					"description": "Unique identifier/email address of the user.",
+					"type": "string"
+				},
+
+				"userId": 
+				{
+					"format": "int64",
+					"description": "Unique id of the user.",
+					"type": "integer"
+				},
+
+				"title": 
+				{
+					"description": "User's title, e.g. \"Dr.\".",
+					"type": "string"
+				},
+
+				"firstName": 
+				{
+					"description": "User's first name.",
+					"type": "string"
+				},
+
+				"lastName": 
+				{
+					"description": "User's last name.",
+					"type": "string"
+				},
+
+				"companyId": 
+				{
+					"format": "int64",
+					"description": "Unique identifier of the company.",
+					"type": "integer"
+				},
+
+				"company": 
+				{
+					"description": "Name of the company.",
+					"type": "string"
+				}
+			}
+		},
+
+		"UserCreationRequest": 
+		{
+			"description": "",
+			"required": 
+			[
+				"identifier",
+				"firstName",
+				"lastName",
+				"password",
+				"cultureName",
+				"title",
+				"termsOfUseConfirmed",
+				"dataPrivacyConfirmed"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"identifier": 
+				{
+					"description": "Unique identifier/email address of the user.",
+					"type": "string"
+				},
+
+				"firstName": 
+				{
+					"description": "User's first name.",
+					"type": "string"
+				},
+
+				"lastName": 
+				{
+					"description": "User's last name.",
+					"type": "string"
+				},
+
+				"password": 
+				{
+					"description": "User's password (not hashed).",
+					"type": "string"
+				},
+
+				"cultureName": 
+				{
+					"description": "Culture Name see ISO standards  [(ISO 639-1)-(3166-2)], e.g. \"de-DE\".",
+					"type": "string"
+				},
+
+				"title": 
+				{
+					"description": "User's title, e.g. \"Dr.\".",
+					"type": "string"
+				},
+
+				"termsOfUseConfirmed": 
+				{
+					"description": "Defines if user has confirmed terms of use.",
+					"type": "boolean"
+				},
+
+				"dataPrivacyConfirmed": 
+				{
+					"description": "Defines if user has confirmed the data privacy.",
+					"type": "boolean"
+				},
+
+				"country": 
+				{
+					"description": "Country where the user lives .",
+					"type": "string"
+				},
+
+				"zipCode": 
+				{
+					"description": "Zip code of the city.",
+					"type": "string"
+				},
+
+				"city": 
+				{
+					"description": "City where the user lives.",
+					"type": "string"
+				},
+
+				"street": 
+				{
+					"description": "Street where the user lives.",
+					"type": "string"
+				},
+
+				"phoneNumber": 
+				{
+					"description": "Phone number of the user.",
+					"type": "string"
+				}
+			}
+		}
+	}
+}

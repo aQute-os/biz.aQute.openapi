@@ -1,0 +1,146 @@
+{
+	"swagger": "2.0",
+	"info": 
+	{
+		"version": "v1",
+		"title": "test.names"
+	},
+
+	"basePath": "/api/v1",
+	"schemes": 
+	[
+		"http"
+	],
+
+	"paths": 
+	{
+		"/accessToken": 
+		{
+			"post": 
+			{
+				"tags": 
+				[
+					"Access Token Api"
+				],
+
+				"summary": "Generate an access token.",
+				"description": "The endpoint to validate users credentials and generate an access token.",
+				"operationId": "with spaces",
+				"parameters": 
+				[
+					{
+						"name": "with spaces",
+						"in": "query",
+						"description": "The username.",
+						"required": true,
+						"type": "array",
+						"collectionFormat":"multi",
+						"items": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "with-dash",
+						"in": "query",
+						"description": "The password.",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "context",
+						"in": "query",
+						"description": "The password.",
+						"required": true,
+						"type": "string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"type":"array",
+							"items": {
+								"$ref": "#/definitions/Iterable"
+							}
+						}
+					},
+
+					"0": 
+					{
+						"description": "Unexpected error"
+					}
+				}
+			}
+		},
+
+		"/accessToken/refresh": 
+		{
+			"post": 
+			{
+				"tags": 
+				[
+					"List"
+				],
+
+				"summary": "Refresh an access token.",
+				"description": "The endpoint to refresh an access token.",
+				"operationId": "Refresh",
+				"consumes": 
+				[
+					
+				],
+
+				"produces": 
+				[
+					"application/json",
+					"text/json"
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"description": "OK",
+						"schema": 
+						{
+							"$ref": "#/definitions/Iterable"
+						}
+					},
+
+					"0": 
+					{
+						"description": "Unexpected error"
+					}
+				}
+			}
+		}
+	},
+
+	"definitions": 
+	{
+		"Iterable": 
+		{
+			"description": "",
+			"type": "object",
+			"properties": 
+			{
+				"access token": 
+				{
+					"description": "The generated authentication token.",
+					"type": "string"
+				},
+
+				"expire-date-time": 
+				{
+					"format": "date-time",
+					"description": "The timestamp of token expiration.",
+					"type": "string"
+				}
+			}
+		}
+	}
+}
