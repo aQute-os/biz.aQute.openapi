@@ -1,0 +1,14 @@
+-standalone: true
+
+-plugin.examples.eval = \
+	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
+		releaseUrls=https://repo1.maven.org/maven2/; \
+		pom=${.}/pom.xml; \
+		name=examples.eval; \
+		location=${.}/target/cached.xml
+
+-runrequires: \
+	osgi.identity;filter:='(osgi.identity=org.apache.felix.webconsole)',\
+	osgi.identity;filter:='(osgi.identity=biz.aQute:biz.aQute.openapi.debug)'
+-runfw: org.eclipse.osgi;version='[3.10.100.v20150529-1857,3.10.100.v20150529-1857]'
+-runee: JavaSE-1.8
