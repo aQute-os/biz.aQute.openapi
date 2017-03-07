@@ -1,0 +1,6 @@
+
+
+
+-buildpath: \
+	osgi.enroute.base.api, \
+	biz.aQute.bndlib;packages=*
