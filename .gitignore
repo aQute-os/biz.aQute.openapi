@@ -4,3 +4,9 @@ bin_test/
 generated/
 *.class
 
+.gradle-wrapper/gradle-wrapper.jar
+.gradle-wrapper/gradle-wrapper.properties
+.gradle/3.3/taskArtifacts/fileHashes.bin
+.gradle/3.3/taskArtifacts/fileSnapshots.bin
+.gradle/3.3/taskArtifacts/taskArtifacts.bin
+.gradle/3.3/taskArtifacts/taskArtifacts.lock

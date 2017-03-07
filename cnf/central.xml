@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>local</groupId>
+	<artifactId>central</artifactId>
+	<version>0.0.0</version>
+
+	<packaging>pom</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy</artifactId>
+			<scope>compile</scope>
+			<version>2.4.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.gradle</groupId>
+			<artifactId>gradle-core</artifactId>
+			<scope>compile</scope>
+			<version>3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.gradle</groupId>
+			<artifactId>gradle-base-services</artifactId>
+			<scope>compile</scope>
+			<version>3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.gradle</groupId>
+			<artifactId>gradle-base-services-groovy</artifactId>
+			<scope>compile</scope>
+			<version>3.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.193</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.osgi/org.osgi.service.jdbc -->
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.service.jdbc</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>biz.aQute.bnd</groupId>
+			<artifactId>biz.aQute.bnd</artifactId>
+			<version>3.3.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.felix/org.apache.felix.framework -->
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.framework</artifactId>
+			<version>5.4.0</version>
+		</dependency>
+	</dependencies>
+
+</project>

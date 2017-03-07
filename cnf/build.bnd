@@ -1,0 +1,17 @@
+#
+# This file is left open for you to define your macros
+#
+
+-testpath.default = \
+	osgi.enroute.junit.wrapper, \
+	osgi.enroute.hamcrest.wrapper
+
+
+-groupid:               biz.aQute
+-pom:                   version=1.0.0-SNAPSHOT
+
+-plugin.maven.install  \
+	aQute.bnd.repository.maven.provider.MavenBndRepository; \
+	name=Install
+	
+-buildrepo: Install
