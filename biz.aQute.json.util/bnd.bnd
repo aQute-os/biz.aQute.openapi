@@ -1,0 +1,4 @@
+-buildpath: \
+	biz.aQute.bndlib;packages=*, \
+	osgi.enroute.base.api
+Export-Package: aQute.json.util
