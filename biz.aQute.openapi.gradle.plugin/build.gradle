@@ -11,8 +11,8 @@ buildscript {
 apply plugin: 'biz.aQute.openapi'
 
 openapi {
-	input			= file( '/Ws/sma/de.sma.iguana.framework/de.sma.iguana.ldm.restapi/openapi.json' )
-	output			= file( '/Ws/sma/de.sma.iguana.framework/de.sma.iguana.ldm.restapi/gen-src')
+	input			= file( 'swagger.json' )
+	output			= file( 'gen-src')
 	
 	configuration.tags				= "*"
 	configuration.typePrefix		= "Xyz"

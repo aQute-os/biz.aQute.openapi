@@ -1,8 +1,6 @@
 package aQute.openapi.gradle.plugin;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.util.Arrays;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.Input;
@@ -29,22 +27,15 @@ public class OpenAPITask extends DefaultTask {
 
 	@TaskAction
 	void action() throws Exception {
-		System.out.println("Version          " +  1.1);
+		System.out.println("Version          " + 1.1);
 
 		System.out.println("Input file       " + input);
 		System.out.println("Output file      " + output);
 		System.out.println("Destination Dir  " + getDestinationDir());
 		System.out.println("Configuration    " + config);
 
-		try (FileInputStream in = new FileInputStream(input);) {
-			System.out.println("Processing " + input);
-			OpenAPIGenerator gen = new OpenAPIGenerator(in, config);
-			System.out.println("Processing2 " + getDestinationDir());
-			gen.generate(getDestinationDir());
-			System.out.println("Processing2 " + Arrays.toString(getDestinationDir().listFiles()));
-		} catch( Exception e) {
-			e.printStackTrace();
-		}
+		OpenAPIGenerator gen = new OpenAPIGenerator(input, config);
+		gen.generate(getDestinationDir());
 	}
 
 	public void setInput(File f) {

@@ -1,4 +1,7 @@
 Private-Package: aQute.openapi.gradle.plugin
+	
+Bundle-Version: 1.0.0.${tstamp}
+
 -conditionalpackage: \
 	aQute.openapi.*, \
 	aQute.lib*, \
@@ -6,3 +9,19 @@ Private-Package: aQute.openapi.gradle.plugin
 	org.osgi.*, \
 	aQute.service.*, \
 	aQute.json.*
+	
+-buildpath: \
+	lib/gradle-plugins-3.3.jar;version=file,\
+	groovy;version=2.4.5,\
+	org.gradle:gradle-base-services,\
+	org.gradle:gradle-base-services-groovy,\
+	org.gradle:gradle-core,\
+	org.gradle:gradle-logging,\
+	org.gradle:gradle-resources,\
+	org.gradle:gradle-messaging,\
+	biz.aQute.openapi.generator;version=latest, \
+	biz.aQute.json.util, \
+	biz.aQute.bndlib;packages=*, \
+	osgi.enroute.base.api
+	
+-includeresource: META-INF=META-INF
