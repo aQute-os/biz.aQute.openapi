@@ -1,0 +1,8 @@
+-buildpath: \
+	biz.aQute.openapi.provider;version=latest;packages=*,\
+	biz.aQute.openapi.generator;version=latest,\
+	osgi.enroute.base.api,\
+	org.apache.felix.http.jetty,\
+	biz.aQute.bndlib,\
+	osgi.core;version=6.0,\
+	osgi.cmpn;version=6.0

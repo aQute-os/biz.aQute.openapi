@@ -1,0 +1,110 @@
+{
+	"swagger": "2.0",
+	"info": 
+	{
+		"version": "v1",
+		"title": "apikey"
+	},
+	"securityDefinitions": {
+		"api_key": {
+		    "type": "api_key",
+			"name": "Key",
+			"in": "header"
+		}
+	},
+	"security": [
+		{
+			"api_key":[]	
+		}
+	],
+	"basePath": "/v1",
+	"paths": 
+	{
+		"/operation": 
+		{
+			"get": 
+			{
+				"operationId": "use",
+				"parameters": 
+				[
+					{
+						"name": "header",
+						"in": "header",
+						"required": true,
+						"type":"string"
+					}
+				],
+				"responses": 
+				{
+					"200": 
+					{
+						"schema": 
+						{
+							"$ref": "#/definitions/Response"
+						}
+					}
+				}
+			},
+			"put": 
+			{
+				"operationId": "login",
+				"security": [],
+				"parameters": 
+				[
+					{
+						"name": "header",
+						"in": "header",
+						"required": true,
+						"type":"string"
+					}
+				],
+				"responses": 
+				{
+					"200": 
+					{
+						"schema": 
+						{
+							"$ref": "#/definitions/Response"
+						}
+					},
+					"401": 
+					{
+						"schema": 
+						{
+						  	"$ref": "#/definitions/Response"
+						}
+					}
+				}
+			}
+			
+		}
+	},
+
+	"definitions": 
+	{
+		"Body": 
+		{
+			"type": "object",
+			"properties": 
+			{
+				"payload": 
+				{
+					"type": "string"
+				}
+				
+			}
+		},
+		"Response": 
+		{
+			"type": "object",
+			"properties": 
+			{
+				"error": 
+				{
+					"type": "string"
+				}
+				
+			}
+		}
+	}
+}

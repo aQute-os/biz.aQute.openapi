@@ -1,0 +1,138 @@
+{
+	"swagger": "2.0",
+	"info": 
+	{
+		"version": "v1",
+		"title": "parameters"
+	},
+
+	"basePath": "/v1",
+	"paths": 
+	{
+		"/parameter/{path}": 
+		{
+			"put": 
+			{
+				"operationId": "putParameter",
+				"parameters": 
+				[
+					{
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Body"
+						}
+					},
+					{
+						"name": "path",
+						"in": "path",
+						"required": true,
+						"type":"string"
+					},
+					{
+						"name": "header",
+						"in": "header",
+						"required": true,
+						"type":"string"
+					},
+					{
+						"name": "query",
+						"in": "query",
+						"required": true,
+						"type":"string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"schema": 
+						{
+							"$ref": "#/definitions/Response"
+						}
+					}
+				}
+			},
+			"post": 
+			{
+				"operationId": "postParameter",
+				"parameters": 
+				[
+					{
+						"name": "form1",
+						"in": "formData",
+						"required": true,
+						"type":"string"
+					},
+					{
+						"name": "form2",
+						"in": "formData",
+						"required": true,
+						"type":"integer",
+						"format":"int32"
+					},
+					{
+						"name": "path",
+						"in": "path",
+						"required": true,
+						"type":"string"
+					},
+					{
+						"name": "header",
+						"in": "header",
+						"required": true,
+						"type":"string"
+					},
+					{
+						"name": "query",
+						"in": "query",
+						"required": true,
+						"type":"string"
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						"schema": 
+						{
+							"$ref": "#/definitions/Response"
+						}
+					}
+				}
+			}
+			
+		}
+	},
+
+	"definitions": 
+	{
+		"Body": 
+		{
+			"type": "object",
+			"properties": 
+			{
+				"payload": 
+				{
+					"type": "string"
+				}
+				
+			}
+		},
+		"Response": 
+		{
+			"type": "object",
+			"properties": 
+			{
+				"error": 
+				{
+					"type": "string"
+				}
+				
+			}
+		}
+	}
+}
