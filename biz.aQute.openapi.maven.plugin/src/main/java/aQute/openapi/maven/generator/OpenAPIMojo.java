@@ -22,29 +22,28 @@ import aQute.openapi.generator.OpenAPIGenerator;
  * @description generate code files for Open API Files
  */
 
-
-@Mojo( name = "openapi", defaultPhase=LifecyclePhase.GENERATE_SOURCES)
+@Mojo(name = "openapi", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class OpenAPIMojo extends AbstractMojo {
 
 	/**
 	 * @parameter property="${project}"
 	 * @required
 	 */
-	@Parameter(property="project", required=true)
+	@Parameter(property = "project", required = true)
 	protected MavenProject	project;
 
 	/**
 	 * @parameter property="${project.build.directory}/generated-sources/openapi"
 	 * @required
 	 */
-	@Parameter(defaultValue="${project.build.directory}/generated-sources/openapi")
+	@Parameter(defaultValue = "${project.build.directory}/generated-sources/openapi")
 	private File			sourceOutput;
 
 	/**
 	 * @parameter
 	 * @required
 	 */
-	@Parameter(defaultValue="${baseDir}/openapi.json")
+	@Parameter(defaultValue = "${baseDir}/openapi.json")
 	private String			sourceSpec;
 
 	@Parameter
@@ -52,7 +51,8 @@ public class OpenAPIMojo extends AbstractMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		boolean couldNotEnforceDir = this.sourceOutput == null || (!this.sourceOutput.isDirectory() && !this.sourceOutput.mkdirs());
+		boolean couldNotEnforceDir = this.sourceOutput == null
+				|| (!this.sourceOutput.isDirectory() && !this.sourceOutput.mkdirs());
 		if (couldNotEnforceDir) {
 			getLog().error("Could not create source directory! " + this.sourceOutput);
 			return;
@@ -63,9 +63,9 @@ public class OpenAPIMojo extends AbstractMojo {
 		File root = this.project.getBasedir();
 
 		getLog().info("Source specification " + this.sourceSpec);
-		
+
 		FileSet set = new FileSet(root, sourceSpec);
-		
+
 		getLog().info("Set of files   " + set);
 		getLog().info("Tags           " + c.tags);
 
@@ -83,8 +83,8 @@ public class OpenAPIMojo extends AbstractMojo {
 	private void generate(File source, File out) throws Exception {
 		try (FileInputStream in = new FileInputStream(source)) {
 			Configuration config = new Configuration();
-			 OpenAPIGenerator generator = new OpenAPIGenerator(in, config);
-			 generator.generate(out);
+			OpenAPIGenerator generator = new OpenAPIGenerator(in, config);
+			generator.generate(out);
 		}
 	}
 }
