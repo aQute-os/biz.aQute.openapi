@@ -1,3 +1,19 @@
--sources: true
-Export-Package: aQute.openapi.provider
+
+Export-Package: \
+	aQute.openapi.provider,\
+	aQute.openapi.security.apikey.api,\
+	aQute.openapi.security.basic.api,\
+	aQute.openapi.security.oauth2.api
+
 -conditionalpackage: aQute.lib*, aQute.json.util
+
+-buildpath: \
+	biz.aQute.openapi.api;version=latest,\
+	osgi.enroute.base.api,\
+	biz.aQute.json.util,\
+	biz.aQute.bndlib;packages=*, \
+	org.apache.felix.gogo.runtime
+	
+-testpath: \
+	org.apache.felix.http.jetty
+-runrequires: osgi.identity;filter:='(osgi.identity=biz.aQute.openapi.provider)'
