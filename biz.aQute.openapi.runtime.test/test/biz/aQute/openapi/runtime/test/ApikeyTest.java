@@ -5,7 +5,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import aQute.bnd.service.url.TaggedData;
-import generated.apikey.ApikeyBase;
+import gen.apikey.ApikeyBase;
 
 public class ApikeyTest extends Assert 
 {

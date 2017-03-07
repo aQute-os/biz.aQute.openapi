@@ -9,9 +9,9 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
-import generated.defaultdatetime.dates.DefaultdatetimeDates;
-import generated.manualconversion.dates.ManualconversionDates;
-import generated.modifieddatetime.dates.ModifieddatetimeDates;
+import gen.defaultdatetime.dates.DefaultdatetimeDates;
+import gen.manualconversion.dates.ManualconversionDates;
+import gen.modifieddatetime.dates.ModifieddatetimeDates;
 
 
 public class DateTimeEncodingsTest extends Assert

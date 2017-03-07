@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
-import generated.instantiation.dates.InstantiationDates;
+import gen.instantiation.dates.InstantiationDates;
 
 public class InstantiateSpecialTypeTest extends Assert
 {

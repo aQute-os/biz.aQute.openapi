@@ -67,9 +67,9 @@ public class GenerateTestSources
    static void generate(String name, String file, Configuration c) throws Exception
    {
       System.out.println("*** " + name);
-      c.packagePrefix = "generated." + name;
+      c.packagePrefix = "gen." + name;
       c.typePrefix = Character.toUpperCase(name.charAt(0)) + name.substring(1);
-      File output = IO.getFile("gen-src");
+      File output = IO.getFile("gen-sources");
       InputStream in = GenerateTestSources.class.getResourceAsStream(file);
       File tmp = File.createTempFile("openapi", ".json");
       try

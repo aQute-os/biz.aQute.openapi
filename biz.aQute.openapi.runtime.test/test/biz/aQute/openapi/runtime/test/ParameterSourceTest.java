@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
-import generated.parameters.ParametersBase;
+import gen.parameters.ParametersBase;
 
 public class ParameterSourceTest extends Assert
 {
