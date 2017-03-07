@@ -1,9 +1,7 @@
 package aQute.openapi.cli;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Formatter;
@@ -12,7 +10,6 @@ import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
-import aQute.bnd.version.Version;
 import aQute.lib.collections.ExtList;
 import aQute.lib.env.Env;
 import aQute.lib.getopt.Arguments;
@@ -28,7 +25,6 @@ import aQute.openapi.v2.api.OperationObject;
 
 /**
  * Hello world!
- *
  */
 public class OpenAPICLI extends Env {
 	boolean exceptions;
@@ -180,11 +176,9 @@ public class OpenAPICLI extends Env {
 				error("No such input file: %s", file);
 			} else {
 
-				try (InputStream in = new FileInputStream(file)) {
-					trace("File %s", fileString);
-					OpenAPIGenerator gen = new OpenAPIGenerator(in, c);
-					gen.generate(dir);
-				}
+				trace("File %s", fileString);
+				OpenAPIGenerator gen = new OpenAPIGenerator(file, c);
+				gen.generate(dir);
 			}
 		}
 	}
@@ -207,14 +201,16 @@ public class OpenAPICLI extends Env {
 
 	@Description("Print version")
 	public void _version(Options options) throws IOException {
-		Version v = OpenAPIGenerator.getGeneratorVersion();
+		String v = OpenAPIGenerator.getGeneratorVersion();
 		if (v != null)
 			System.out.println(v);
 		else
 			out.append("Could not find version %n");
 	}
 
-	@Arguments(arg = { "swagger.json..." })
+	@Arguments(arg = {
+			"swagger.json..."
+	})
 	interface TagOptions extends Options {
 
 	}
@@ -227,7 +223,9 @@ public class OpenAPICLI extends Env {
 		print(tags);
 	}
 
-	@Arguments(arg = { "swagger.json..." })
+	@Arguments(arg = {
+			"swagger.json..."
+	})
 	interface PathsOptions extends Options {
 
 	}
@@ -240,7 +238,9 @@ public class OpenAPICLI extends Env {
 		print(paths);
 	}
 
-	@Arguments(arg = { "swagger.json..." })
+	@Arguments(arg = {
+			"swagger.json..."
+	})
 	interface OperationsOptions extends Options {
 
 	}
@@ -272,11 +272,9 @@ public class OpenAPICLI extends Env {
 				error("No such input file: %s", file);
 			} else {
 				Configuration c = new Configuration();
-				try (InputStream in = new FileInputStream(file)) {
-					trace("File %s", fileString);
-					OpenAPIGenerator gen = new OpenAPIGenerator(in, c);
-					callback.accept(gen);
-				}
+				trace("File %s", fileString);
+				OpenAPIGenerator gen = new OpenAPIGenerator(file, c);
+				callback.accept(gen);
 			}
 		}
 	}

@@ -1,17 +1,28 @@
 Bundle-Description: \
 	Command line program for the Open API generator
 Conditional-Package: \
-	aQute.lib*
+	aQute.lib*, \
+	aQute.openapi.*,\
+	aQute.configurable.*,\
+	
+
 Private-Package: \
-	aQute.openapi.cli.*, \
-	aQute.openapi.annotations.*, \
-	aQute.openapi.generator.*, \
-	aQute.openapi.v2.api.*, \
-	aQute.json.util.*, \
-	aQute.service.reporter.*, \
-	org.osgi.dto.*, \
-	aQute.configurable.*, \
-	org.slf4j.*
+	aQute.openapi.cli.*,\
+	aQute.openapi.annotations.*,\
+	aQute.openapi.generator.*,\
+	aQute.openapi.v2.api.*,\
+	aQute.json.util.*,\
+	aQute.service.reporter.*,\
+	org.slf4j.*,\
+	aQute.bnd.annotation.headers;-split-package:=merge-first,\
+	org.osgi.util.function;-split-package:=merge-first,\
+	org.osgi.dto
 
 Main-Class: aQute.openapi.cli.OpenAPICLI
 JPM-Command: openapi
+
+-buildpath: \
+	osgi.enroute.base.api,\
+	biz.aQute.bndlib;packages=*,\
+	biz.aQute.openapi.generator,\
+	biz.aQute.json.util
