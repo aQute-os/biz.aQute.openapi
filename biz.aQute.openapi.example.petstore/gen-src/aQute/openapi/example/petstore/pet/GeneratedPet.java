@@ -2,8 +2,10 @@ package aQute.openapi.example.petstore.pet;
 
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
+import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import java.time.format.DateTimeFormatter;
-import java.time.ZonedDateTime;
+import java.util.List;
+import java.time.OffsetDateTime;
 import java.time.LocalDate;
 /**
  * 
@@ -11,7 +13,7 @@ import java.time.LocalDate;
  * 
  * <li>{@link #uploadFile(long,String,OpenAPIBase.Part) POST /pet/<b>[petId]</b>/uploadImage =  uploadFile}
  * 
- * <li>{@link #findPetsByTags(String[]) GET /pet/findByTags =  findPetsByTags}
+ * <li>{@link #findPetsByTags(List<String>) GET /pet/findByTags =  findPetsByTags}
  * 
  * <li>{@link #updatePet(Pet) PUT /pet =  updatePet}
  * 
@@ -21,7 +23,7 @@ import java.time.LocalDate;
  * 
  * <li>{@link #addPet(Pet) POST /pet =  addPet}
  * 
- * <li>{@link #findPetsByStatus(String[]) GET /pet/findByStatus =  findPetsByStatus}
+ * <li>{@link #findPetsByStatus(List<String>) GET /pet/findByStatus =  findPetsByStatus}
  * 
  * <li>{@link #updatePetWithForm(long,String,String) POST /pet/<b>[petId]</b> =  updatePetWithForm}
  * 
@@ -73,7 +75,7 @@ protected abstract ApiResponse uploadFile(long petId, java.util.Optional<String>
  * 
  */
 
-protected abstract Iterable<? extends Pet> findPetsByTags(String[] tags) throws Exception, OpenAPIBase.BadRequestResponse;
+protected abstract Iterable<? extends Pet> findPetsByTags(List<String> tags) throws Exception, OpenAPIBase.BadRequestResponse;
 
 /**
  * 
@@ -175,7 +177,7 @@ protected abstract void addPet(Pet body) throws Exception;
  * 
  */
 
-protected abstract Iterable<? extends Pet> findPetsByStatus(String[] status) throws Exception, OpenAPIBase.BadRequestResponse;
+protected abstract Iterable<? extends Pet> findPetsByStatus(List<String> status) throws Exception, OpenAPIBase.BadRequestResponse;
 
 /**
  * 
@@ -287,15 +289,15 @@ public static class Tag extends OpenAPIBase.DTO {
 
 public static class Pet extends OpenAPIBase.DTO {
 
-    public String[] photoUrls;
+    public List<String> photoUrls;
     public String name;
     public long id;
     public Category category;
-    public Tag[] tags;
+    public List<Tag> tags;
     public StatusEnum status;
 
-    public Pet photoUrls(String[] photoUrls){ this.photoUrls=photoUrls; return this; }
-    public String[] photoUrls(){ return this.photoUrls; }
+    public Pet photoUrls(List<String> photoUrls){ this.photoUrls=photoUrls; return this; }
+    public List<String> photoUrls(){ return this.photoUrls; }
 
     public Pet name(String name){ this.name=name; return this; }
     public String name(){ return this.name; }
@@ -306,8 +308,8 @@ public static class Pet extends OpenAPIBase.DTO {
     public Pet category(Category category){ this.category=category; return this; }
     public Category category(){ return this.category; }
 
-    public Pet tags(Tag[] tags){ this.tags=tags; return this; }
-    public Tag[] tags(){ return this.tags; }
+    public Pet tags(List<Tag> tags){ this.tags=tags; return this; }
+    public List<Tag> tags(){ return this.tags; }
 
     public Pet status(StatusEnum status){ this.status=status; return this; }
     public StatusEnum status(){ return this.status; }
@@ -319,30 +321,16 @@ public static class Pet extends OpenAPIBase.DTO {
   public GeneratedPet() {
     super(BASE_PATH,
          "uploadFile           POST   /pet/{petId}/uploadImage  RETURN ApiResponse",
-         "findPetsByTags       GET    /pet/findByTags?tags  RETURN Pet[]",
+         "findPetsByTags       GET    /pet/findByTags?tags  RETURN List<Pet>",
          "updatePet            PUT    /pet  PAYLOAD Pet",
          "getPetById           GET    /pet/{petId}  RETURN Pet",
          "deletePet            DELETE /pet/{petId}",
          "addPet               POST   /pet  PAYLOAD Pet",
-         "findPetsByStatus     GET    /pet/findByStatus?status  RETURN Pet[]",
+         "findPetsByStatus     GET    /pet/findByStatus?status  RETURN List<Pet>",
          "updatePetWithForm    POST   /pet/{petId}");
-
-
-     petstore_auth.name = "petstore_auth";
-     petstore_auth.flow = aQute.openapi.security.oauth2.api.Flow.implicit;
-     petstore_auth.authorizationURL = "http://petstore.swagger.io/api/oauth/dialog";
-
-
-     api_key.name = "api_key";
   }
-  protected aQute.openapi.security.oauth2.api.OAuth2DTO petstore_auth =  new aQute.openapi.security.oauth2.api.OAuth2DTO();
-  protected aQute.openapi.security.apikey.api.APIKeyDTO api_key =  new aQute.openapi.security.apikey.api.APIKeyDTO();
 
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
-    if ( segments.length == 1 && "openapi.json".equals(segments[0])) {
-        getOpenAPIContext().copy( aQute.openapi.example.petstore.GeneratedBase.class.getResourceAsStream("openapi.json"), "application/json");
-        return true;
-    }
 
     if( index < segments.length && "pet".equals(segments[index])) {
       index++;
@@ -410,7 +398,7 @@ public static class Pet extends OpenAPIBase.DTO {
 private void uploadFile_post_(OpenAPIContext context) throws Exception{
 
     context.setOperation("uploadFile");
-    context.verify(petstore_auth,"write:pets","read:pets");
+    context.verify(aQute.openapi.example.petstore.GeneratedBase.petstore_auth,"write:pets","read:pets");
 
 Long petId_ = context.toLong(context.path("petId"));
 java.util.Optional<String> additionalMetadata_ = context.optional(context.toString(context.parameter("additionalMetadata")));
@@ -431,9 +419,9 @@ java.util.Optional<OpenAPIBase.Part> file_ = context.optional(context.part("file
 private void findPetsByTags_get_(OpenAPIContext context) throws Exception{
 
     context.setOperation("findPetsByTags");
-    context.verify(petstore_auth,"write:pets","read:pets");
+    context.verify(aQute.openapi.example.petstore.GeneratedBase.petstore_auth,"write:pets","read:pets");
 
-String[] tags_ = context.toArray(String.class, context.csv(context.parameter("tags")));
+List<String> tags_ = context.toArray(String.class, context.csv(context.parameter("tags")));
 
 
     //  VALIDATORS 
@@ -450,7 +438,7 @@ String[] tags_ = context.toArray(String.class, context.csv(context.parameter("ta
 private void updatePet_put_(OpenAPIContext context) throws Exception{
 
     context.setOperation("updatePet");
-    context.verify(petstore_auth,"write:pets","read:pets");
+    context.verify(aQute.openapi.example.petstore.GeneratedBase.petstore_auth,"write:pets","read:pets");
 
 Pet body_ = context.body(Pet.class);
 
@@ -469,7 +457,7 @@ Pet body_ = context.body(Pet.class);
 private void getPetById_get_(OpenAPIContext context) throws Exception{
 
     context.setOperation("getPetById");
-    context.verify(api_key, context.header("api_key"));
+    context.verify(aQute.openapi.example.petstore.GeneratedBase.api_key, context.header("api_key"));
 
 Long petId_ = context.toLong(context.path("petId"));
 
@@ -488,7 +476,7 @@ Long petId_ = context.toLong(context.path("petId"));
 private void deletePet_delete_(OpenAPIContext context) throws Exception{
 
     context.setOperation("deletePet");
-    context.verify(petstore_auth,"write:pets","read:pets");
+    context.verify(aQute.openapi.example.petstore.GeneratedBase.petstore_auth,"write:pets","read:pets");
 
 java.util.Optional<String> api_key_ = context.optional(context.toString(context.header("api_key")));
 Long petId_ = context.toLong(context.path("petId"));
@@ -508,7 +496,7 @@ Long petId_ = context.toLong(context.path("petId"));
 private void addPet_post_(OpenAPIContext context) throws Exception{
 
     context.setOperation("addPet");
-    context.verify(petstore_auth,"write:pets","read:pets");
+    context.verify(aQute.openapi.example.petstore.GeneratedBase.petstore_auth,"write:pets","read:pets");
 
 Pet body_ = context.body(Pet.class);
 
@@ -527,16 +515,16 @@ Pet body_ = context.body(Pet.class);
 private void findPetsByStatus_get_(OpenAPIContext context) throws Exception{
 
     context.setOperation("findPetsByStatus");
-    context.verify(petstore_auth,"write:pets","read:pets");
+    context.verify(aQute.openapi.example.petstore.GeneratedBase.petstore_auth,"write:pets","read:pets");
 
-String[] status_ = context.toArray(String.class, context.csv(context.parameter("status")));
+List<String> status_ = context.toArray(String.class, context.csv(context.parameter("status")));
 
 
     //  VALIDATORS 
 
     context.begin("findPetsByStatus");
-    context.validate(status_.length <= 10, status_, "status_", "status_.length <= 10");
-    context.validate(status_.length >= 0, status_, "status_", "status_.length >= 0");
+    context.validate(status_.size() <= 10, status_, "status_", "status_.size() <= 10");
+    context.validate(status_.size() >= 0, status_, "status_", "status_.size() >= 0");
     int status__counter=0;
     for( String status__item : status_) {
         context.begin(status__counter++);
@@ -556,7 +544,7 @@ String[] status_ = context.toArray(String.class, context.csv(context.parameter("
 private void updatePetWithForm_post_(OpenAPIContext context) throws Exception{
 
     context.setOperation("updatePetWithForm");
-    context.verify(petstore_auth,"write:pets","read:pets");
+    context.verify(aQute.openapi.example.petstore.GeneratedBase.petstore_auth,"write:pets","read:pets");
 
 Long petId_ = context.toLong(context.path("petId"));
 java.util.Optional<String> name_ = context.optional(context.toString(context.parameter("name")));
@@ -577,4 +565,4 @@ java.util.Optional<String> status_ = context.optional(context.toString(context.p
 }
 
 
-// aQute OpenAPI generator version 1.0.0.201703021854
+// aQute OpenAPI generator version 1.0.0.201704251535

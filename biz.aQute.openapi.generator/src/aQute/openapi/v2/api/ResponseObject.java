@@ -16,8 +16,8 @@ import aQute.openapi.annotations.Required;
  * by the specification. The Responses Object MUST contain at least one response
  * code, and it SHOULD be the response for a successful operation call.
  * Describes a single response from an API Operation.
- * 
- * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#response-object
+ *
+ * @see "https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#response-object"
  */
 public class ResponseObject extends BaseOpenAPIObject {
 	/**

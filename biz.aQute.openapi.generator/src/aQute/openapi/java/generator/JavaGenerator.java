@@ -210,7 +210,9 @@ public class JavaGenerator extends BaseSourceGenerator {
 	protected void doAbstractClassImportSection() {
 		doImport("aQute.openapi.provider.OpenAPIBase");
 		doImport("aQute.openapi.provider.OpenAPIContext");
+		doImport("aQute.openapi.security.api.OpenAPISecurityDefinition");
 		doImport(DateTimeFormatter.class);
+		doImport(List.class);
 		String dateTimeClass = gen.getDateTimeClass();
 		doImport(dateTimeClass);
 		doImport(LocalDate.class);
@@ -327,7 +329,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 				}
 
 				switch (sso.type) {
-					case api_key :
+					case apiKey :
 						String access;
 						switch (sso.in) {
 							default :
@@ -340,15 +342,16 @@ public class JavaGenerator extends BaseSourceGenerator {
 								access = String.format("toString(context.parameter(%s))", escapeString(sso.name));
 								break;
 						}
-						format("    context.verify(%s, %s);\n", e.getKey(), access);
+						format("    context.verify(%s.%s, %s);\n", gen.getBaseSourceFile().getFQN(), e.getKey(),
+								access);
 						break;
 					case basic :
-						format("    context.verify(%s);\n", e.getKey());
+						format("    context.verify(%s.%s);\n", gen.getBaseSourceFile().getFQN(), e.getKey());
 
 						break;
 					case oauth2 :
 
-						format("    context.verify(%s", e.getKey());
+						format("    context.verify(%s.%s", gen.getBaseSourceFile().getFQN(), e.getKey());
 						for (String scope : e.getValue()) {
 							format(",%s", escapeString(scope));
 						}
@@ -375,58 +378,36 @@ public class JavaGenerator extends BaseSourceGenerator {
 		format("  }\n\n");
 	}
 
-	private void doOpenAPIFileSupport() {
+	protected void doOpenAPIFileSupport() {
+		if (!isBase())
+			return;
+
 		String openAPIFile = gen.getConfig().openapiFile;
 		if (openAPIFile != null) {
-			openAPIFile = escapeString(openAPIFile);
-			SourceFileBase base = gen.getBaseSourceFile();
-			format("    if ( segments.length == 1 && %s.equals(segments[0])) {\n", openAPIFile);
-			format("        getOpenAPIContext().copy( %s.class.getResourceAsStream(%s), \"application/json\");\n",
-					base.getFQN(), openAPIFile);
-			format("        return true;\n");
-			format("    }\n");
+			doCopyOpenAPIFile(openAPIFile);
+		}
+	}
 
-			File output = IO.getFile(this.getOutput(), sourceFile.getPath(gen.getConfig().openapiFile));
-			output.getParentFile().mkdirs();
-			try {
-				IO.copy(gen.getInputFile(), output);
-			} catch (Exception e) {
-				gen.exception(e, "Could not copy the openapi input file %s to the output %s", gen.getInputFile(),
-						output);
-			}
+	protected void doCopyOpenAPIFile(String openAPIFile) {
+		openAPIFile = escapeString(openAPIFile);
+		SourceFileBase base = gen.getBaseSourceFile();
+		format("    if ( segments.length == 1 && %s.equals(segments[0])) {\n", openAPIFile);
+		format("        getOpenAPIContext().copy( %s.class.getResourceAsStream(%s), \"application/json\");\n",
+				base.getFQN(), openAPIFile);
+		format("        return true;\n");
+		format("    }\n");
+
+		File output = IO.getFile(this.getOutput(), sourceFile.getPath(gen.getConfig().openapiFile));
+		output.getParentFile().mkdirs();
+		try {
+			IO.copy(gen.getInputFile(), output);
+		} catch (Exception e) {
+			gen.exception(e, "Could not copy the openapi input file %s to the output %s", gen.getInputFile(), output);
 		}
 	}
 
 	private void doInitialize(SourceFile source) {
 
-		String[] securities = source.getSecurities();
-
-		for (String security : securities) {
-
-			SecuritySchemeObject so = gen.getSwagger().securityDefinitions.get(security);
-
-			if (so == null) {
-				OpenAPIGenerator.getLogger().error("Reference to unknown security scheme. From {} to {}", this,
-						security);
-				continue;
-			}
-
-			switch (so.type) {
-				case api_key :
-					newField(Modifier.PROTECTED, "aQute.openapi.security.apikey.api.APIKeyDTO", security);
-					break;
-				case basic :
-					newField(Modifier.PROTECTED, "aQute.openapi.security.basic.api.BasicDTO", security);
-					break;
-				case oauth2 :
-					newField(Modifier.PROTECTED, "aQute.openapi.security.oauth2.api.OAuth2DTO", security);
-					break;
-
-				default :
-					OpenAPIGenerator.getLogger().error(
-							"Security Scheme Object refers to unknown scheme type {}, name = {}", so.type, security);
-			}
-		}
 		doTypeConversions();
 
 		format("\n");
@@ -441,12 +422,11 @@ public class JavaGenerator extends BaseSourceGenerator {
 		if (conversions.isEmpty())
 			return;
 
-		if (sourceFile instanceof SourceFileBase) {
+		if (isBase()) {
 
 			format("\n");
 			format("    static final public OpenAPIBase.Codec CODEC = OpenAPIBase.createOpenAPICodec();\n");
 			format("    static {\n");
-
 
 			for (String conversion : conversions) {
 				format("      %s\n", conversion);
@@ -457,6 +437,10 @@ public class JavaGenerator extends BaseSourceGenerator {
 		format("    public OpenAPIBase.Codec codec_() {\n");
 		format("        return %s.CODEC;\n", base.getFQN());
 		format("    }\n\n");
+	}
+
+	protected boolean isBase() {
+		return sourceFile instanceof SourceFileBase;
 	}
 
 	protected void doDateTimeConversions(List<String> conversions) {
@@ -474,6 +458,9 @@ public class JavaGenerator extends BaseSourceGenerator {
 
 	protected void doConstructor(String className) {
 
+		if (isBase())
+			doSecurityDefinitions();
+
 		format("  public %s() {\n", className);
 		format("    super(BASE_PATH");
 
@@ -482,35 +469,77 @@ public class JavaGenerator extends BaseSourceGenerator {
 		}
 		format(");\n");
 
-		String[] securities = this.sourceFile.getSecurities();
+		format("  }\n");
+	}
 
-		for (String security : securities) {
+	protected void doSecurityDefinitions() {
+		if (gen.getSwagger().securityDefinitions == null)
+			return;
+
+		for (String security : gen.getSwagger().securityDefinitions.keySet()) {
 
 			SecuritySchemeObject so = gen.getSwagger().securityDefinitions.get(security);
 
-			if (so == null) {
-				continue;
+			format("\n\n");
+			if (so.description != null) {
+				comment().para(so.description).close();
 			}
 
-			format("\n\n");
-			format("     %s.name = %s;\n", security, escapeString(security));
-			if (so.description != null)
-				format("     %s.description = %s;\n", security, escapeString(so.description));
+			String varName = gen.toMemberName(security);
+			format("     public static OpenAPISecurityDefinition %s = ", security, escapeString(varName));
 
 			switch (so.type) {
-				case api_key :
+				case apiKey :
+					format(" OpenAPISecurityDefinition.apiKey(%s, BASE_PATH, %s, %s);\n", escapeString(security),
+							escapeString(so.in), escapeString(so.name));
 					break;
+
 				case basic :
+					format(" OpenAPISecurityDefinition.basic(%s,BASE_PATH);\n", escapeString(security));
 					break;
+
 				case oauth2 :
-					format("     %s.flow = %s.%s;\n", security, "aQute.openapi.security.oauth2.api.Flow", so.flow);
-					format("     %s.authorizationURL = %s;\n", security, escapeString(so.authorizationUrl));
-					if (so.tokenUrl != null)
-						format("     %s.tokenURL = %s;\n", security, escapeString(so.tokenUrl));
+					/*
+					 * "implicit", "password", "application" or "accessCode".
+					 */
+					switch (so.flow) {
+
+						case "implicit" :
+							format(" OpenAPISecurityDefinition.implicit(%s, BASE_PATH, %s, %s, %s);\n",
+									escapeString(security), escapeString(so.authorizationUrl), null,
+									toScopes(so.scopes));
+							break;
+
+						case "application" :
+							format(" OpenAPISecurityDefinition.application(%s, BASE_PATH, %s, %s, %s);\n",
+									escapeString(security), escapeString(so.authorizationUrl),
+									escapeString(so.tokenUrl), null, toScopes(so.scopes));
+							break;
+						case "password" :
+							format(" OpenAPISecurityDefinition.password(%s, BASE_PATH, %s, %s, %s);\n",
+									escapeString(security), escapeString(so.authorizationUrl),
+									escapeString(so.tokenUrl), null, toScopes(so.scopes));
+							break;
+						case "accessCode" :
+							format(" OpenAPISecurityDefinition.accessCode(%s, BASE_PATH, %s, %s, %s);\n",
+									escapeString(security), escapeString(so.authorizationUrl),
+									escapeString(so.tokenUrl), null, toScopes(so.scopes));
+							break;
+					}
 					break;
 			}
 		}
-		format("  }\n");
+		format("\n\n");
+	}
+
+	protected String toScopes(Map<String,String> scopes) {
+		StringBuilder sb = new StringBuilder();
+		String del = "";
+		for (Entry<String,String> scope : scopes.entrySet()) {
+			sb.append(del).append(escapeString(scope.getKey() + " " + scope.getValue()));
+			del = ", ";
+		}
+		return sb.toString();
 	}
 
 	protected void doEndClass() {
@@ -580,7 +609,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 					doValidators(property.getType(), property.getKey());
 				}
 
-				format("       context.end();\n");
+				format("     context.end();\n");
 				format("    }\n");
 			}
 			if (gen.getConfig().beans) {
@@ -626,11 +655,11 @@ public class JavaGenerator extends BaseSourceGenerator {
 	public void doArrayTypeValidator(SourceType.ArrayType type, String reference) {
 		ItemsObject schema = type.getSchema();
 		if (schema.maxItems >= 0) {
-			doValidate(reference + ".length <= " + schema.maxItems, reference);
+			doValidate(reference + ".size() <= " + schema.maxItems, reference);
 		}
 
 		if (schema.minItems >= 0) {
-			doValidate(reference + ".length >= " + schema.minItems, reference);
+			doValidate(reference + ".size() >= " + schema.minItems, reference);
 		}
 
 		if (type.getComponentType().hasValidator()) {
@@ -842,62 +871,12 @@ public class JavaGenerator extends BaseSourceGenerator {
 		comment.close();
 	}
 
-	protected String access(SourceArgument arg) {
-		switch (arg.getPar().in) {
-			case body :
-				return String.format("context.body(%s.class)", arg.getType().reference());
-
-			case formData :
-				if ("file".equals(arg.getPar().type))
-					return String.format("context.part(\"%s\")", arg.getPar().name);
-				else {
-					return doArray(arg);
-				}
-
-			case header :
-				return convert(String.format("context.header(\"%s\")", arg.getPar().name), arg);
-
-			case path :
-				return convert(String.format("context.path(\"%s\")", arg.getPar().name), arg);
-
-			case query :
-				return doArray(arg);
-
-			default :
-				throw new UnsupportedOperationException("No such in type: " + arg.getPar().in);
-		}
-	}
-
 	String convert(String access, SourceArgument arg) {
 		String s = arg.getType().conversion(access, arg.getPar().collectionFormat);
 		if (s == null)
 			return access;
 		else
 			return "context." + s;
-	}
-
-	private String doArray(SourceArgument arg) {
-		if (arg.getType().isArray()) {
-			switch (arg.getPar().collectionFormat) {
-				case csv :
-					return convert(String.format("context.csv(context.parameter(\"%s\"))", arg.getPar().name), arg);
-
-				case pipes :
-					return convert(String.format("context.pipes(context.parameter(\"%s\"))", arg.getPar().name), arg);
-
-				case ssv :
-					return convert(String.format("context.ssv(context.parameter(\"%s\"))", arg.getPar().name), arg);
-
-				case tsv :
-					return convert(String.format("context.tsv(context.parameter(\"%s\"))", arg.getPar().name), arg);
-
-				default :
-				case multi :
-				case none :
-					return convert(String.format("context.parameters(\"%s\")", arg.getPar().name), arg);
-			}
-		} else
-			return convert(String.format("context.parameter(\"%s\")", arg.getPar().name), arg);
 	}
 
 	protected void para(CommentBuilder comment, ExternalDocumentationObject externalDocs) {

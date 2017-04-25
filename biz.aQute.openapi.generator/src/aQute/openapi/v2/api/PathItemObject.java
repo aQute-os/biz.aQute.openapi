@@ -10,7 +10,7 @@ import java.util.Map;
  * empty, due to ACL constraints. The path itself is still exposed to the
  * documentation viewer but they will not know which operations and parameters
  * are available.
- * 
+ *
  * <pre>
  * {
 "get": {
@@ -54,8 +54,8 @@ import java.util.Map;
 ]
 }
  * </pre>
- * 
- * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#path-item-object
+ *
+ * @see "https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#path-item-object"
  */
 public class PathItemObject extends BaseOpenAPIObject {
 

@@ -12,6 +12,7 @@
 -runrequires: osgi.identity;filter:='(osgi.identity=biz.aQute.openapi.example.petstore)'
 
 -runrequires.debug = ${debug-bundles}
+-runstorage: /var/foo
 
 src=gen-src,src
 -runbundles: \

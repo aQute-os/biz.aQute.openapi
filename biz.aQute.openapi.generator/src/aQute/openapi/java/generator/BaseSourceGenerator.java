@@ -351,6 +351,19 @@ public class BaseSourceGenerator {
 		};
 	}
 
+	public static String escapeString(String prefix, String middle, String suffix, Iterable< ? > it) {
+		StringBuilder sb = new StringBuilder();
+		String del = prefix;
+		for (Object o : it) {
+			sb.append(del).append(escapeString(o));
+			del = middle;
+		}
+		if (del == middle)
+			sb.append(suffix);
+
+		return sb.toString();
+	}
+
 	public static String escapeString(Object string) {
 		if (string == null)
 			return null;
@@ -392,11 +405,6 @@ public class BaseSourceGenerator {
 		}
 		sb.append("\"");
 		return sb.toString();
-	}
-
-	protected void newField(int modifiers, String type, String name) {
-		format("  %s %s %s =  new %s();\n", Modifier.toString(modifiers), type, name, type);
-
 	}
 
 	public Formatter getFormatter() {

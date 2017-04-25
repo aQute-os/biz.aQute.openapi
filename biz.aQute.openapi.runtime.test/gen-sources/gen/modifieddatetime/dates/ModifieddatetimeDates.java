@@ -2,6 +2,7 @@ package gen.modifieddatetime.dates;
 
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
+import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import java.time.format.DateTimeFormatter;
 import java.time.Instant;
 import java.time.LocalDate;

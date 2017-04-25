@@ -7,7 +7,7 @@
 	},
 	"securityDefinitions": {
 		"api_key": {
-		    "type": "api_key",
+		    "type": "apiKey",
 			"name": "Key",
 			"in": "header"
 		}
@@ -28,7 +28,7 @@
 				"parameters": 
 				[
 					{
-						"name": "header",
+						"name": "Key",
 						"in": "header",
 						"required": true,
 						"type":"string"
@@ -52,9 +52,9 @@
 				"parameters": 
 				[
 					{
-						"name": "header",
+						"name": "Key",
 						"in": "header",
-						"required": true,
+						"required": false,
 						"type":"string"
 					}
 				],

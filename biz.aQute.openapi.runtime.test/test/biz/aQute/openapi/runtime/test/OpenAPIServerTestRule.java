@@ -2,7 +2,6 @@ package biz.aQute.openapi.runtime.test;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.Dictionary;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -13,8 +12,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.osgi.service.http.HttpContext;
-import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
 import aQute.bnd.http.HttpClient;
@@ -26,7 +23,13 @@ public class OpenAPIServerTestRule implements TestRule
    public URI uri;
    public Server server = new Server(0);
    public ServletHandler handler;
-   public OpenAPIRuntime runtime = new OpenAPIRuntime();
+   public OpenAPIRuntime runtime = new OpenAPIRuntime() {
+      @Override
+     public java.io.Closeable registerServlet(String alias, Servlet servlet) throws ServletException ,NamespaceException {
+         handler.addServletWithMapping(new ServletHolder(servlet), (alias + "/*"));
+         return () -> {};
+     };
+   };
    public HttpClient http = new HttpClient();
 
    @Override
@@ -48,35 +51,6 @@ public class OpenAPIServerTestRule implements TestRule
 
                while (!(server.isStarted() || server.isRunning()))
                   Thread.sleep(100);
-
-               runtime.http = new HttpService()
-               {
-
-                  @Override
-                  public void unregister(String alias)
-                  {}
-
-                  @Override
-                  public void registerServlet(String alias, Servlet servlet,
-                           @SuppressWarnings("rawtypes") Dictionary initparams, HttpContext context)
-                           throws ServletException, NamespaceException
-                  {
-                     handler.addServletWithMapping(new ServletHolder(servlet), (alias + "/*"));
-                  }
-
-                  @Override
-                  public void registerResources(String alias, String name, HttpContext context)
-                           throws NamespaceException
-                  {
-
-                  }
-
-                  @Override
-                  public HttpContext createDefaultHttpContext()
-                  {
-                     return null;
-                  }
-               };
 
                uri = server.getURI();
                statement.evaluate();

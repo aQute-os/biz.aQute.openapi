@@ -1,40 +1,29 @@
 package aQute.openapi.provider;
 
+import java.io.Closeable;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.http.HttpService;
+import org.osgi.service.http.NamespaceException;
+import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 import org.osgi.util.tracker.ServiceTracker;
 
 import aQute.json.util.JSONCodec;
-import aQute.openapi.security.apikey.api.APIKeyProvider;
-import aQute.openapi.security.basic.api.BasicProvider;
-import aQute.openapi.security.oauth2.api.OAuth2Provider;
 
 @Component(service = OpenAPIRuntime.class)
 public class OpenAPIRuntime {
 	final static JSONCodec				codec		= new JSONCodec();
 	static OpenAPIBase.Codec			deflt		= new CodecWrapper(codec);
-
-	@Reference
-	public
-	HttpService							http;
-
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
-	volatile OAuth2Provider				oath2;
-
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
-	volatile APIKeyProvider				apiKey;
-
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
-	volatile BasicProvider				basic;
 
 	ServiceTracker<OpenAPIBase,Tracker>	tracker;
 	BundleContext						context;
@@ -42,13 +31,13 @@ public class OpenAPIRuntime {
 	final ThreadLocal<OpenAPIContext>	contexts	= new ThreadLocal<>();
 
 	class Tracker {
-		private OpenAPIBase	base;
-		private Dispatcher	dispatcher;
+		OpenAPIBase	base;
+		Dispatcher	dispatcher;
 
 		Tracker(OpenAPIBase service) {
 			base = service;
 			dispatcher = dispatchers.computeIfAbsent(base.prefix, (key) -> create(key));
-			dispatcher.add(base);
+			dispatcher.add(this);
 		}
 
 		Dispatcher create(String prefix) {
@@ -60,7 +49,7 @@ public class OpenAPIRuntime {
 		}
 
 		void close() {
-			dispatcher.remove(base);
+			dispatcher.remove(this);
 		}
 
 	}
@@ -91,10 +80,28 @@ public class OpenAPIRuntime {
 	@Deactivate
 	void deactivate() {
 		this.tracker.close();
+		this.dispatchers.values().forEach(d -> d.close());
 	}
 
 	public Tracker add(OpenAPIBase service) {
 		return new Tracker(service);
+	}
+
+	/**
+	 * Used for testing purposes since servlets are registered using the
+	 * whiteboard approach. However, in the test we want to more closely control
+	 * it.
+	 *
+	 * @param alias
+	 * @param servlet
+	 * @return a closeable
+	 */
+	public Closeable registerServlet(String alias, Servlet servlet)
+			throws ServletException, NamespaceException {
+		Hashtable<String,Object> p = new Hashtable<>();
+		p.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN, alias + "/*");
+		ServiceRegistration<Servlet> registration = context.registerService(Servlet.class, servlet, p);
+		return () -> registration.unregister();
 	}
 
 }

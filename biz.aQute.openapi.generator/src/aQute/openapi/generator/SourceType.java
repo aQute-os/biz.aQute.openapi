@@ -308,13 +308,17 @@ public abstract class SourceType {
 		final NummericType wrapper;
 
 		public NummericType(OpenAPIGenerator gen, String name, ItemsObject schema) {
-			super(gen, name, schema);
-			wrapper = this;
+			this(gen, name, schema, (NummericType) null);
 		}
 
 		public NummericType(OpenAPIGenerator gen, String name, ItemsObject schema, String wrapper) {
 			super(gen, name, schema);
 			this.wrapper = new NummericType(gen, wrapper, schema);
+		}
+
+		public NummericType(OpenAPIGenerator gen, String name, ItemsObject schema, NummericType wrapper) {
+			super(gen, name, schema);
+			this.wrapper = wrapper == null ? this : wrapper;
 		}
 
 		@Override
@@ -350,8 +354,12 @@ public abstract class SourceType {
 
 	static class DoubleType extends NummericType {
 
-		public DoubleType(OpenAPIGenerator gen, String name, ItemsObject schema, String string) {
-			super(gen, name, schema);
+		public DoubleType(OpenAPIGenerator gen, String name, ItemsObject schema, String wrapper) {
+			super(gen, name, schema, new DoubleType(gen, wrapper, schema));
+		}
+
+		public DoubleType(OpenAPIGenerator gen, String wrapper, ItemsObject schema) {
+			super(gen, wrapper, schema);
 		}
 
 		public String toString(double v) {
@@ -387,6 +395,7 @@ public abstract class SourceType {
 		@Override
 		public SourceType getEnum(String typeName) {
 			if (getSchema().__extra != null && getSchema().__extra.containsKey("enum")) {
+				// TODO fix, json should support reserved names
 				getSchema().enum$ = (List<Object>) getSchema().__extra.get("enum");
 			}
 			if (getSchema().enum$ == null || getSchema().enum$.isEmpty()) {
@@ -449,7 +458,7 @@ public abstract class SourceType {
 
 		@Override
 		public String reference() {
-			return getComponentType().reference() + "[]";
+			return "List<" + getComponentType().reference() + ">";
 		}
 
 		@Override

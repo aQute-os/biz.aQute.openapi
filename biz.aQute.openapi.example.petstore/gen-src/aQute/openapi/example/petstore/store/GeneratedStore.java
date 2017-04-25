@@ -2,8 +2,10 @@ package aQute.openapi.example.petstore.store;
 
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
+import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import java.time.format.DateTimeFormatter;
-import java.time.ZonedDateTime;
+import java.util.List;
+import java.time.OffsetDateTime;
 import java.time.LocalDate;
 /**
  * 
@@ -122,7 +124,7 @@ public static class Order extends OpenAPIBase.DTO {
     protected void validate(OpenAPIContext context, String name) {
        context.begin(name);
     context.validate(quantity <= 23, quantity, "quantity", "quantity <= 23");
-       context.end();
+     context.end();
     }
     public Order petId(long petId){ this.petId=petId; return this; }
     public long petId(){ return this.petId; }
@@ -183,17 +185,9 @@ public static class Anonymous_1000 extends OpenAPIBase.DTO {
          "getOrderById         GET    /store/order/{orderId}  RETURN Order",
          "getInventory         GET    /store/inventory  RETURN Anonymous_1000",
          "deleteOrder          DELETE /store/order/{orderId}");
-
-
-     api_key.name = "api_key";
   }
-  protected aQute.openapi.security.apikey.api.APIKeyDTO api_key =  new aQute.openapi.security.apikey.api.APIKeyDTO();
 
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
-    if ( segments.length == 1 && "openapi.json".equals(segments[0])) {
-        getOpenAPIContext().copy( aQute.openapi.example.petstore.GeneratedBase.class.getResourceAsStream("openapi.json"), "application/json");
-        return true;
-    }
 
     if( index < segments.length && "store".equals(segments[index])) {
       index++;
@@ -278,7 +272,7 @@ Long orderId_ = context.toLong(context.path("orderId"));
 private void getInventory_get_(OpenAPIContext context) throws Exception{
 
     context.setOperation("getInventory");
-    context.verify(api_key, context.header("api_key"));
+    context.verify(aQute.openapi.example.petstore.GeneratedBase.api_key, context.header("api_key"));
 
 
     Object result = getInventory();
@@ -307,4 +301,4 @@ Long orderId_ = context.toLong(context.path("orderId"));
 }
 
 
-// aQute OpenAPI generator version 1.0.0.201703021854
+// aQute OpenAPI generator version 1.0.0.201704251535

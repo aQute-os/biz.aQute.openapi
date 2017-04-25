@@ -1,11 +1,11 @@
 package aQute.openapi.provider;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.time.OffsetDateTime;
-import java.util.Dictionary;
 import java.util.Set;
 
 import javax.servlet.Servlet;
@@ -18,8 +18,6 @@ import org.apache.felix.service.command.Converter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.osgi.service.http.HttpContext;
-import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
 import aQute.json.util.JSONCodec;
@@ -127,7 +125,7 @@ public class BasicRuntimeTest extends TestCase {
 
 		assertEquals(1, dispatcher.targets.size());
 
-		OpenAPIBase base = dispatcher.targets.get(0);
+		OpenAPIBase base = dispatcher.targets.get(0).base;
 
 		assertEquals(impl, base);
 
@@ -172,27 +170,14 @@ public class BasicRuntimeTest extends TestCase {
 	}
 
 	private OpenAPIRuntime getRuntime() {
-		OpenAPIRuntime runtime = new OpenAPIRuntime();
-		runtime.http = new HttpService() {
+		OpenAPIRuntime runtime = new OpenAPIRuntime() {
 
 			@Override
-			public void unregister(String alias) {}
-
-			@Override
-			public void registerServlet(String alias, Servlet servlet,
-					@SuppressWarnings("rawtypes") Dictionary initparams, HttpContext context)
+			public Closeable registerServlet(String alias, Servlet servlet)
 					throws ServletException, NamespaceException {
-				handler.addServletWithMapping(new ServletHolder(servlet), (alias + "/*"));
-			}
-
-			@Override
-			public void registerResources(String alias, String name, HttpContext context) throws NamespaceException {
-
-			}
-
-			@Override
-			public HttpContext createDefaultHttpContext() {
-				return null;
+				ServletHolder servletHolder = new ServletHolder(servlet);
+				handler.addServletWithMapping(servletHolder, (alias + "/*"));
+				return () -> {};
 			}
 		};
 		return runtime;

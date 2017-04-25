@@ -1,9 +1,7 @@
 
 Export-Package: \
 	aQute.openapi.provider,\
-	aQute.openapi.security.apikey.api,\
-	aQute.openapi.security.basic.api,\
-	aQute.openapi.security.oauth2.api
+	aQute.openapi.security.api
 
 -conditionalpackage: aQute.lib*, aQute.json.util
 

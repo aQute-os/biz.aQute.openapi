@@ -2,6 +2,7 @@ package gen.defaultdatetime.dates;
 
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
+import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import java.time.format.DateTimeFormatter;
 import java.time.OffsetDateTime;
 import java.time.LocalDate;

@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class SecuritySchemeObject extends BaseOpenAPIObject {
 	public enum Type {
-		basic, api_key, oauth2;
+		basic, apiKey, oauth2;
 	};
 
 	public enum OAuth2Flow {

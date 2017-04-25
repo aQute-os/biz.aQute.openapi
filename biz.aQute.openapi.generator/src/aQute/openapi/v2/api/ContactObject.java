@@ -4,16 +4,16 @@ import java.net.URI;
 
 /**
  * Contact information for the exposed API.
- * 
+ *
  * <pre>
- * { 
- * 	"name": "API Support", 
- * 	"url": "http://www.swagger.io/support", 
- * 	"email": "support@swagger.io" 
+ * {
+ * 	"name": "API Support",
+ * 	"url": "http://www.swagger.io/support",
+ * 	"email": "support@swagger.io"
  * }
  * </pre>
- * 
- * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#contact-object
+ *
+ * @see "https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#contact-object"
  */
 
 public class ContactObject extends BaseOpenAPIObject {

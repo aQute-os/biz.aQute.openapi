@@ -1,5 +1,6 @@
 package aQute.openapi.generator;
 
+import aQute.openapi.generator.SourceType.ArrayType;
 import aQute.openapi.v2.api.ParameterObject;
 
 public class SourceArgument {
@@ -12,7 +13,8 @@ public class SourceArgument {
 		this.par = par;
 		this.name = method.toParameterName(par.name);
 
-		type = par.schema != null ? method.getParent().getGen().getSourceType(par.schema) : method.getParent().getGen().getSourceType(par);
+		type = par.schema != null ? method.getParent().getGen().getSourceType(par.schema)
+				: method.getParent().getGen().getSourceType(par);
 		if (getType() == null) {
 			throw new IllegalArgumentException("No type for " + par.schema);
 		}
@@ -29,7 +31,11 @@ public class SourceArgument {
 	public String access() {
 		switch (getPar().in) {
 			case body :
-				return String.format("context.body(%s.class)", getType().reference());
+				if (getType().isArray()) {
+					ArrayType arrayType = (ArrayType) getType();
+					return String.format("context.listBody(%s.class)", arrayType.getComponentType().reference());
+				} else
+					return String.format("context.body(%s.class)", getType().reference());
 
 			case formData :
 				if ("file".equals(getPar().type))

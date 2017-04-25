@@ -1,5 +1,7 @@
 package aQute.openapi.example.petstore.provider;
 
+import java.util.List;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -14,7 +16,7 @@ public class UserImpl extends GeneratedUser {
 	PetStoreCentral central;
 
 	@Override
-	protected void createUsersWithArrayInput(User[] body) throws Exception {
+	protected void createUsersWithArrayInput(List<User> body) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
@@ -56,7 +58,7 @@ public class UserImpl extends GeneratedUser {
 	}
 
 	@Override
-	protected void createUsersWithListInput(User[] body) throws Exception {
+	protected void createUsersWithListInput(List<User> body) throws Exception {
 		// TODO Auto-generated method stub
 
 	}

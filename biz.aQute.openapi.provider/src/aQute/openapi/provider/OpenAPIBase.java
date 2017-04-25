@@ -16,6 +16,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.function.Function;
@@ -26,13 +27,18 @@ import aQute.lib.exceptions.Exceptions;
 
 public abstract class OpenAPIBase {
 
+
 	public interface Codec {
 		String encode(Object object, OutputStream out) throws Exception;
 
-		<T, X> T decode(Class<T> type, InputStream in, String mime, Function<Class<X>,X> instantiator)
+		<T, X> T decode(Class<T> type, InputStream in, String mime, Function<Class<X>,X> instantiator) throws Exception;
+
+		<T, X> List<T> decodeList(Class<T> type, InputStream in, String mime, Function<Class<X>,X> instantiator)
 				throws Exception;
 
 		<T> void addStringHandler(Class<T> type, Function<T,String> toString, Function<String,T> fromString);
+
+		String getContentType();
 
 	}
 

@@ -1,8 +1,11 @@
 package aQute.openapi.provider;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.ServletException;
@@ -12,11 +15,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.http.NamespaceException;
 
+import aQute.lib.exceptions.Exceptions;
+import aQute.openapi.provider.OpenAPIRuntime.Tracker;
+import aQute.openapi.security.api.OpenAPISecurityDefinition;
+import aQute.openapi.security.api.OpenAPISecurityProvider;
+
 public class Dispatcher extends HttpServlet {
-	private static final long	serialVersionUID	= 1L;
-	final String				prefix;
-	final OpenAPIRuntime		runtime;
-	final List<OpenAPIBase>		targets				= new CopyOnWriteArrayList<>();
+	private static final long										serialVersionUID	= 1L;
+	final String													prefix;
+	final OpenAPIRuntime											runtime;
+	final List<Tracker>												targets				= new CopyOnWriteArrayList<>();
+	final Map<OpenAPISecurityDefinition,SecurityProviderTracker>	security			= new ConcurrentHashMap<>();
+	final Closeable													registration;
 
 	public Dispatcher(OpenAPIRuntime runtime, String prefix) throws ServletException, NamespaceException {
 		this.runtime = runtime;
@@ -24,21 +34,21 @@ public class Dispatcher extends HttpServlet {
 
 		assert this.prefix.startsWith("/");
 
-		this.runtime.http.registerServlet(this.prefix, this, null, null);
+		registration = runtime.registerServlet(this.prefix, this);
 	}
 
-	public synchronized void add(OpenAPIBase base) {
+	public synchronized void add(Tracker base) {
 		this.targets.add(base);
 	}
 
-	public void remove(OpenAPIBase base) {
+	public void remove(Tracker base) {
 		this.targets.remove(base);
 	}
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		OpenAPIContext context = new OpenAPIContext(runtime, request, response);
+		OpenAPIContext context = new OpenAPIContext(runtime, this, request, response);
 		try {
 			runtime.contexts.set(context);
 			try {
@@ -51,11 +61,16 @@ public class Dispatcher extends HttpServlet {
 
 				String segments[] = path.split("/");
 
-				for (OpenAPIBase base : targets) {
+				for (Tracker target : targets) {
+					OpenAPIBase base = target.base;
 					context.setTarget(base);
 					base.before_(context);
 					try {
 						if (base.dispatch_(context, segments, 0)) {
+
+							if (response.getContentType() == null)
+								response.setContentType("application/json");
+
 							return;
 						}
 					} finally {
@@ -89,5 +104,20 @@ public class Dispatcher extends HttpServlet {
 		s.append(prefix);
 		s.append(" - ").append(targets);
 		return super.toString();
+	}
+
+	public void close() {
+		security.values().forEach(SecurityProviderTracker::close);
+		Exceptions.wrap(registration::close);
+	}
+
+	public OpenAPISecurityProvider getSecurityProvider(OpenAPISecurityDefinition def) {
+		return security.computeIfAbsent(def, this::newTracker).getService();
+	}
+
+	private SecurityProviderTracker newTracker(OpenAPISecurityDefinition def) {
+		SecurityProviderTracker sp = new SecurityProviderTracker(runtime.context, def);
+		sp.open();
+		return sp;
 	}
 }

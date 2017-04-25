@@ -1,24 +1,24 @@
 {
 	"swagger": "2.0",
-	"info": 
+	"info":
 	{
 		"version": "v1",
 		"title": "Sma.Sp.WebUi.Api"
 	},
 
 	"basePath": "/api/v1",
-	"schemes": 
+	"schemes":
 	[
 		"http"
 	],
 
-	"paths": 
+	"paths":
 	{
-		"/accessToken": 
+		"/accessToken":
 		{
-			"post": 
+			"post":
 			{
-				"tags": 
+				"tags":
 				[
 					"AccessTokenApi"
 				],
@@ -26,18 +26,18 @@
 				"summary": "Generate an access token.",
 				"description": "The endpoint to validate users credentials and generate an access token.",
 				"operationId": "AccessTokenPost",
-				"consumes": 
+				"consumes":
 				[
-					
+
 				],
 
-				"produces": 
+				"produces":
 				[
 					"application/json",
 					"text/json"
 				],
 
-				"parameters": 
+				"parameters":
 				[
 					{
 						"name": "username",
@@ -45,6 +45,13 @@
 						"description": "The username.",
 						"required": true,
 						"type": "string"
+					},
+					{
+						"name": "quality",
+						"in": "query",
+						"description": "Quality",
+						"required": false,
+						"type": "number"
 					},
 
 					{
@@ -56,18 +63,18 @@
 					}
 				],
 
-				"responses": 
+				"responses":
 				{
-					"200": 
+					"200":
 					{
 						"description": "OK",
-						"schema": 
+						"schema":
 						{
 							"$ref": "#/definitions/TokenResult"
 						}
 					},
 
-					"0": 
+					"0":
 					{
 						"description": "Unexpected error"
 					}
@@ -76,21 +83,21 @@
 		}
 	},
 
-	"definitions": 
+	"definitions":
 	{
-		"TokenResult": 
+		"TokenResult":
 		{
 			"description": "",
 			"type": "object",
-			"properties": 
+			"properties":
 			{
-				"accessToken": 
+				"accessToken":
 				{
 					"description": "The generated authentication token.",
 					"type": "string"
 				},
 
-				"expireDateTime": 
+				"expireDateTime":
 				{
 					"format": "date-time",
 					"description": "The timestamp of token expiration.",

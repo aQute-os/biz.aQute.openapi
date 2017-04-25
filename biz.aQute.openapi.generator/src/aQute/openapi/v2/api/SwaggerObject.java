@@ -10,8 +10,8 @@ import aQute.openapi.annotations.Required;
  * Swagger Object This is the root document object for the API specification.It
  * combines what previously was the Resource Listing and API Declaration(version
  * 1.2 and earlier)together into one document.
- * 
- * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#swagger-object
+ *
+ * @see "https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#swagger-object"
  */
 public class SwaggerObject extends BaseOpenAPIObject {
 

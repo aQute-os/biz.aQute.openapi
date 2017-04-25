@@ -2,14 +2,16 @@ package aQute.openapi.example.petstore.user;
 
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
+import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import java.time.format.DateTimeFormatter;
-import java.time.ZonedDateTime;
+import java.util.List;
+import java.time.OffsetDateTime;
 import java.time.LocalDate;
 /**
  * 
  * <ul>
  * 
- * <li>{@link #createUsersWithArrayInput(User[]) POST /user/createWithArray =  createUsersWithArrayInput}
+ * <li>{@link #createUsersWithArrayInput(List<User>) POST /user/createWithArray =  createUsersWithArrayInput}
  * 
  * <li>{@link #loginUser(String,String) GET /user/login =  loginUser}
  * 
@@ -23,7 +25,7 @@ import java.time.LocalDate;
  * 
  * <li>{@link #createUser(User) POST /user =  createUser}
  * 
- * <li>{@link #createUsersWithListInput(User[]) POST /user/createWithList =  createUsersWithListInput}
+ * <li>{@link #createUsersWithListInput(List<User>) POST /user/createWithList =  createUsersWithListInput}
  * 
  * </ul>
  * 
@@ -49,7 +51,7 @@ public static final String BASE_PATH = "/v2";
  * 
  */
 
-protected abstract void createUsersWithArrayInput(User[] body) throws Exception;
+protected abstract void createUsersWithArrayInput(List<User> body) throws Exception;
 
 /**
  * 
@@ -193,7 +195,7 @@ protected abstract void createUser(User body) throws Exception;
  * 
  */
 
-protected abstract void createUsersWithListInput(User[] body) throws Exception;
+protected abstract void createUsersWithListInput(List<User> body) throws Exception;
 
 /**
  * 
@@ -242,21 +244,17 @@ public static class User extends OpenAPIBase.DTO {
 
   public GeneratedUser() {
     super(BASE_PATH,
-         "createUsersWithArrayInput POST   /user/createWithArray  PAYLOAD User[]",
+         "createUsersWithArrayInput POST   /user/createWithArray  PAYLOAD List<User>",
          "loginUser            GET    /user/login?username&password  RETURN String",
          "logoutUser           GET    /user/logout",
          "deleteUser           DELETE /user/{username}",
          "getUserByName        GET    /user/{username}  RETURN User",
          "updateUser           PUT    /user/{username}  PAYLOAD User",
          "createUser           POST   /user  PAYLOAD User",
-         "createUsersWithListInput POST   /user/createWithList  PAYLOAD User[]");
+         "createUsersWithListInput POST   /user/createWithList  PAYLOAD List<User>");
   }
 
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
-    if ( segments.length == 1 && "openapi.json".equals(segments[0])) {
-        getOpenAPIContext().copy( aQute.openapi.example.petstore.GeneratedBase.class.getResourceAsStream("openapi.json"), "application/json");
-        return true;
-    }
 
     if( index < segments.length && "user".equals(segments[index])) {
       index++;
@@ -331,7 +329,7 @@ public static class User extends OpenAPIBase.DTO {
 private void createUsersWithArrayInput_post_(OpenAPIContext context) throws Exception{
 
     context.setOperation("createUsersWithArrayInput");
-User[] body_ = context.body(User[].class);
+List<User> body_ = context.listBody(User.class);
 
 
     //  VALIDATORS 
@@ -446,7 +444,7 @@ User body_ = context.body(User.class);
 private void createUsersWithListInput_post_(OpenAPIContext context) throws Exception{
 
     context.setOperation("createUsersWithListInput");
-User[] body_ = context.body(User[].class);
+List<User> body_ = context.listBody(User.class);
 
 
     //  VALIDATORS 
@@ -463,4 +461,4 @@ User[] body_ = context.body(User[].class);
 }
 
 
-// aQute OpenAPI generator version 1.0.0.201703021854
+// aQute OpenAPI generator version 1.0.0.201704251535

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.net.URLDecoder;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -29,12 +28,7 @@ import aQute.lib.converter.Converter;
 import aQute.lib.io.IO;
 import aQute.lib.strings.Strings;
 import aQute.openapi.provider.OpenAPIBase.Method;
-import aQute.openapi.security.apikey.api.APIKeyDTO;
-import aQute.openapi.security.apikey.api.APIKeyProvider;
-import aQute.openapi.security.basic.api.BasicDTO;
-import aQute.openapi.security.basic.api.BasicProvider;
-import aQute.openapi.security.oauth2.api.OAuth2DTO;
-import aQute.openapi.security.oauth2.api.OAuth2Provider;
+import aQute.openapi.security.api.OpenAPISecurityDefinition;
 
 public class OpenAPIContext {
 	private static final String[]	EMPTY			= new String[0];
@@ -44,14 +38,18 @@ public class OpenAPIContext {
 	final OpenAPIRuntime			runtime;
 	final Map<String,String>		pathParameters	= new HashMap<>();
 	final static Logger				log				= LoggerFactory.getLogger(OpenAPIContext.class);
+	final Dispatcher				dispatcher;
 	private String					operation;
 	private Method					method;
 	private List<String>			stack			= new ArrayList<>();
 	private List<String>			errors			= null;
 	private OpenAPIBase				target;
+	Authenticator					authenticator;
 
-	protected OpenAPIContext(OpenAPIRuntime runtime, HttpServletRequest request, HttpServletResponse response) {
+	protected OpenAPIContext(OpenAPIRuntime runtime, Dispatcher dispatcher, HttpServletRequest request,
+			HttpServletResponse response) {
 		this.runtime = runtime;
+		this.dispatcher = dispatcher;
 		this.request = request;
 		this.response = response;
 		this.method = Method.valueOf(request.getMethod().toUpperCase());
@@ -72,11 +70,11 @@ public class OpenAPIContext {
 		doHeaders();
 
 		if (result != null) {
-
+			String mime = target.codec_().getContentType();
+			response.setContentType(mime);
 			OutputStream out = getOutputStream();
 			try {
-				String mime = target.codec_().encode(result, out);
-				response.setContentType(mime);
+				target.codec_().encode(result, out);
 			} catch (Exception e) {
 				log.error("failed to serialize output for " + operation);
 			}
@@ -166,6 +164,11 @@ public class OpenAPIContext {
 		return t;
 	}
 
+	public <T> List<T> listBody(Class<T> componentType) throws Exception {
+		InputStream in = request.getInputStream();
+		return target.codec_().decodeList(componentType, in, request.getContentType(), target::instantiate_);
+	}
+
 	public void begin(String name) {
 		stack.add(name);
 	}
@@ -195,19 +198,20 @@ public class OpenAPIContext {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T[] toArray(Class<T> type, String values[]) throws Exception {
+	public <T> List<T> toArray(Class<T> type, String values[]) throws Exception {
 		if (values == null)
 			return null;
 
 		if (type == String.class)
-			return (T[]) values;
+			return (List<T>) Arrays.asList(values);
 
-		T[] array = (T[]) Array.newInstance(type, values.length);
+
+		List<T> list = new ArrayList<T>();
 
 		for (int i = 0; i < values.length; i++) {
-			array[i] = Converter.cnv(type, values[i]);
+			list.add(Converter.cnv(type, values[i]));
 		}
-		return array;
+		return list;
 	}
 
 	public boolean in(String value, String... sortedSet) {
@@ -311,39 +315,6 @@ public class OpenAPIContext {
 		request.getSession().setAttribute("ip", request.getRemoteHost());
 	}
 
-	public void verify(APIKeyDTO dto, String headerValue) {
-		APIKeyProvider apiKey = runtime.apiKey;
-		if (apiKey == null) {
-			securityException(dto.name, "No API Key Security Provider found");
-			return;
-		}
-
-		if (!apiKey.check(this, dto, operation, headerValue))
-			securityException(dto.name, "Unauthorized key");
-	}
-
-	public void verify(BasicDTO dto) {
-		BasicProvider basic = runtime.basic;
-		if (basic == null) {
-			securityException(dto.name, "No Basic Security Provider found");
-			return;
-		}
-		if (!basic.check(this, dto, operation))
-			securityException(dto.name, "Could not authenticate");
-	}
-
-	public void verify(OAuth2DTO dto, String... scopes) {
-		OAuth2Provider oauth2 = runtime.oath2;
-		if (oauth2 == null) {
-			securityException(dto.name, "No OAuth2 Provider found");
-			return;
-		}
-
-		if (!oauth2.check(this, dto, operation, scopes)) {
-			securityException(dto.name, "Scopes not authorized " + scopes);
-		}
-	}
-
 	protected void securityException(String name, String message) {
 		throw new SecurityException(name + ":" + message);
 	}
@@ -358,4 +329,28 @@ public class OpenAPIContext {
 		IO.copy(in, response.getOutputStream());
 	}
 
+	public OpenAPIContext authenticate(OpenAPISecurityDefinition def, String... scopes) {
+		if (authenticator == null)
+			this.authenticator = new Authenticator(this);
+
+		return authenticator.authenticate(def, scopes);
+	}
+
+	OpenAPIContext or() {
+		return authenticator.or();
+	}
+
+	public void verify(OpenAPISecurityDefinition def, String... args) {
+		authenticator.verify();
+	}
+
+	public void authorize(String permission, String... args) throws Exception {
+		// for (Authority a : runtime.authority) {
+		// if (a.hasPermission(permission, args)) {
+		// return;
+		// }
+		// }
+		throw new OpenAPIBase.UnauthorizedResponse(
+				"Not authorized " + permission + " with arguments " + Arrays.toString(args));
+	}
 }

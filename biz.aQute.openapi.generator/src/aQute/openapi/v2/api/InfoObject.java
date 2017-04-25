@@ -5,7 +5,7 @@ import aQute.openapi.annotations.Required;
 /**
  * The object provides metadata about the API. The metadata can be used by the
  * clients if needed, and can be presented in the Swagger-UI for convenience.
- * 
+ *
  * <pre>
  * {
 "title": "Swagger Sample App",
@@ -23,8 +23,8 @@ import aQute.openapi.annotations.Required;
 "version": "1.0.1"
 }
  * </pre>
- * 
- * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#info-object
+ *
+ * @see "https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#info-object"
  */
 public class InfoObject extends BaseOpenAPIObject {
 	/**

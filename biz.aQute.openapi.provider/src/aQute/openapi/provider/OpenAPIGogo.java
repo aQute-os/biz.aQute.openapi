@@ -8,6 +8,7 @@ import org.apache.felix.service.command.Descriptor;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import aQute.openapi.provider.OpenAPIRuntime.Tracker;
 import osgi.enroute.debug.api.Debug;
 
 @Component(property = {
@@ -45,7 +46,8 @@ public class OpenAPIGogo implements Converter {
 			case Converter.INSPECT :
 				try (Formatter f = new Formatter();) {
 					f.format("Base Path        %s\n", dispatcher.prefix);
-					for (OpenAPIBase base : dispatcher.targets) {
+					for (Tracker t : dispatcher.targets) {
+						OpenAPIBase base = t.base;
 						f.format("  %s\n", base.getClass().getSimpleName());
 						for (String op : base.ops) {
 							f.format("     %s\n", op);

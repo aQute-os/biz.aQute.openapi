@@ -62,6 +62,18 @@ public class GenTest {
 	}
 
 	@Test
+	public void testPetStore() throws Exception {
+		File file = IO.getFile("test/aQute/openapi/generator/files/pet.store.json");
+		Configuration c = new Configuration();
+		File output = IO.getFile("target/gen-sources");
+		String pack = file.getName().substring(0, file.getName().length() - 5);
+		c.packagePrefix = pack;
+		OpenAPIGenerator g = new OpenAPIGenerator(file, c);
+		g.report(System.out);
+		g.generate(output);
+	}
+
+	@Test
 	public void testX() {
 		Clock c = Clock.fixed(Instant.parse("2017-03-01T12:00:00Z"), ZoneId.of("CET"));
 		testClock(c, "Zero ms");
