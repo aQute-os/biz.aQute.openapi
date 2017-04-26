@@ -2,6 +2,7 @@ package aQute.json.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,18 +10,19 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ObjectHandler extends Handler {
 	@SuppressWarnings("rawtypes")
 	final Class		rawClass;
 	final Field		fields[];
+	final boolean	optional[];
 	final Type		types[];
 	final Object	defaults[];
 	final Field		extra;
 
-	ObjectHandler(JSONCodec codec, Class< ? > c) throws Exception {
+	ObjectHandler(JSONCodec codec, Class<?> c) throws Exception {
 		rawClass = c;
-
 		List<Field> fields = new ArrayList<Field>();
 		for (Field f : c.getFields()) {
 			if (Modifier.isStatic(f.getModifiers()))
@@ -38,6 +40,7 @@ public class ObjectHandler extends Handler {
 		});
 
 		types = new Type[this.fields.length];
+		optional = new boolean[this.fields.length];
 		defaults = new Object[this.fields.length];
 
 		Field x = null;
@@ -45,6 +48,13 @@ public class ObjectHandler extends Handler {
 			if (this.fields[i].getName().equals("__extra"))
 				x = this.fields[i];
 			types[i] = this.fields[i].getGenericType();
+
+			if (this.fields[i].getType() == Optional.class) {
+				ParameterizedType ptype = (ParameterizedType) types[i];
+				types[i] = ptype.getActualTypeArguments()[0];
+				optional[i] = true;
+			}
+
 		}
 		if (x != null && Map.class.isAssignableFrom(x.getType()))
 			extra = x;
@@ -62,21 +72,33 @@ public class ObjectHandler extends Handler {
 		}
 	}
 
+
 	@Override
-	public void encode(Encoder app, Object object, Map<Object,Type> visited) throws Exception {
+	public void encode(Encoder app, Object object, Map<Object, Type> visited) throws Exception {
 		app.append("{");
 		app.indent();
 		String del = "";
 		for (int i = 0; i < fields.length; i++) {
+
 			String name = fields[i].getName();
 			try {
 				if (name.startsWith("__"))
 					continue;
 
-				if ( name.endsWith("$"))
-					name = name.substring(0, name.length()-1);
-				
+				if (name.endsWith("$"))
+					name = name.substring(0, name.length() - 1);
+
 				Object value = fields[i].get(object);
+
+				if (optional[i]) {
+
+					Optional<?> opt = (Optional<?>) value;
+					if (opt == null || !opt.isPresent())
+						continue;
+
+					value = opt.get();
+				}
+
 				if (!app.writeDefaults) {
 					if (value == defaults[i])
 						continue;
@@ -118,17 +140,30 @@ public class ObjectHandler extends Handler {
 
 			// Get value
 
-			Field f = getField(key);
-			if (f != null) {
-				// We have a field and thus a type
-				Object value = r.codec.decode(f.getGenericType(), r);
+			int i = getField(key);
+			if (i >= 0) {
+				Field f = fields[i];
+
+				Object value = r.codec.decode(types[i], r);
+
 				if (value != null || !r.codec.ignorenull) {
 					if (Modifier.isFinal(f.getModifiers()))
 						throw new IllegalArgumentException("Field " + f + " is final");
 
+					if (optional[i]) {
+						value = Optional.ofNullable(value);
+					}
 					f.set(targetObject, value);
 				}
 			} else {
+				if (r.isLog()) {
+					try {
+						Field f = rawClass.getDeclaredField(key);
+						r.log("Field %s accessed but is not public", f);
+					} catch (Exception e) {
+						// ignore
+					}
+				}
 				// No field, but may extra is defined
 				if (extra == null) {
 					if (r.strict)
@@ -138,9 +173,9 @@ public class ObjectHandler extends Handler {
 				} else {
 
 					@SuppressWarnings("unchecked")
-					Map<String,Object> map = (Map<String,Object>) extra.get(targetObject);
+					Map<String, Object> map = (Map<String, Object>) extra.get(targetObject);
 					if (map == null) {
-						map = new LinkedHashMap<String,Object>();
+						map = new LinkedHashMap<String, Object>();
 						extra.set(targetObject, map);
 					}
 					Object value = r.codec.decode(null, r);
@@ -166,21 +201,21 @@ public class ObjectHandler extends Handler {
 		return targetObject;
 	}
 
-	private Field getField(String key) {
+	private int getField(String key) {
 		for (int i = 0; i < fields.length; i++) {
 			String name = fields[i].getName();
 			int n = key.compareTo(name);
 			if (n == 0)
-				return fields[i];
-			
+				return i;
+
 			if (n < 0) {
-				boolean isKeyword = key.length()+1 == name.length() && name.startsWith(key) && name.endsWith("$");
+				boolean isKeyword = key.length() + 1 == name.length() && name.startsWith(key) && name.endsWith("$");
 				if (isKeyword)
-					return fields[i];
-				return null;
+					return i;
+				return -1;
 			}
 		}
-		return null;
+		return -1;
 	}
 
 }

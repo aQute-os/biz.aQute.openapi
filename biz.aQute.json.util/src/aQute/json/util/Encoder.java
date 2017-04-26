@@ -26,9 +26,11 @@ public class Encoder implements Appendable, Closeable, Flushable {
 	String			indent		= "";
 	boolean			keepOpen	= false;
 	boolean			closed		= false;
+	private boolean log;
 
 	Encoder(JSONCodec codec) {
 		this.codec = codec;
+		this.log = codec.log;
 	}
 
 	public Encoder put(Object object) throws Exception {
@@ -168,5 +170,21 @@ public class Encoder implements Appendable, Closeable, Flushable {
 	public Encoder keepOpen() {
 		keepOpen = true;
 		return this;
+	}
+
+	public boolean isLog() {
+		return log;
+	}
+
+	public Encoder log(boolean on) {
+		this.log = on;
+		return this;
+	}
+
+
+	public void log(String format, Object... args) {
+		if (isLog()) {
+			JSONCodec.log(format,args);
+		}
 	}
 }

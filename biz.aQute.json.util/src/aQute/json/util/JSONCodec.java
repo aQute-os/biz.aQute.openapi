@@ -23,14 +23,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Dictionary;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is a simple JSON Coder and Encoder that uses the Java type system to
@@ -39,7 +45,7 @@ import java.util.regex.Pattern;
  * information, when present is taken into account.
  * </p>
  * Usage patterns to encode:
- * 
+ *
  * <pre>
  *  JSONCoder codec = new JSONCodec(); // assert "1".equals(
  * codec.enc().to().put(1).toString()); assert "[1,2,3]".equals(
@@ -49,7 +55,7 @@ import java.util.regex.Pattern;
  * new D(); d.a = 41; assert "{\"a\":41}".equals(
  * codec.enc().to().put(d).toString());
  * </pre>
- * 
+ *
  * It is possible to redirect the encoder to another output (default is a
  * string). See {@link Encoder#to()},{@link Encoder#to(File)},
  * {@link Encoder#to(OutputStream)}, {@link Encoder#to(Appendable)}. To reset
@@ -61,6 +67,8 @@ import java.util.regex.Pattern;
  * Will now use hex for encoding byte arrays
  */
 public class JSONCodec {
+	static final Logger								logger				= LoggerFactory.getLogger(JSONCodec.class);
+	static Set<Integer>								alreadyLogged		= new HashSet<>();
 	final static String								START_CHARACTERS	= "[{\"-0123456789tfn";
 
 	// Handlers
@@ -68,10 +76,9 @@ public class JSONCodec {
 	private static StringHandler					sh					= new StringHandler();
 	private static BooleanHandler					bh					= new BooleanHandler();
 	private static CharacterHandler					ch					= new CharacterHandler();
-	private static CollectionHandler				dch					= new CollectionHandler(
-			ArrayList.class, Object.class);
-   private static SpecialHandler					sph					= new SpecialHandler(
-			Pattern.class, null, null);
+	private static CollectionHandler				dch					= new CollectionHandler(ArrayList.class,
+			Object.class);
+	private static SpecialHandler					sph					= new SpecialHandler(Pattern.class, null, null);
 	private static DateHandler						sdh					= new DateHandler();
 	private static FileHandler						fh					= new FileHandler();
 	private static ByteArrayHandler					byteh				= new ByteArrayHandler();
@@ -80,25 +87,22 @@ public class JSONCodec {
 	boolean											ignorenull;
 	Map<Type, Handler>								localHandlers		= new ConcurrentHashMap<Type, Handler>();
 	boolean											references			= false;
+	boolean											log					= true;
 
 	public JSONCodec() {
 		addStringHandler(Period.class, Period::toString, Period::parse);
 		addStringHandler(Duration.class, Duration::toString, Duration::parse);
-		addStringHandler(LocalDate.class, LocalDate::toString,
-				LocalDate::parse);
-		addStringHandler(ZonedDateTime.class,  DateTimeFormatter.ISO_OFFSET_DATE_TIME::format,
-				ZonedDateTime::parse);
-		addStringHandler(OffsetDateTime.class,  DateTimeFormatter.ISO_OFFSET_DATE_TIME::format,
-				OffsetDateTime::parse);
-		addStringHandler(LocalDateTime.class,
-				DateTimeFormatter.ISO_DATE_TIME::format,
+		addStringHandler(LocalDate.class, LocalDate::toString, LocalDate::parse);
+		addStringHandler(ZonedDateTime.class, DateTimeFormatter.ISO_OFFSET_DATE_TIME::format, ZonedDateTime::parse);
+		addStringHandler(OffsetDateTime.class, DateTimeFormatter.ISO_OFFSET_DATE_TIME::format, OffsetDateTime::parse);
+		addStringHandler(LocalDateTime.class, DateTimeFormatter.ISO_DATE_TIME::format,
 				(s) -> LocalDateTime.parse(s, DateTimeFormatter.ISO_DATE_TIME));
 		addStringHandler(Instant.class, Instant::toString, Instant::parse);
 	}
 
 	/**
 	 * Create a new Encoder with the state and appropriate API.
-	 * 
+	 *
 	 * @return an Encoder
 	 */
 	public Encoder enc() {
@@ -107,7 +111,7 @@ public class JSONCodec {
 
 	/**
 	 * Create a new Decoder with the state and appropriate API.
-	 * 
+	 *
 	 * @return a Decoder
 	 */
 	public Decoder dec() {
@@ -117,8 +121,7 @@ public class JSONCodec {
 	/*
 	 * Work horse encode methods, all encoding ends up here.
 	 */
-	void encode(Encoder app, Object object, Type type,
-			Map<Object, Type> visited) throws Exception {
+	void encode(Encoder app, Object object, Type type, Map<Object, Type> visited) throws Exception {
 
 		// Get the null out of the way
 
@@ -145,7 +148,7 @@ public class JSONCodec {
 	 * stuff. It returns a handler for each type. If no appropriate handler
 	 * exists, it will create one for the given type. There are actually quite a
 	 * lot of handlers since Java is not very object oriented.
-	 * 
+	 *
 	 * @param type
 	 * @return a {@code Handler} appropriate for {@code type}
 	 * @throws Exception
@@ -203,15 +206,14 @@ public class JSONCodec {
 			if (Enum.class.isAssignableFrom(clazz))
 				h = new EnumHandler(clazz);
 			else if (Iterable.class.isAssignableFrom(clazz)) // A Non Generic
-																// collection
+				// collection
 
 				h = dch;
 			else if (clazz.isArray()) // Non generic array
 				h = new ArrayHandler(clazz, clazz.getComponentType());
 			else if (Map.class.isAssignableFrom(clazz)) // A Non Generic map
 				h = new MapHandler(clazz, Object.class, Object.class);
-			else if (Number.class.isAssignableFrom(clazz)
-					|| clazz.isPrimitive())
+			else if (Number.class.isAssignableFrom(clazz) || clazz.isPrimitive())
 				h = new NumberHandler(clazz);
 			else {
 				Method valueOf = null;
@@ -231,7 +233,7 @@ public class JSONCodec {
 					h = new SpecialHandler(clazz, constructor, valueOf);
 				else
 					h = new ObjectHandler(this, clazz); // Hmm, might not be a
-														// data class ...
+				// data class ...
 			}
 
 		} else {
@@ -242,20 +244,20 @@ public class JSONCodec {
 			if (type instanceof ParameterizedType) {
 				ParameterizedType pt = (ParameterizedType) type;
 				Type rawType = pt.getRawType();
+
 				if (rawType instanceof Class) {
+
 					Class<?> rawClass = (Class<?>) rawType;
 					if (Iterable.class.isAssignableFrom(rawClass))
-						h = new CollectionHandler(rawClass,
-								pt.getActualTypeArguments()[0]);
+						h = new CollectionHandler(rawClass, pt.getActualTypeArguments()[0]);
 					else if (Map.class.isAssignableFrom(rawClass))
-						h = new MapHandler(rawClass,
-								pt.getActualTypeArguments()[0],
-								pt.getActualTypeArguments()[1]);
+						h = new MapHandler(rawClass, pt.getActualTypeArguments()[0], pt.getActualTypeArguments()[1]);
 					else if (Dictionary.class.isAssignableFrom(rawClass))
-						h = new MapHandler(Hashtable.class,
-								pt.getActualTypeArguments()[0],
+						h = new MapHandler(Hashtable.class, pt.getActualTypeArguments()[0],
 								pt.getActualTypeArguments()[1]);
-					else
+					else if (Optional.class.isAssignableFrom(rawClass)) {
+						h = new OptionalHandler(pt.getActualTypeArguments()[0]);
+					} else
 						//
 						// We try to use the rawtype instead.
 						//
@@ -266,8 +268,7 @@ public class JSONCodec {
 				if (gat.getGenericComponentType() == byte[].class)
 					h = byteh;
 				else
-					h = new ArrayHandler(getRawClass(type),
-							gat.getGenericComponentType());
+					h = new ArrayHandler(getRawClass(type), gat.getGenericComponentType());
 			} else if (type instanceof TypeVariable) {
 				if (actual != null)
 					//
@@ -285,8 +286,7 @@ public class JSONCodec {
 					}
 				}
 			} else
-				throw new IllegalArgumentException(
-						"Found a parameterized type that is not a map or collection");
+				throw new IllegalArgumentException("Found a parameterized type that is not a map or collection");
 		}
 		synchronized (handlers) {
 			// We might actually have duplicates
@@ -345,8 +345,7 @@ public class JSONCodec {
 				return parseNumber(isr);
 
 			default:
-				throw new IllegalArgumentException(
-						"Invalid character at begin of token: " + (char) c);
+				throw new IllegalArgumentException("Invalid character at begin of token: " + (char) c);
 			}
 		}
 
@@ -389,8 +388,7 @@ public class JSONCodec {
 			return h.decode(isr, parseNumber(isr));
 
 		default:
-			throw new IllegalArgumentException(
-					"Unexpected character in input stream: " + (char) c);
+			throw new IllegalArgumentException("Unexpected character in input stream: " + (char) c);
 		}
 	}
 
@@ -402,9 +400,7 @@ public class JSONCodec {
 		StringBuilder sb = new StringBuilder();
 		while (c != '"') {
 			if (c < 0 || Character.isISOControl(c))
-				throw new IllegalArgumentException(
-						"JSON strings may not contain control characters: "
-								+ r.current());
+				throw new IllegalArgumentException("JSON strings may not contain control characters: " + r.current());
 
 			if (c == '\\') {
 				c = r.read();
@@ -442,8 +438,7 @@ public class JSONCodec {
 
 				default:
 					throw new IllegalArgumentException(
-							"The only characters after a backslash are \", \\, b, f, n, r, t, and u but got "
-									+ c);
+							"The only characters after a backslash are \", \\, b, f, n, r, t, and u but got " + c);
 				}
 			} else
 				sb.append((char) c);
@@ -525,8 +520,7 @@ public class JSONCodec {
 		return (int) l;
 	}
 
-	void parseArray(Collection<Object> list, Type componentType, Decoder r)
-			throws Exception {
+	void parseArray(Collection<Object> list, Type componentType, Decoder r) throws Exception {
 		assert r.current() == '[';
 		int c = r.next();
 		while (START_CHARACTERS.indexOf(c) >= 0) {
@@ -543,8 +537,7 @@ public class JSONCodec {
 			}
 
 			throw new IllegalArgumentException(
-					"Invalid character in parsing list, expected ] or , but found "
-							+ (char) c);
+					"Invalid character in parsing list, expected ] or , but found " + (char) c);
 		}
 		assert r.current() == ']';
 		r.read(); // skip closing
@@ -565,13 +558,12 @@ public class JSONCodec {
 		}
 
 		throw new IllegalArgumentException(
-				"Does not support generics beyond Parameterized Type  and GenericArrayType, got "
-						+ type);
+				"Does not support generics beyond Parameterized Type  and GenericArrayType, got " + type);
 	}
 
 	/**
 	 * Ignore null values in output and input
-	 * 
+	 *
 	 * @param ignorenull
 	 * @return this
 	 */
@@ -593,14 +585,12 @@ public class JSONCodec {
 		return this;
 	}
 
-	public <T> void addStringHandler(Class<T> type,
-			Function<T, String> toString, Function<String, T> fromString) {
+	public <T> void addStringHandler(Class<T> type, Function<T, String> toString, Function<String, T> fromString) {
 
 		addHandler(type, new Handler() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public void encode(Encoder app, Object object,
-					Map<Object, Type> visited) throws IOException, Exception {
+			public void encode(Encoder app, Object object, Map<Object, Type> visited) throws IOException, Exception {
 				app.encode(toString.apply((T) object), String.class, visited);
 			}
 
@@ -611,14 +601,12 @@ public class JSONCodec {
 		});
 	}
 
-	public <T> void addNumberHandler(Class<T> type,
-			Function<T, Number> toNumber, Function<Number, T> fromNumber) {
+	public <T> void addNumberHandler(Class<T> type, Function<T, Number> toNumber, Function<Number, T> fromNumber) {
 
 		addHandler(type, new Handler() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public void encode(Encoder app, Object object,
-					Map<Object, Type> visited) throws IOException, Exception {
+			public void encode(Encoder app, Object object, Map<Object, Type> visited) throws IOException, Exception {
 				app.encode(toNumber.apply((T) object), String.class, visited);
 			}
 
@@ -629,23 +617,38 @@ public class JSONCodec {
 		});
 	}
 
-	
 	public JSONCodec base64() {
-		Function<byte[],String> toString = java.util.Base64.getEncoder()::encodeToString;
-		Function<String,byte[]> fromString = java.util.Base64.getDecoder()::decode;
-		addStringHandler( byte[].class, toString,fromString);
+		Function<byte[], String> toString = java.util.Base64.getEncoder()::encodeToString;
+		Function<String, byte[]> fromString = java.util.Base64.getDecoder()::decode;
+		addStringHandler(byte[].class, toString, fromString);
 		return this;
 	}
 
-
 	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
+
 	public static String bytesToHex(byte[] bytes) {
-	    char[] hexChars = new char[bytes.length * 2];
-	    for ( int j = 0; j < bytes.length; j++ ) {
-	        int v = bytes[j] & 0xFF;
-	        hexChars[j * 2] = hexArray[v >>> 4];
-	        hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-	    }
-	    return new String(hexChars);
+		char[] hexChars = new char[bytes.length * 2];
+		for (int j = 0; j < bytes.length; j++) {
+			int v = bytes[j] & 0xFF;
+			hexChars[j * 2] = hexArray[v >>> 4];
+			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+		}
+		return new String(hexChars);
 	}
+
+	public JSONCodec nolog() {
+		this.log = false;
+		return this;
+	}
+
+	public static void log(String format, Object[] args) {
+		String formatted = String.format(format, args);
+		synchronized (logger) {
+			boolean added = JSONCodec.alreadyLogged.add(formatted.hashCode());
+			if (!added) {
+				JSONCodec.logger.warn(formatted);
+			}
+		}
+	}
+
 }

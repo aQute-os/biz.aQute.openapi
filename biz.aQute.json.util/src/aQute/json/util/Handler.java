@@ -15,18 +15,18 @@ public abstract class Handler {
 	}
 
 	public Object decode(Decoder dec, String s) throws Exception {
-		throw new UnsupportedOperationException("Cannot be mapped to string " + this);
+		throw new UnsupportedOperationException("Cannot be mapped to boolean " + this);
 	}
 
 	public Object decode(Decoder dec, Number s) throws Exception {
-		throw new UnsupportedOperationException("Cannot be mapped to number " + this);
+		throw new UnsupportedOperationException("Cannot be mapped to boolean " + this);
 	}
 
 	public Object decode(Decoder dec, boolean s) {
 		throw new UnsupportedOperationException("Cannot be mapped to boolean " + this);
 	}
 
-	public Object decode(Decoder dec) {
+	public Object decode(Decoder dec) throws Exception {
 		return null;
 	}
 
