@@ -3,7 +3,9 @@ package gen.parameters;
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
+import java.util.Optional;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.time.OffsetDateTime;
 import java.time.LocalDate;
 /**
@@ -94,8 +96,6 @@ public static class Body extends OpenAPIBase.DTO {
 }
 
   /*****************************************************************/
-
-
 
   public ParametersBase() {
     super(BASE_PATH,

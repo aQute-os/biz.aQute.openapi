@@ -3,7 +3,9 @@ package gen.manualconversion;
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
+import java.util.Optional;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.time.Instant;
 import java.time.LocalDate;
 /**
@@ -19,8 +21,6 @@ public abstract class ManualconversionBase extends OpenAPIBase {
 public static final String BASE_PATH = "/v1";
 
   /*****************************************************************/
-
-
 
   public ManualconversionBase() {
     super(BASE_PATH);

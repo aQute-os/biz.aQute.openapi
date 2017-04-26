@@ -27,6 +27,7 @@ import aQute.openapi.generator.SourceRoute;
 import aQute.openapi.generator.SourceType;
 import aQute.openapi.generator.SourceType.NummericType;
 import aQute.openapi.generator.SourceType.ObjectType;
+import aQute.openapi.generator.SourceType.OptionalType;
 import aQute.openapi.generator.SourceType.StringEnumType;
 import aQute.openapi.generator.VersionHelper;
 import aQute.openapi.v2.api.ExternalDocumentationObject;
@@ -211,6 +212,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 		doImport("aQute.openapi.provider.OpenAPIBase");
 		doImport("aQute.openapi.provider.OpenAPIContext");
 		doImport("aQute.openapi.security.api.OpenAPISecurityDefinition");
+		doImport(Optional.class);
 		doImport(DateTimeFormatter.class);
 		doImport(List.class);
 		String dateTimeClass = gen.getDateTimeClass();
@@ -594,8 +596,10 @@ public class JavaGenerator extends BaseSourceGenerator {
 
 			for (SourceProperty property : t.getProperties()) {
 				String access = gen.getConfig().privateFields ? "private" : "public";
-				format("    %s %s %s;\n", access, property.getType().reference(), property.getKey());
-
+				String init = "";
+				if (property.getType().isOptional())
+					init = " = Optional.empty()";
+				format("    %s %s %s%s;\n", access, property.getType().reference(), property.getKey(), init);
 			}
 
 			format("\n");
@@ -612,22 +616,34 @@ public class JavaGenerator extends BaseSourceGenerator {
 				format("     context.end();\n");
 				format("    }\n");
 			}
-			if (gen.getConfig().beans) {
-				for (SourceProperty property : t.getProperties()) {
-					String propertyName = gen.firstCharacter(property.getKey(), true);
-					format("    public %s set%s(%s %s){ this.%s=%s; return this; }\n", t.getClassName(), propertyName,
-							property.getType().reference(), property.getKey(), property.getKey(), property.getKey());
-					format("    public %s get%s(){ return this.%s; }\n\n", property.getType().reference(), propertyName,
-							property.getKey());
+
+			for (SourceProperty property : t.getProperties()) {
+				String propertySetName;
+				String propertyGetName;
+				if (gen.getConfig().beans) {
+					propertySetName = "set" + gen.firstCharacter(property.getKey(), true);
+					propertyGetName = "get" + gen.firstCharacter(property.getKey(), true);
+				} else {
+					propertySetName = property.getKey();
+					propertyGetName = property.getKey();
 				}
-			} else {
-				for (SourceProperty property : t.getProperties()) {
-					String propertyName = property.getKey();
-					format("    public %s %s(%s %s){ this.%s=%s; return this; }\n", t.getClassName(), propertyName,
+
+				if (property.getType().isOptional()) {
+
+					OptionalType opt = (OptionalType) property.getType();
+					SourceType type = opt.getTarget();
+					format("    public %s %s(%s %s){ this.%s=Optional.ofNullable(%s); return this; }\n",
+							t.getClassName(), propertySetName, type.wrapper().reference(), property.getKey(),
+							property.getKey(), property.getKey());
+
+				} else {
+					format("    public %s %s(%s %s){ this.%s=%s; return this; }\n", t.getClassName(),
+							propertySetName,
 							property.getType().reference(), property.getKey(), property.getKey(), property.getKey());
-					format("    public %s %s(){ return this.%s; }\n\n", property.getType().reference(), propertyName,
-							property.getKey());
 				}
+
+				format("    public %s %s(){ return this.%s; }\n\n", property.getType().reference(),
+						"get" + propertyGetName, property.getKey());
 			}
 		});
 	}

@@ -1,31 +1,31 @@
 {
 	"swagger": "2.0",
-	"info": 
+	"info":
 	{
 		"version": "v1",
 		"title": "date.time.encoding"
 	},
 
 	"basePath": "/v1",
-	"schemes": 
+	"schemes":
 	[
 		"http"
 	],
 
-	"paths": 
+	"paths":
 	{
-		"/dates": 
+		"/dates":
 		{
-			"put": 
+			"put":
 			{
-				"tags": 
+				"tags":
 				[
 					"Dates"
 				],
 
 				"description": "Validate dates",
 				"operationId": "putDates",
-				"parameters": 
+				"parameters":
 				[
 					{
 						"name": "token",
@@ -37,11 +37,11 @@
 					}
 				],
 
-				"responses": 
+				"responses":
 				{
-					"200": 
+					"200":
 					{
-						"schema": 
+						"schema":
 						{
 							"$ref": "#/definitions/Dates"
 						}
@@ -51,31 +51,32 @@
 		}
 	},
 
-	"definitions": 
+	"definitions":
 	{
-		"Dates": 
+		"Dates":
 		{
 			"description": "",
 			"type": "object",
-			"properties": 
+			"required":["date","dateTime", "error"],
+			"properties":
 			{
-				"date": 
+				"date":
 				{
 					"type": "string",
 					"format": "date"
 				},
 
-				"dateTime": 
+				"dateTime":
 				{
 					"format": "date-time",
 					"type": "string"
 				},
 
-				"error": 
+				"error":
 				{
 					"type": "string"
 				}
-				
+
 			}
 		}
 	}

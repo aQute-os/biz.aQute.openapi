@@ -3,6 +3,7 @@ package aQute.openapi.example.petstore.store;
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
+import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.time.OffsetDateTime;
@@ -114,57 +115,32 @@ protected abstract void deleteOrder(long orderId) throws Exception, OpenAPIBase.
 
 public static class Order extends OpenAPIBase.DTO {
 
-    public long petId;
-    public int quantity;
-    public long id;
-    public java.time.OffsetDateTime shipDate;
-    public boolean complete;
-    public StatusEnum status;
+    public Optional<Long> petId = Optional.empty();
+    public Optional<Integer> quantity = Optional.empty();
+    public Optional<Long> id = Optional.empty();
+    public Optional<java.time.OffsetDateTime> shipDate = Optional.empty();
+    public Optional<Boolean> complete = Optional.empty();
+    public Optional<String> status = Optional.empty();
 
-    protected void validate(OpenAPIContext context, String name) {
-       context.begin(name);
-    context.validate(quantity <= 23, quantity, "quantity", "quantity <= 23");
-     context.end();
-    }
-    public Order petId(long petId){ this.petId=petId; return this; }
-    public long petId(){ return this.petId; }
+    public Order petId(Long petId){ this.petId=Optional.ofNullable(petId); return this; }
+    public Optional<Long> getpetId(){ return this.petId; }
 
-    public Order quantity(int quantity){ this.quantity=quantity; return this; }
-    public int quantity(){ return this.quantity; }
+    public Order quantity(Integer quantity){ this.quantity=Optional.ofNullable(quantity); return this; }
+    public Optional<Integer> getquantity(){ return this.quantity; }
 
-    public Order id(long id){ this.id=id; return this; }
-    public long id(){ return this.id; }
+    public Order id(Long id){ this.id=Optional.ofNullable(id); return this; }
+    public Optional<Long> getid(){ return this.id; }
 
-    public Order shipDate(java.time.OffsetDateTime shipDate){ this.shipDate=shipDate; return this; }
-    public java.time.OffsetDateTime shipDate(){ return this.shipDate; }
+    public Order shipDate(java.time.OffsetDateTime shipDate){ this.shipDate=Optional.ofNullable(shipDate); return this; }
+    public Optional<java.time.OffsetDateTime> getshipDate(){ return this.shipDate; }
 
-    public Order complete(boolean complete){ this.complete=complete; return this; }
-    public boolean complete(){ return this.complete; }
+    public Order complete(Boolean complete){ this.complete=Optional.ofNullable(complete); return this; }
+    public Optional<Boolean> getcomplete(){ return this.complete; }
 
-    public Order status(StatusEnum status){ this.status=status; return this; }
-    public StatusEnum status(){ return this.status; }
+    public Order status(String status){ this.status=Optional.ofNullable(status); return this; }
+    public Optional<String> getstatus(){ return this.status; }
 
 }
-
-/**
- * 
- * StatusEnum
- * 
- * Order Status
- * 
- */
-
-  public enum StatusEnum {
-    placed("placed"),
-    approved("approved"),
-    delivered("delivered");
-
-    public final String value;
-
-    StatusEnum(String value) {
-      this.value = value;
-    }
-  }
 
 /**
  * 
@@ -241,7 +217,6 @@ Order body_ = context.body(Order.class);
     //  VALIDATORS 
 
     context.begin("placeOrder");
-       body_.validate(context, "body_");
     context.require(body_,"body");
     context.end();
 
@@ -301,4 +276,4 @@ Long orderId_ = context.toLong(context.path("orderId"));
 }
 
 
-// aQute OpenAPI generator version 1.0.0.201704251535
+// aQute OpenAPI generator version 1.0.0.201704261218

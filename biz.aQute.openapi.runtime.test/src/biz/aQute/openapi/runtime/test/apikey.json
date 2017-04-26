@@ -1,6 +1,6 @@
 {
 	"swagger": "2.0",
-	"info": 
+	"info":
 	{
 		"version": "v1",
 		"title": "apikey"
@@ -14,18 +14,18 @@
 	},
 	"security": [
 		{
-			"api_key":[]	
+			"api_key":[]
 		}
 	],
 	"basePath": "/v1",
-	"paths": 
+	"paths":
 	{
-		"/operation": 
+		"/operation":
 		{
-			"get": 
+			"get":
 			{
 				"operationId": "use",
-				"parameters": 
+				"parameters":
 				[
 					{
 						"name": "Key",
@@ -34,22 +34,22 @@
 						"type":"string"
 					}
 				],
-				"responses": 
+				"responses":
 				{
-					"200": 
+					"200":
 					{
-						"schema": 
+						"schema":
 						{
 							"$ref": "#/definitions/Response"
 						}
 					}
 				}
 			},
-			"put": 
+			"put":
 			{
 				"operationId": "login",
 				"security": [],
-				"parameters": 
+				"parameters":
 				[
 					{
 						"name": "Key",
@@ -58,52 +58,54 @@
 						"type":"string"
 					}
 				],
-				"responses": 
+				"responses":
 				{
-					"200": 
+					"200":
 					{
-						"schema": 
+						"schema":
 						{
 							"$ref": "#/definitions/Response"
 						}
 					},
-					"401": 
+					"401":
 					{
-						"schema": 
+						"schema":
 						{
 						  	"$ref": "#/definitions/Response"
 						}
 					}
 				}
 			}
-			
+
 		}
 	},
 
-	"definitions": 
+	"definitions":
 	{
-		"Body": 
+		"Body":
 		{
 			"type": "object",
-			"properties": 
+			"required":["payload"],
+			"properties":
 			{
-				"payload": 
+				"payload":
 				{
 					"type": "string"
 				}
-				
+
 			}
 		},
-		"Response": 
+		"Response":
 		{
 			"type": "object",
-			"properties": 
+			"required":["payload"],
+			"properties":
 			{
-				"error": 
+				"error":
 				{
 					"type": "string"
 				}
-				
+
 			}
 		}
 	}

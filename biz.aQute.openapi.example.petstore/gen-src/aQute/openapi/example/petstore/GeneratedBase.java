@@ -3,6 +3,7 @@ package aQute.openapi.example.petstore;
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
+import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.time.OffsetDateTime;
@@ -46,4 +47,4 @@ public static final String BASE_PATH = "/v2";
 }
 
 
-// aQute OpenAPI generator version 1.0.0.201704251535
+// aQute OpenAPI generator version 1.0.0.201704261218

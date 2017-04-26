@@ -3,6 +3,7 @@ package aQute.openapi.example.petstore.user;
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
+import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.time.OffsetDateTime;
@@ -205,38 +206,38 @@ protected abstract void createUsersWithListInput(List<User> body) throws Excepti
 
 public static class User extends OpenAPIBase.DTO {
 
-    public String firstName;
-    public String lastName;
-    public String password;
-    public int userStatus;
-    public String phone;
-    public long id;
-    public String email;
-    public String username;
+    public Optional<String> firstName = Optional.empty();
+    public Optional<String> lastName = Optional.empty();
+    public Optional<String> password = Optional.empty();
+    public Optional<Integer> userStatus = Optional.empty();
+    public Optional<String> phone = Optional.empty();
+    public Optional<Long> id = Optional.empty();
+    public Optional<String> email = Optional.empty();
+    public Optional<String> username = Optional.empty();
 
-    public User firstName(String firstName){ this.firstName=firstName; return this; }
-    public String firstName(){ return this.firstName; }
+    public User firstName(String firstName){ this.firstName=Optional.ofNullable(firstName); return this; }
+    public Optional<String> getfirstName(){ return this.firstName; }
 
-    public User lastName(String lastName){ this.lastName=lastName; return this; }
-    public String lastName(){ return this.lastName; }
+    public User lastName(String lastName){ this.lastName=Optional.ofNullable(lastName); return this; }
+    public Optional<String> getlastName(){ return this.lastName; }
 
-    public User password(String password){ this.password=password; return this; }
-    public String password(){ return this.password; }
+    public User password(String password){ this.password=Optional.ofNullable(password); return this; }
+    public Optional<String> getpassword(){ return this.password; }
 
-    public User userStatus(int userStatus){ this.userStatus=userStatus; return this; }
-    public int userStatus(){ return this.userStatus; }
+    public User userStatus(Integer userStatus){ this.userStatus=Optional.ofNullable(userStatus); return this; }
+    public Optional<Integer> getuserStatus(){ return this.userStatus; }
 
-    public User phone(String phone){ this.phone=phone; return this; }
-    public String phone(){ return this.phone; }
+    public User phone(String phone){ this.phone=Optional.ofNullable(phone); return this; }
+    public Optional<String> getphone(){ return this.phone; }
 
-    public User id(long id){ this.id=id; return this; }
-    public long id(){ return this.id; }
+    public User id(Long id){ this.id=Optional.ofNullable(id); return this; }
+    public Optional<Long> getid(){ return this.id; }
 
-    public User email(String email){ this.email=email; return this; }
-    public String email(){ return this.email; }
+    public User email(String email){ this.email=Optional.ofNullable(email); return this; }
+    public Optional<String> getemail(){ return this.email; }
 
-    public User username(String username){ this.username=username; return this; }
-    public String username(){ return this.username; }
+    public User username(String username){ this.username=Optional.ofNullable(username); return this; }
+    public Optional<String> getusername(){ return this.username; }
 
 }
 
@@ -461,4 +462,4 @@ List<User> body_ = context.listBody(User.class);
 }
 
 
-// aQute OpenAPI generator version 1.0.0.201704251535
+// aQute OpenAPI generator version 1.0.0.201704261218

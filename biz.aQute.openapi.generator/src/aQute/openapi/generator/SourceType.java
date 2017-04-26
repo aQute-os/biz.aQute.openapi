@@ -1,6 +1,7 @@
 package aQute.openapi.generator;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -556,7 +557,7 @@ public abstract class SourceType {
 			this.className = toClassName(this.getSchema().$ref);
 		}
 
-		public void build() {
+		void build() {
 			doProperties(getSchema(), this.getSchema().properties, true);
 		}
 
@@ -564,8 +565,16 @@ public abstract class SourceType {
 			if (schema.properties == null)
 				return;
 
+			List<String> required = schema.required == null ? Collections.emptyList() : schema.required;
+
 			for (Entry<String,SchemaObject> e : schema.properties.entrySet()) {
 				SourceType type = SourceType.getSourceType(gen, e.getValue());
+
+				boolean optional = !required.contains(e.getKey());
+
+				if (optional) {
+					type = new OptionalType(type);
+				}
 
 				// It is hard to decide for a name for an enum type so they
 				// are generally represented as strings. However, if a type
@@ -684,6 +693,43 @@ public abstract class SourceType {
 	}
 
 	public boolean isObject() {
+		return false;
+	}
+
+	public static class OptionalType extends SourceType {
+
+		private SourceType target;
+
+		OptionalType(SourceType parent) {
+			super(parent.gen);
+			this.target = parent;
+		}
+
+		@Override
+		public String reference() {
+			return "Optional<" + target.wrapper().reference() + ">";
+		}
+
+		@Override
+		public String conversion(String name) {
+			return target.conversion(name + ".get()");
+		}
+
+		public void addTypes(SourceFile sourceFile) {
+			sourceFile.addType(target);
+			target.addTypes(sourceFile);
+		}
+
+		public boolean isOptional() {
+			return true;
+		}
+
+		public SourceType getTarget() {
+			return target;
+		}
+	}
+
+	public boolean isOptional() {
 		return false;
 	}
 }

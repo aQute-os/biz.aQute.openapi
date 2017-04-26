@@ -1,5 +1,6 @@
 package aQute.openapi.example.petstore.provider;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +28,7 @@ public class PetImpl extends GeneratedPet {
 	}
 
 	@Override
-	protected Iterable< ? extends Pet> findPetsByTags(List<String> tags) throws Exception, BadRequestResponse {
+	protected ArrayList< ? extends Pet> findPetsByTags(List<String> tags) throws Exception, BadRequestResponse {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -57,8 +58,8 @@ public class PetImpl extends GeneratedPet {
 	}
 
 	@Override
-	protected Iterable< ? extends Pet> findPetsByStatus(List<String> status) throws Exception, BadRequestResponse {
-		return Arrays.asList(new Pet().id(1000).name("Lucy"));
+	protected List<Pet> findPetsByStatus(List<String> status) throws Exception, BadRequestResponse {
+		return Arrays.asList(new Pet().id(1000L).name("Lucy"));
 	}
 
 	@Override

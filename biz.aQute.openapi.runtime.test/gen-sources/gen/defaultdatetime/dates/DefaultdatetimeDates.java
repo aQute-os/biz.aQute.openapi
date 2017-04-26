@@ -3,7 +3,9 @@ package gen.defaultdatetime.dates;
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
+import java.util.Optional;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.time.OffsetDateTime;
 import java.time.LocalDate;
 /**
@@ -82,10 +84,6 @@ public static class Dates extends OpenAPIBase.DTO {
       // end dates
     } 
 
-    if ( segments.length == 1 && "openapi.json".equals(segments[0])) {
-        getOpenAPIContext().copy( gen.defaultdatetime.DefaultdatetimeBase.class.getResourceAsStream("openapi.json"), "application/json");
-        return true;
-    }
     return false;
   }
 

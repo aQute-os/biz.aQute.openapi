@@ -171,6 +171,9 @@
             "id": {
               "type": "integer",
               "format": "int64"
+            },
+            "name": {
+              "type": "string"
             }
           }
         }
@@ -185,7 +188,7 @@
         "name": {
           "type": "string"
         },
-        "tag": {
+        "tagx": {
           "type": "string"
         }
       }

@@ -1,20 +1,20 @@
 {
 	"swagger": "2.0",
-	"info": 
+	"info":
 	{
 		"version": "v1",
 		"title": "parameters"
 	},
 
 	"basePath": "/v1",
-	"paths": 
+	"paths":
 	{
-		"/parameter/{path}": 
+		"/parameter/{path}":
 		{
-			"put": 
+			"put":
 			{
 				"operationId": "putParameter",
-				"parameters": 
+				"parameters":
 				[
 					{
 						"name": "body",
@@ -44,21 +44,21 @@
 					}
 				],
 
-				"responses": 
+				"responses":
 				{
-					"200": 
+					"200":
 					{
-						"schema": 
+						"schema":
 						{
 							"$ref": "#/definitions/Response"
 						}
 					}
 				}
 			},
-			"post": 
+			"post":
 			{
 				"operationId": "postParameter",
-				"parameters": 
+				"parameters":
 				[
 					{
 						"name": "form1",
@@ -93,45 +93,47 @@
 					}
 				],
 
-				"responses": 
+				"responses":
 				{
-					"200": 
+					"200":
 					{
-						"schema": 
+						"schema":
 						{
 							"$ref": "#/definitions/Response"
 						}
 					}
 				}
 			}
-			
+
 		}
 	},
 
-	"definitions": 
+	"definitions":
 	{
-		"Body": 
+		"Body":
 		{
 			"type": "object",
-			"properties": 
+			"required":["payload"],
+			"properties":
 			{
-				"payload": 
+				"payload":
 				{
 					"type": "string"
 				}
-				
+
 			}
 		},
-		"Response": 
+		"Response":
 		{
 			"type": "object",
-			"properties": 
+			"required":["error"],
+			"properties":
 			{
-				"error": 
+				"error":
 				{
 					"type": "string"
 				}
-				
+
 			}
 		}
 	}
