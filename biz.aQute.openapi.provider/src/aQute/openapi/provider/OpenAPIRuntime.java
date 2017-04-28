@@ -18,7 +18,7 @@ import org.osgi.service.http.NamespaceException;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 import org.osgi.util.tracker.ServiceTracker;
 
-import aQute.json.util.JSONCodec;
+import aQute.json.codec.JSONCodec;
 
 @Component(service = OpenAPIRuntime.class)
 public class OpenAPIRuntime {

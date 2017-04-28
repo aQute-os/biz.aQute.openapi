@@ -20,7 +20,7 @@ import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.osgi.service.http.NamespaceException;
 
-import aQute.json.util.JSONCodec;
+import aQute.json.codec.JSONCodec;
 import aQute.lib.io.IO;
 import junit.framework.TestCase;
 import local.test.accesstokenapi.GeneratedAccessTokenApi;

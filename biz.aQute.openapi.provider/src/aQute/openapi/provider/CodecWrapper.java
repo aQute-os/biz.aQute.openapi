@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.function.Function;
 
-import aQute.json.util.JSONCodec;
+import aQute.json.codec.JSONCodec;
 import aQute.openapi.provider.OpenAPIBase.Codec;
 
 public class CodecWrapper implements Codec {

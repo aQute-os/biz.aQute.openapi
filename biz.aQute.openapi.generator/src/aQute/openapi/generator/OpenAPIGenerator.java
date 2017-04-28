@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -22,7 +23,8 @@ import java.util.jar.Manifest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import aQute.json.util.JSONCodec;
+import aQute.json.codec.JSONCodec;
+import aQute.json.naming.NameCodec;
 import aQute.lib.env.Env;
 import aQute.lib.hex.Hex;
 import aQute.libg.glob.Glob;
@@ -59,7 +61,7 @@ public class OpenAPIGenerator extends Env {
 		if (config.dateTimeClass != null) {
 			this.dateTimeClass = config.dateTimeClass;
 		} else
-			this.dateTimeClass = null;
+			this.dateTimeClass = Instant.class.getName();
 
 		setSwagger(new JSONCodec().dec().resolve().from(in).get(SwaggerObject.class));
 
@@ -291,22 +293,13 @@ public class OpenAPIGenerator extends Env {
 		return SourceType.getSourceType(this, schema);
 	}
 
-	public final String[]	RESERVED	= {
-			"abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue",
-			"default", "do", "double", "else", "enum", "extends", "false", "final", "finally", "float", "for", "goto",
-			"if", "implements", "import", "instanceof", "int", "interface", "long", "native", "new", "null", "package",
-			"private", "protected", "public", "return", "short", "static", "strictfp", "super", "switch",
-			"synchronized", "this", "throw", "throws", "transient", "true", "try", "void", "volatile", "while"
-	};
 	public Object			dtoType;
-
-	public String toMemberName(String name) {
-		return makeSafe(firstCharacter(name, false), RESERVED, "$");
-	}
 
 	public String getVersion() {
 		String v = getSwagger().info.version;
-		if (v.startsWith("v"))
+		if (v == null)
+			v = "1.0.0";
+		else if (v.startsWith("v"))
 			v = v.substring(1);
 
 		return v;
@@ -377,7 +370,6 @@ public class OpenAPIGenerator extends Env {
 		return conversions;
 	}
 
-
 	public String findNamedDateTimeFormat(String name) {
 		try {
 			Field field = DateTimeFormatter.class.getField(name);
@@ -418,5 +410,40 @@ public class OpenAPIGenerator extends Env {
 
 	public String getDateTimeClass() {
 		return dateTimeClass == null ? OffsetDateTime.class.getName() : dateTimeClass;
+	}
+
+	public String getDateTimeFormat() {
+		return config.dateTimeFormat;
+	}
+
+	public String getDateFormat() {
+		return config.dateFormat;
+	}
+
+	public String pathToName(String string) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < string.length(); i++) {
+			int l = sb.length();
+			char c = string.charAt(i);
+			if ((l == 0 && Character.isJavaIdentifierStart(c)) || (l > 0 && Character.isJavaIdentifierPart(c))) {
+				sb.append(c);
+			} else {
+				if (l > 0)
+					sb.append("_");
+			}
+		}
+		return sb.toString();
+	}
+
+	public String toMemberName(String unencoded) {
+		if (unencoded.isEmpty())
+			unencoded = "_";
+
+		return toSafeName(unencoded.substring(0, 1).toLowerCase() + unencoded.substring(1));
+	}
+
+	public String toSafeName(String unencoded) {
+
+		return NameCodec.encode(unencoded);
 	}
 }

@@ -6,7 +6,7 @@ import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.LocalDate;
 /**
  * 
@@ -36,7 +36,7 @@ public static final String BASE_PATH = "/v1";
  * 
  */
 
-protected abstract Response use(String key) throws Exception;
+protected abstract Response use(String Key) throws Exception;
 
 /**
  * 
@@ -52,7 +52,7 @@ protected abstract Response use(String key) throws Exception;
  * 
  */
 
-protected abstract Response login(java.util.Optional<String> key) throws Exception, OpenAPIBase.UnauthorizedResponse;
+protected abstract Response login(Optional<String> Key) throws Exception, OpenAPIBase.UnauthorizedResponse;
 
 /**
  * 
@@ -62,9 +62,9 @@ protected abstract Response login(java.util.Optional<String> key) throws Excepti
 
 public static class Response extends OpenAPIBase.DTO {
 
-    public Optional<String> error;
+    public Optional<String> error = Optional.empty();
 
-    public Response error(Optional<String> error){ this.error=error; return this; }
+    public Response error(String error){ this.error=Optional.ofNullable(error); return this; }
     public Optional<String> error(){ return this.error; }
 
 }
@@ -80,6 +80,18 @@ public static class Response extends OpenAPIBase.DTO {
     super(BASE_PATH,
          "use                  GET    /operation  RETURN Response",
          "login                PUT    /operation  RETURN Response");
+  }
+  public static java.time.Instant toDateTime(String s) {
+    return java.time.Instant.parse(s);
+  }
+  public static String fromDateTime(java.time.Instant s) {
+    return s.toString();
+  }
+  public static LocalDate toDate(String s) {
+    return LocalDate.parse(s);
+  }
+  public static String fromDate(LocalDate s) {
+    return s.toString();
   }
 
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
@@ -99,10 +111,6 @@ public static class Response extends OpenAPIBase.DTO {
       // end operation
     } 
 
-    if ( segments.length == 1 && "openapi.json".equals(segments[0])) {
-        getOpenAPIContext().copy( gen.apikey.ApikeyBase.class.getResourceAsStream("openapi.json"), "application/json");
-        return true;
-    }
     return false;
   }
 
@@ -111,16 +119,16 @@ private void use_get_(OpenAPIContext context) throws Exception{
     context.setOperation("use");
     context.verify(gen.apikey.ApikeyBase.api_key, context.header("Key"));
 
-String key_ = context.toString(context.header("Key"));
+String Key_ = context.toString(context.header("Key"));
 
 
     //  VALIDATORS 
 
     context.begin("use");
-    context.require(key_,"Key");
+    context.require(Key_,"Key");
     context.end();
 
-    Object result = use(key_);
+    Object result = use(Key_);
     context.setResult(result, 200);
 
 }
@@ -129,9 +137,9 @@ private void login_put_(OpenAPIContext context) throws Exception{
 
     context.setOperation("login");
 
-java.util.Optional<String> key_ = context.optional(context.toString(context.header("Key")));
+Optional<String> Key_ = context.optional(context.toString(context.header("Key")));
 
-    Object result = login(key_);
+    Object result = login(Key_);
     context.setResult(result, 200);
 
 }

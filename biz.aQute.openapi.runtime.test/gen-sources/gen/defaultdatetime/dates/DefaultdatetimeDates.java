@@ -6,7 +6,7 @@ import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.LocalDate;
 /**
  * 
@@ -49,14 +49,14 @@ protected abstract Dates putDates(Dates token) throws Exception;
 public static class Dates extends OpenAPIBase.DTO {
 
     public LocalDate date;
-    public java.time.OffsetDateTime dateTime;
+    public java.time.Instant dateTime;
     public String error;
 
     public Dates date(LocalDate date){ this.date=date; return this; }
     public LocalDate date(){ return this.date; }
 
-    public Dates dateTime(java.time.OffsetDateTime dateTime){ this.dateTime=dateTime; return this; }
-    public java.time.OffsetDateTime dateTime(){ return this.dateTime; }
+    public Dates dateTime(java.time.Instant dateTime){ this.dateTime=dateTime; return this; }
+    public java.time.Instant dateTime(){ return this.dateTime; }
 
     public Dates error(String error){ this.error=error; return this; }
     public String error(){ return this.error; }

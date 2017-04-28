@@ -6,7 +6,7 @@ import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.LocalDate;
 /**
  * 
@@ -56,7 +56,7 @@ public static final String BASE_PATH = "/v2";
  * 
  */
 
-protected abstract ApiResponse uploadFile(long petId, java.util.Optional<String> additionalMetadata, java.util.Optional<OpenAPIBase.Part> file) throws Exception;
+protected abstract ApiResponse uploadFile(long petId, Optional<String> additionalMetadata, Optional<OpenAPIBase.Part> file) throws Exception;
 
 /**
  * 
@@ -141,7 +141,7 @@ protected abstract Pet getPetById(long petId) throws Exception, OpenAPIBase.BadR
  * 
  */
 
-protected abstract void deletePet(java.util.Optional<String> api_key, long petId) throws Exception, OpenAPIBase.BadRequestResponse;
+protected abstract void deletePet(Optional<String> api_key, long petId) throws Exception, OpenAPIBase.BadRequestResponse;
 
 /**
  * 
@@ -199,7 +199,27 @@ protected abstract Iterable<? extends Pet> findPetsByStatus(List<String> status)
  * 
  */
 
-protected abstract void updatePetWithForm(long petId, java.util.Optional<String> name, java.util.Optional<String> status) throws Exception;
+protected abstract void updatePetWithForm(long petId, Optional<String> name, Optional<String> status) throws Exception;
+
+/**
+ * 
+ * StatusEnum
+ * 
+ * pet status in the store
+ * 
+ */
+
+  public enum StatusEnum {
+    available("available"),
+    pending("pending"),
+    sold("sold");
+
+    public final String value;
+
+    StatusEnum(String value) {
+      this.value = value;
+    }
+  }
 
 /**
  * 
@@ -213,10 +233,10 @@ public static class Category extends OpenAPIBase.DTO {
     public Optional<Long> id = Optional.empty();
 
     public Category name(String name){ this.name=Optional.ofNullable(name); return this; }
-    public Optional<String> getname(){ return this.name; }
+    public Optional<String> name(){ return this.name; }
 
     public Category id(Long id){ this.id=Optional.ofNullable(id); return this; }
-    public Optional<Long> getid(){ return this.id; }
+    public Optional<Long> id(){ return this.id; }
 
 }
 
@@ -233,13 +253,13 @@ public static class ApiResponse extends OpenAPIBase.DTO {
     public Optional<String> message = Optional.empty();
 
     public ApiResponse code(Integer code){ this.code=Optional.ofNullable(code); return this; }
-    public Optional<Integer> getcode(){ return this.code; }
+    public Optional<Integer> code(){ return this.code; }
 
     public ApiResponse type(String type){ this.type=Optional.ofNullable(type); return this; }
-    public Optional<String> gettype(){ return this.type; }
+    public Optional<String> type(){ return this.type; }
 
     public ApiResponse message(String message){ this.message=Optional.ofNullable(message); return this; }
-    public Optional<String> getmessage(){ return this.message; }
+    public Optional<String> message(){ return this.message; }
 
 }
 
@@ -255,10 +275,10 @@ public static class Tag extends OpenAPIBase.DTO {
     public Optional<Long> id = Optional.empty();
 
     public Tag name(String name){ this.name=Optional.ofNullable(name); return this; }
-    public Optional<String> getname(){ return this.name; }
+    public Optional<String> name(){ return this.name; }
 
     public Tag id(Long id){ this.id=Optional.ofNullable(id); return this; }
-    public Optional<Long> getid(){ return this.id; }
+    public Optional<Long> id(){ return this.id; }
 
 }
 
@@ -275,25 +295,25 @@ public static class Pet extends OpenAPIBase.DTO {
     public Optional<Long> id = Optional.empty();
     public Optional<Category> category = Optional.empty();
     public Optional<List<Tag>> tags = Optional.empty();
-    public Optional<String> status = Optional.empty();
+    public Optional<StatusEnum> status = Optional.empty();
 
     public Pet photoUrls(List<String> photoUrls){ this.photoUrls=photoUrls; return this; }
-    public List<String> getphotoUrls(){ return this.photoUrls; }
+    public List<String> photoUrls(){ return this.photoUrls; }
 
     public Pet name(String name){ this.name=name; return this; }
-    public String getname(){ return this.name; }
+    public String name(){ return this.name; }
 
     public Pet id(Long id){ this.id=Optional.ofNullable(id); return this; }
-    public Optional<Long> getid(){ return this.id; }
+    public Optional<Long> id(){ return this.id; }
 
     public Pet category(Category category){ this.category=Optional.ofNullable(category); return this; }
-    public Optional<Category> getcategory(){ return this.category; }
+    public Optional<Category> category(){ return this.category; }
 
     public Pet tags(List<Tag> tags){ this.tags=Optional.ofNullable(tags); return this; }
-    public Optional<List<Tag>> gettags(){ return this.tags; }
+    public Optional<List<Tag>> tags(){ return this.tags; }
 
-    public Pet status(String status){ this.status=Optional.ofNullable(status); return this; }
-    public Optional<String> getstatus(){ return this.status; }
+    public Pet status(StatusEnum status){ this.status=Optional.ofNullable(status); return this; }
+    public Optional<StatusEnum> status(){ return this.status; }
 
 }
 
@@ -382,8 +402,8 @@ private void uploadFile_post_(OpenAPIContext context) throws Exception{
     context.verify(aQute.openapi.example.petstore.GeneratedBase.petstore_auth,"write:pets","read:pets");
 
 Long petId_ = context.toLong(context.path("petId"));
-java.util.Optional<String> additionalMetadata_ = context.optional(context.toString(context.parameter("additionalMetadata")));
-java.util.Optional<OpenAPIBase.Part> file_ = context.optional(context.part("file"));
+Optional<String> additionalMetadata_ = context.optional(context.toString(context.parameter("additionalMetadata")));
+Optional<OpenAPIBase.Part> file_ = context.optional(context.part("file"));
 
 
     //  VALIDATORS 
@@ -459,7 +479,7 @@ private void deletePet_delete_(OpenAPIContext context) throws Exception{
     context.setOperation("deletePet");
     context.verify(aQute.openapi.example.petstore.GeneratedBase.petstore_auth,"write:pets","read:pets");
 
-java.util.Optional<String> api_key_ = context.optional(context.toString(context.header("api_key")));
+Optional<String> api_key_ = context.optional(context.toString(context.header("api_key")));
 Long petId_ = context.toLong(context.path("petId"));
 
 
@@ -528,8 +548,8 @@ private void updatePetWithForm_post_(OpenAPIContext context) throws Exception{
     context.verify(aQute.openapi.example.petstore.GeneratedBase.petstore_auth,"write:pets","read:pets");
 
 Long petId_ = context.toLong(context.path("petId"));
-java.util.Optional<String> name_ = context.optional(context.toString(context.parameter("name")));
-java.util.Optional<String> status_ = context.optional(context.toString(context.parameter("status")));
+Optional<String> name_ = context.optional(context.toString(context.parameter("name")));
+Optional<String> status_ = context.optional(context.toString(context.parameter("status")));
 
 
     //  VALIDATORS 
@@ -546,4 +566,4 @@ java.util.Optional<String> status_ = context.optional(context.toString(context.p
 }
 
 
-// aQute OpenAPI generator version 1.0.0.201704261218
+// aQute OpenAPI generator version 1.0.0.201704281403

@@ -1433,6 +1433,55 @@
         "tags": [
           "OverviewApi"
         ],
+        "operationId": "GetOverview",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "parentId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/OverviewPlantItems"
+            }
+          },
+          "400": {
+            "description": "The request is not as expected"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      }
+    },
+    "/overview/plants": {
+      "get": {
+        "tags": [
+          "OverviewApi"
+        ],
         "summary": "Returns child overview items (plants or sub plants) of the passed parent component id or root elements if parentId is not set.",
         "description": "Navigation items describes elements for navigating within a plant related to passed parent component id.",
         "operationId": "GetOverview",
@@ -1470,7 +1519,7 @@
           "200": {
             "description": "A list of available navigation items related to the parent component id.",
             "schema": {
-              "$ref": "#/definitions/OverviewItem"
+              "$ref": "#/definitions/OverviewPlantItems"
             }
           },
           "400": {
@@ -5455,7 +5504,7 @@
         }
       }
     },
-    "OverviewItem": {
+    "OverviewPlantItems": {
       "type": "object",
       "properties": {
         "unassigned": {
@@ -5466,12 +5515,12 @@
           "description": "Overview items in this hierarchy level without devices",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/OverviewItemData"
+            "$ref": "#/definitions/OverviewPlantItem"
           }
         }
       }
     },
-    "OverviewItemData": {
+    "OverviewPlantItem": {
       "required": [
         "componentType",
         "name",
@@ -5484,9 +5533,14 @@
           "description": "Gets the peak power of the plant group, plant or sub plant.",
           "type": "number"
         },
-        "perfRatio": {
+        "perfRatioToday": {
           "format": "double",
-          "description": "Performance Ratio of the plant group, plant or sub plant.",
+          "description": "Todays Performance Ratio of the plant or sub plant.",
+          "type": "number"
+        },
+        "perfRatioYesterday": {
+          "format": "double",
+          "description": "Yesterdays Performance Ratio of the plant or sub plant.",
           "type": "number"
         },
         "componentType": {
@@ -5509,17 +5563,28 @@
           "type": "string"
         },
         "state": {
+          "format": "int64",
           "description": "State of the plant group, plant or sub plant.",
-          "type": "string"
+          "type": "integer"
         },
-        "totWhOut": {
+        "totWhOutToday": {
           "format": "double",
-          "description": "Gets the energy of the plant group, plant or sub plant.",
+          "description": "Gets todays energy of the  plant, sub plant or device.",
           "type": "number"
         },
-        "specWhOut": {
+        "totWhOutYesterday": {
           "format": "double",
-          "description": "Gets the specific energy of the plant group, plant or sub plant.",
+          "description": "Gets yesterdays energy of the  plant, sub plant or device.",
+          "type": "number"
+        },
+        "specWhOutToday": {
+          "format": "double",
+          "description": "Gets todays specific energy of the  plant, sub plant or device.",
+          "type": "number"
+        },
+        "specWhOutYesterday": {
+          "format": "double",
+          "description": "Gets yesterdays specific energy of the  plant, sub plant or device.",
           "type": "number"
         }
       }
@@ -5560,17 +5625,28 @@
           "type": "string"
         },
         "state": {
+          "format": "int64",
           "description": "State of the plant group, plant or sub plant.",
-          "type": "string"
+          "type": "integer"
         },
-        "totWhOut": {
+        "totWhOutToday": {
           "format": "double",
-          "description": "Gets the energy of the plant group, plant or sub plant.",
+          "description": "Gets todays energy of the  plant, sub plant or device.",
           "type": "number"
         },
-        "specWhOut": {
+        "totWhOutYesterday": {
           "format": "double",
-          "description": "Gets the specific energy of the plant group, plant or sub plant.",
+          "description": "Gets yesterdays energy of the  plant, sub plant or device.",
+          "type": "number"
+        },
+        "specWhOutToday": {
+          "format": "double",
+          "description": "Gets todays specific energy of the  plant, sub plant or device.",
+          "type": "number"
+        },
+        "specWhOutYesterday": {
+          "format": "double",
+          "description": "Gets yesterdays specific energy of the  plant, sub plant or device.",
           "type": "number"
         }
       }

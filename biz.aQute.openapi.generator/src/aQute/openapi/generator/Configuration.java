@@ -21,4 +21,5 @@ public class Configuration extends DTO {
 	public String		dateTimeClass;
 	public String[]		conversions;
 	public String		openapiFile		= "openapi.json";
+	public boolean		uisupport		= false;
 }

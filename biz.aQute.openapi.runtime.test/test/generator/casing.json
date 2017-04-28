@@ -1,0 +1,14 @@
+{
+    "swagger": "2.0",
+    "basePath": "/enums",
+    "info": {},
+    "paths": {
+        "/casing": {
+            "post": {
+                "operationId": "Case"
+            }
+        }
+    },
+    "definitions": {
+   }
+}

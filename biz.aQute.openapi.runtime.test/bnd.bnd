@@ -1,4 +1,5 @@
 -buildpath: \
+	biz.aQute.json.util;version=latest;packages=*,\
 	biz.aQute.openapi.provider;version=latest;packages=*,\
 	biz.aQute.openapi.generator;version=latest,\
 	osgi.enroute.base.api,\

@@ -281,9 +281,12 @@ public abstract class SourceType {
 			return gen.getDateTimeClass();
 		}
 
+		/**
+		 * GeneratedBase.to
+		 */
 		@Override
 		public String conversion(String name) {
-			return String.format("toDateTime(%s)", name);
+			return String.format("^%s.toDateTime(%s)", gen.getBaseSourceFile().getFQN(), name);
 		}
 
 	}
@@ -324,8 +327,8 @@ public abstract class SourceType {
 
 		@Override
 		public boolean hasValidator() {
-			return !Double.isNaN(getSchema().minimum) || !Double.isNaN(getSchema().maximum) || getSchema().multipleOf > 0
-					|| (getSchema().enum$ != null && !getSchema().enum$.isEmpty());
+			return !Double.isNaN(getSchema().minimum) || !Double.isNaN(getSchema().maximum)
+					|| getSchema().multipleOf > 0 || (getSchema().enum$ != null && !getSchema().enum$.isEmpty());
 		}
 
 		@Override
@@ -340,14 +343,14 @@ public abstract class SourceType {
 
 		@Override
 		public String conversion(String variable) {
-			return String.format("to%s(%s)", Character.toUpperCase(this.getName().charAt(0)) + this.getName().substring(1),
-					variable);
+			return String.format("to%s(%s)",
+					Character.toUpperCase(this.getName().charAt(0)) + this.getName().substring(1), variable);
 		}
 
 		public String toString(double v) {
 			if ((v % 1) != 0) {
-				OpenAPIGenerator.getLogger().warn("A minimum/maximum for an integer value in {} is not an int but is {}",
-						this, v);
+				OpenAPIGenerator.getLogger()
+						.warn("A minimum/maximum for an integer value in {} is not an int but is {}", this, v);
 			}
 			return Long.toString(Math.round(v));
 		}
@@ -421,9 +424,9 @@ public abstract class SourceType {
 	}
 
 	public static class ArrayType extends SourceType {
-		private ItemsObject		schema;
-		private SourceType		componentType;
-		private Boolean	hasValidator;
+		private ItemsObject	schema;
+		private SourceType	componentType;
+		private Boolean		hasValidator;
 
 		public ArrayType(OpenAPIGenerator gen, ItemsObject schema) {
 			super(gen);
@@ -443,7 +446,8 @@ public abstract class SourceType {
 		public boolean hasValidator() {
 			if (hasValidator == null) {
 				hasValidator = Boolean.FALSE;
-				hasValidator = getSchema().maxItems > 0 || getSchema().minItems > 0 || getComponentType().hasValidator();
+				hasValidator = getSchema().maxItems > 0 || getSchema().minItems > 0
+						|| getComponentType().hasValidator();
 			}
 
 			return hasValidator;
@@ -546,8 +550,8 @@ public abstract class SourceType {
 
 	public static class ObjectType extends SourceType {
 		private static int					index		= 1000;
-		private final SchemaObject					schema;
-		private final String						className;
+		private final SchemaObject			schema;
+		private final String				className;
 		final Map<String,SourceProperty>	properties	= new HashMap<>();
 		private Boolean						hasValidator;
 
@@ -613,7 +617,11 @@ public abstract class SourceType {
 		public boolean hasValidator() {
 			if (hasValidator == null) {
 				hasValidator = Boolean.FALSE;
-				hasValidator = properties.values().stream().filter(p -> p.getType().hasValidator()).findAny().isPresent();
+				hasValidator = properties.values()
+						.stream()
+						.filter(p -> p.getType().hasValidator())
+						.findAny()
+						.isPresent();
 			}
 			return hasValidator;
 		}
@@ -703,6 +711,15 @@ public abstract class SourceType {
 		OptionalType(SourceType parent) {
 			super(parent.gen);
 			this.target = parent;
+		}
+
+		@Override
+		public SourceType getEnum(String typeName) {
+			SourceType enum1 = target.getEnum(typeName);
+			if (enum1 == null)
+				return null;
+
+			return new OptionalType(enum1);
 		}
 
 		@Override

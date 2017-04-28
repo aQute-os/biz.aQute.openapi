@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -205,7 +204,6 @@ public class OpenAPIContext {
 		if (type == String.class)
 			return (List<T>) Arrays.asList(values);
 
-
 		List<T> list = new ArrayList<T>();
 
 		for (int i = 0; i < values.length; i++) {
@@ -294,10 +292,6 @@ public class OpenAPIContext {
 		return value.toCharArray();
 	}
 
-	public OffsetDateTime toDateTime(String parameter) {
-		return OffsetDateTime.parse(parameter);
-	}
-
 	public LocalDate toDate(String parameter) {
 		return LocalDate.parse(parameter);
 	}
@@ -341,7 +335,8 @@ public class OpenAPIContext {
 	}
 
 	public void verify(OpenAPISecurityDefinition def, String... args) {
-		authenticator.verify();
+		if (authenticator != null)
+			authenticator.verify();
 	}
 
 	public void authorize(String permission, String... args) throws Exception {

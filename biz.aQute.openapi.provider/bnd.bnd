@@ -9,9 +9,12 @@ Export-Package: \
 	biz.aQute.openapi.api;version=latest,\
 	osgi.enroute.base.api,\
 	biz.aQute.json.util,\
-	biz.aQute.bndlib;packages=*, \
+	biz.aQute.bndlib, \
 	org.apache.felix.gogo.runtime
-	
+
 -testpath: \
 	org.apache.felix.http.jetty
 -runrequires: osgi.identity;filter:='(osgi.identity=biz.aQute.openapi.provider)'
+Private-Package: \
+	aQute.json.codec,\
+	aQute.json.naming

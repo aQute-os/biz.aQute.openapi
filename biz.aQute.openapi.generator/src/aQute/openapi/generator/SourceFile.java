@@ -15,9 +15,9 @@ import aQute.openapi.v2.api.ResponseObject;
 
 public class SourceFile {
 	private final Map<String,SourceMethod>	methods	= new HashMap<>();
-	final Map<String,SourceType>	types	= new HashMap<>();
-	final RootSourceRoute			root	= new RootSourceRoute();
-	final private String			name;
+	final Map<String,SourceType>			types	= new HashMap<>();
+	final RootSourceRoute					root	= new RootSourceRoute();
+	final private String					name;
 	private final OpenAPIGenerator			gen;
 
 	public SourceFile(OpenAPIGenerator gen, String name) {
@@ -80,7 +80,7 @@ public class SourceFile {
 			getGen().error("Duplicate operation id: %s, current=%s, previous=%s", operation.operationId, path,
 					duplicate.getPath());
 
-			operation.operationId = operation.operationId + "_";
+			operation.operationId = m.name + "_";
 			m = new SourceMethod(this, path, method, operation);
 		}
 		getMethods().put(m.name, m);

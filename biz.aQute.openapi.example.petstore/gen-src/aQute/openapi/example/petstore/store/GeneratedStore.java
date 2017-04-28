@@ -6,7 +6,7 @@ import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.LocalDate;
 /**
  * 
@@ -118,29 +118,49 @@ public static class Order extends OpenAPIBase.DTO {
     public Optional<Long> petId = Optional.empty();
     public Optional<Integer> quantity = Optional.empty();
     public Optional<Long> id = Optional.empty();
-    public Optional<java.time.OffsetDateTime> shipDate = Optional.empty();
+    public Optional<java.time.Instant> shipDate = Optional.empty();
     public Optional<Boolean> complete = Optional.empty();
-    public Optional<String> status = Optional.empty();
+    public Optional<StatusEnum> status = Optional.empty();
 
     public Order petId(Long petId){ this.petId=Optional.ofNullable(petId); return this; }
-    public Optional<Long> getpetId(){ return this.petId; }
+    public Optional<Long> petId(){ return this.petId; }
 
     public Order quantity(Integer quantity){ this.quantity=Optional.ofNullable(quantity); return this; }
-    public Optional<Integer> getquantity(){ return this.quantity; }
+    public Optional<Integer> quantity(){ return this.quantity; }
 
     public Order id(Long id){ this.id=Optional.ofNullable(id); return this; }
-    public Optional<Long> getid(){ return this.id; }
+    public Optional<Long> id(){ return this.id; }
 
-    public Order shipDate(java.time.OffsetDateTime shipDate){ this.shipDate=Optional.ofNullable(shipDate); return this; }
-    public Optional<java.time.OffsetDateTime> getshipDate(){ return this.shipDate; }
+    public Order shipDate(java.time.Instant shipDate){ this.shipDate=Optional.ofNullable(shipDate); return this; }
+    public Optional<java.time.Instant> shipDate(){ return this.shipDate; }
 
     public Order complete(Boolean complete){ this.complete=Optional.ofNullable(complete); return this; }
-    public Optional<Boolean> getcomplete(){ return this.complete; }
+    public Optional<Boolean> complete(){ return this.complete; }
 
-    public Order status(String status){ this.status=Optional.ofNullable(status); return this; }
-    public Optional<String> getstatus(){ return this.status; }
+    public Order status(StatusEnum status){ this.status=Optional.ofNullable(status); return this; }
+    public Optional<StatusEnum> status(){ return this.status; }
 
 }
+
+/**
+ * 
+ * StatusEnum
+ * 
+ * Order Status
+ * 
+ */
+
+  public enum StatusEnum {
+    placed("placed"),
+    approved("approved"),
+    delivered("delivered");
+
+    public final String value;
+
+    StatusEnum(String value) {
+      this.value = value;
+    }
+  }
 
 /**
  * 
@@ -276,4 +296,4 @@ Long orderId_ = context.toLong(context.path("orderId"));
 }
 
 
-// aQute OpenAPI generator version 1.0.0.201704261218
+// aQute OpenAPI generator version 1.0.0.201704281403

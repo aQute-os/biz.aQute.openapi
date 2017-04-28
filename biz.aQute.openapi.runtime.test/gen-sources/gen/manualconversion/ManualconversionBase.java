@@ -25,6 +25,18 @@ public static final String BASE_PATH = "/v1";
   public ManualconversionBase() {
     super(BASE_PATH);
   }
+  public static java.time.Instant toDateTime(String s) {
+    return java.time.Instant.parse(s);
+  }
+  public static String fromDateTime(java.time.Instant s) {
+    return s.toString();
+  }
+  public static LocalDate toDate(String s) {
+    return LocalDate.parse(s);
+  }
+  public static String fromDate(LocalDate s) {
+    return s.toString();
+  }
 
     static final public OpenAPIBase.Codec CODEC = OpenAPIBase.createOpenAPICodec();
     static {
@@ -41,10 +53,6 @@ public static final String BASE_PATH = "/v1";
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
 
 
-    if ( segments.length == 1 && "openapi.json".equals(segments[0])) {
-        getOpenAPIContext().copy( gen.manualconversion.ManualconversionBase.class.getResourceAsStream("openapi.json"), "application/json");
-        return true;
-    }
     return false;
   }
 

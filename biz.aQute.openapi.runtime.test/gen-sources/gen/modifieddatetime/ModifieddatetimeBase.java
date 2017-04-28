@@ -25,12 +25,26 @@ public static final String BASE_PATH = "/v1";
   public ModifieddatetimeBase() {
     super(BASE_PATH);
   }
+  final static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss[.SSS]X", java.util.Locale.getDefault());
+  public static java.time.Instant toDateTime(String s) {
+    return java.time.Instant.from(dateTimeFormat.parse(s));
+  }
+  public static String fromDateTime(java.time.Instant s) {
+    return dateTimeFormat.format(java.time.ZonedDateTime.ofInstant(s, java.time.ZoneId.of("UTC")));
+  }
+  final static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-DDD");
+  public static LocalDate toDate(String s) {
+    return LocalDate.from(dateFormat.parse(s));
+  }
+  public static String fromDate(LocalDate s) {
+    return dateFormat.format(s);
+  }
 
     static final public OpenAPIBase.Codec CODEC = OpenAPIBase.createOpenAPICodec();
     static {
-               addDateTimeHandler(CODEC, LocalDate.class, "yyyy-DDD");
+           CODEC.addStringHandler(LocalDate.class, ModifieddatetimeBase::fromDate, ModifieddatetimeBase::toDate);
 
-               addDateTimeHandler(CODEC, java.time.Instant.class, "yyyy-MM-dd'T'HH:mm:ss[.SSS]X");
+           CODEC.addStringHandler(java.time.Instant.class, ModifieddatetimeBase::fromDateTime, ModifieddatetimeBase::toDateTime);
 
     }
 
@@ -42,10 +56,6 @@ public static final String BASE_PATH = "/v1";
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
 
 
-    if ( segments.length == 1 && "openapi.json".equals(segments[0])) {
-        getOpenAPIContext().copy( gen.modifieddatetime.ModifieddatetimeBase.class.getResourceAsStream("openapi.json"), "application/json");
-        return true;
-    }
     return false;
   }
 

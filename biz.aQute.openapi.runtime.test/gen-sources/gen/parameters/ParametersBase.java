@@ -6,7 +6,7 @@ import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.LocalDate;
 /**
  * 
@@ -102,6 +102,18 @@ public static class Body extends OpenAPIBase.DTO {
          "postParameter        POST   /parameter/{path}?query  RETURN Response",
          "putParameter         PUT    /parameter/{path}?query  PAYLOAD Body  RETURN Response");
   }
+  public static java.time.Instant toDateTime(String s) {
+    return java.time.Instant.parse(s);
+  }
+  public static String fromDateTime(java.time.Instant s) {
+    return s.toString();
+  }
+  public static LocalDate toDate(String s) {
+    return LocalDate.parse(s);
+  }
+  public static String fromDate(LocalDate s) {
+    return s.toString();
+  }
 
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
 
@@ -125,10 +137,6 @@ public static class Body extends OpenAPIBase.DTO {
       }      // end parameter
     } 
 
-    if ( segments.length == 1 && "openapi.json".equals(segments[0])) {
-        getOpenAPIContext().copy( gen.parameters.ParametersBase.class.getResourceAsStream("openapi.json"), "application/json");
-        return true;
-    }
     return false;
   }
 

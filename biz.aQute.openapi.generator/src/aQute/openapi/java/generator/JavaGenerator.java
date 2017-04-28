@@ -7,6 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Modifier;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -308,8 +309,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 
 	protected void doLocalVariable(SourceArgument a, String name) {
 		if (!a.getPar().required) {
-			format("java.util.Optional<%s> %s = context.optional(%s);\n", a.getType().wrapper().reference(), name,
-					a.access());
+			format("Optional<%s> %s = context.optional(%s);\n", a.getType().wrapper().reference(), name, a.access());
 		} else
 			format("%s %s_ = %s;\n", a.getType().wrapper().reference(), a.getName(), a.access());
 	}
@@ -391,20 +391,23 @@ public class JavaGenerator extends BaseSourceGenerator {
 	}
 
 	protected void doCopyOpenAPIFile(String openAPIFile) {
-		openAPIFile = escapeString(openAPIFile);
-		SourceFileBase base = gen.getBaseSourceFile();
-		format("    if ( segments.length == 1 && %s.equals(segments[0])) {\n", openAPIFile);
-		format("        getOpenAPIContext().copy( %s.class.getResourceAsStream(%s), \"application/json\");\n",
-				base.getFQN(), openAPIFile);
-		format("        return true;\n");
-		format("    }\n");
+		if (gen.getConfig().uisupport) {
+			openAPIFile = escapeString(openAPIFile);
+			SourceFileBase base = gen.getBaseSourceFile();
+			format("    if ( segments.length == 1 && %s.equals(segments[0])) {\n", openAPIFile);
+			format("        getOpenAPIContext().copy( %s.class.getResourceAsStream(%s), \"application/json\");\n",
+					base.getFQN(), openAPIFile);
+			format("        return true;\n");
+			format("    }\n");
 
-		File output = IO.getFile(this.getOutput(), sourceFile.getPath(gen.getConfig().openapiFile));
-		output.getParentFile().mkdirs();
-		try {
-			IO.copy(gen.getInputFile(), output);
-		} catch (Exception e) {
-			gen.exception(e, "Could not copy the openapi input file %s to the output %s", gen.getInputFile(), output);
+			File output = IO.getFile(this.getOutput(), sourceFile.getPath(gen.getConfig().openapiFile));
+			output.getParentFile().mkdirs();
+			try {
+				IO.copy(gen.getInputFile(), output);
+			} catch (Exception e) {
+				gen.exception(e, "Could not copy the openapi input file %s to the output %s", gen.getInputFile(),
+						output);
+			}
 		}
 	}
 
@@ -421,24 +424,32 @@ public class JavaGenerator extends BaseSourceGenerator {
 
 		doDateTimeConversions(conversions);
 
-		if (conversions.isEmpty())
-			return;
-
 		if (isBase()) {
 
-			format("\n");
-			format("    static final public OpenAPIBase.Codec CODEC = OpenAPIBase.createOpenAPICodec();\n");
-			format("    static {\n");
+			doDateTimeConversionFunction();
+			doDateConversionFunction();
 
-			for (String conversion : conversions) {
-				format("      %s\n", conversion);
+			if (!conversions.isEmpty()) {
+
+				format("\n");
+				format("    static final public OpenAPIBase.Codec CODEC = OpenAPIBase.createOpenAPICodec();\n");
+				format("    static {\n");
+
+				for (String conversion : conversions) {
+					format("      %s\n", conversion);
+				}
+				format("    }\n\n");
 			}
-			format("    }\n\n");
 		}
-		SourceFileBase base = gen.getBaseSourceFile();
-		format("    public OpenAPIBase.Codec codec_() {\n");
-		format("        return %s.CODEC;\n", base.getFQN());
-		format("    }\n\n");
+
+		if (!conversions.isEmpty()) {
+
+			SourceFileBase base = gen.getBaseSourceFile();
+			format("    public OpenAPIBase.Codec codec_() {\n");
+			format("        return %s.CODEC;\n", base.getFQN());
+			format("    }\n\n");
+
+		}
 	}
 
 	protected boolean isBase() {
@@ -446,16 +457,109 @@ public class JavaGenerator extends BaseSourceGenerator {
 	}
 
 	protected void doDateTimeConversions(List<String> conversions) {
+
 		String dateFormat = gen.getConfig().dateFormat;
+		String fqn = gen.getBaseSourceFile().getTypeName();
 		if (dateFormat != null)
-			conversions.add(String.format("         addDateTimeHandler(CODEC, LocalDate.class, %s);\n",
-					escapeString(dateFormat)));
+			conversions.add(String.format("     CODEC.addStringHandler(LocalDate.class, %s::fromDate, %s::toDate);\n",
+					fqn, fqn));
 
 		String dateTimeFormat = gen.getConfig().dateTimeFormat;
 		if (dateTimeFormat != null) {
-			conversions.add(String.format("         addDateTimeHandler(CODEC, %s.class, %s);\n", gen.getDateTimeClass(),
-					escapeString(gen.getConfig().dateTimeFormat)));
+			conversions.add(String.format("     CODEC.addStringHandler(%s.class, %s::fromDateTime, %s::toDateTime);\n",
+					gen.getDateTimeClass(), fqn, fqn));
 		}
+	}
+
+	protected void doDateTimeConversionFunction() {
+		boolean hasFormat = gen.getDateTimeFormat() != null;
+		boolean hasNamedFormat = false;
+		String named = null;
+
+		if (hasFormat) {
+			named = gen.findNamedDateTimeFormat(gen.getDateTimeFormat());
+			if (named == null)
+				format("  final static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern(%s, java.util.Locale.getDefault());\n",
+						escapeString(gen.getDateTimeFormat()));
+			else
+				hasNamedFormat = true;
+		}
+
+		String dateTimeClass = gen.getDateTimeClass();
+
+		format("  public static %s toDateTime(String s) {\n", dateTimeClass);
+
+		if (hasFormat) {
+			if (hasNamedFormat) {
+				format("    return %s.from(%s.parse(s));\n", dateTimeClass, named);
+			} else {
+				format("    return %s.from(dateTimeFormat.parse(s));\n", dateTimeClass, named);
+			}
+
+		} else {
+			format("    return %s.parse(s);\n", dateTimeClass);
+		}
+		format("  }\n");
+
+		format("  public static String fromDateTime(%s s) {\n", dateTimeClass);
+
+		if (hasFormat) {
+			String access = "s";
+			if (dateTimeClass.equals(Instant.class.getName()))
+				access = "java.time.ZonedDateTime.ofInstant(s, java.time.ZoneId.of(\"UTC\"))";
+
+			if (hasNamedFormat) {
+				format("    return %s.format(%s);\n", named, access);
+			} else {
+				format("    return dateTimeFormat.format(%s);\n", access);
+			}
+
+		} else {
+			format("    return s.toString();\n");
+		}
+		format("  }\n");
+	}
+
+	protected void doDateConversionFunction() {
+		boolean hasFormat = gen.getDateFormat() != null;
+		boolean hasNamedFormat = false;
+		String named = null;
+
+		if (hasFormat) {
+			named = gen.findNamedDateTimeFormat(gen.getDateFormat());
+			if (named == null)
+				format("  final static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(%s);\n",
+						escapeString(gen.getDateFormat()));
+			else
+				hasNamedFormat = true;
+		}
+
+		format("  public static LocalDate toDate(String s) {\n");
+
+		if (hasFormat) {
+			if (hasNamedFormat) {
+				format("    return LocalDate.from(%s.parse(s));\n", named);
+			} else {
+				format("    return LocalDate.from(dateFormat.parse(s));\n", named);
+			}
+
+		} else {
+			format("    return LocalDate.parse(s);\n");
+		}
+		format("  }\n");
+		format("  public static String fromDate(LocalDate s) {\n");
+
+		if (hasFormat) {
+			if (hasNamedFormat) {
+				format("    return %s.format(s);\n", named);
+			} else {
+				format("    return dateFormat.format(s);\n");
+			}
+
+		} else {
+			format("    return s.toString();\n");
+		}
+		format("  }\n");
 	}
 
 	protected void doConstructor(String className) {
@@ -572,7 +676,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 		String del = "";
 		for (Object member : enumType.getSchema().enum$) {
 			String name = member == null ? "null" : member.toString();
-			String memberName = gen.makeSafe(name, gen.RESERVED, "$");
+			String memberName = gen.toSafeName(name);
 			format("%s    %s(%s)", del, memberName, escapeString(member));
 			del = ",\n";
 		}
@@ -637,13 +741,12 @@ public class JavaGenerator extends BaseSourceGenerator {
 							property.getKey(), property.getKey());
 
 				} else {
-					format("    public %s %s(%s %s){ this.%s=%s; return this; }\n", t.getClassName(),
-							propertySetName,
+					format("    public %s %s(%s %s){ this.%s=%s; return this; }\n", t.getClassName(), propertySetName,
 							property.getType().reference(), property.getKey(), property.getKey(), property.getKey());
 				}
 
-				format("    public %s %s(){ return this.%s; }\n\n", property.getType().reference(),
-						"get" + propertyGetName, property.getKey());
+				format("    public %s %s(){ return this.%s; }\n\n", property.getType().reference(), propertyGetName,
+						property.getKey());
 			}
 		});
 	}
@@ -763,7 +866,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 				m.getName());
 		for (SourceArgument argument : m.getSourceArguments()) {
 			if (!argument.getPar().required) {
-				mb.parameter(String.format("java.util.Optional<%s>", argument.getType().wrapper().reference()),
+				mb.parameter(String.format("Optional<%s>", argument.getType().wrapper().reference()),
 						argument.getName());
 			} else {
 				mb.parameter(argument.getType().reference(), argument.getName());

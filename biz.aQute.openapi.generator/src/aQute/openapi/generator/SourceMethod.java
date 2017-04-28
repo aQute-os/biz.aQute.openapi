@@ -5,19 +5,20 @@ import java.util.Formatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import aQute.json.naming.NameCodec;
 import aQute.openapi.v2.api.In;
 import aQute.openapi.v2.api.OperationObject;
 
 public class SourceMethod {
-	private static final Map<String,String>		responses	= new LinkedHashMap<>();
-	static int							id			= 1000;
-	private final SourceFile					parent;
-	private final String						path;
-	final Map<String,SourceArgument>	prototype	= new LinkedHashMap<>();
-	final OperationObject				operation;
-	private final String						method;
-	final String						name;
-	private SourceType							returnType	= SourceType.VOID;
+	private static final Map<String,String>	responses	= new LinkedHashMap<>();
+	static int								id			= 1000;
+	private final SourceFile				parent;
+	private final String					path;
+	final Map<String,SourceArgument>		prototype	= new LinkedHashMap<>();
+	final OperationObject					operation;
+	private final String					method;
+	final String							name;
+	private SourceType						returnType	= SourceType.VOID;
 
 	static {
 		getResponses().put("301", "MovedPermanentlyResponse");
@@ -36,17 +37,23 @@ public class SourceMethod {
 	}
 
 	public SourceMethod(SourceFile parent, String path, String method, OperationObject operation) {
+		OpenAPIGenerator gen = parent.getGen();
 		this.parent = parent;
 		this.path = path;
 		this.method = method;
 		this.operation = operation;
 		if (operation.operationId == null) {
-			operation.operationId = "operation_" + id++;
-			parent.getGen().error("No operationId specified for path %s", path);
-			this.name = parent.getGen().toMemberName(path.substring(1).replace('/', '_'));
+			operation.operationId = mangleOperation(this.path, this.method);
+			gen.error("No operationId specified for path %s", path);
+			String pathToName = gen.pathToName(path + "_" + method);
+			this.name = gen.toMemberName(pathToName);
 		} else
-			this.name = parent.getGen().toMemberName(operation.operationId);
+			this.name = gen.toMemberName(operation.operationId);
+	}
 
+	private String mangleOperation(String path, String method) {
+		parent.getGen().pathToName(path + "_" + method);
+		return null;
 	}
 
 	public void gatherTypes(SourceFile sourceFile) {
@@ -99,7 +106,7 @@ public class SourceMethod {
 	}
 
 	public String toParameterName(String name) {
-		return getParent().getGen().toMemberName(name);
+		return NameCodec.encode(name);
 	}
 
 	public OperationObject getOperation() {

@@ -36,6 +36,8 @@ public class OpenAPITask extends DefaultTask {
 
 		OpenAPIGenerator gen = new OpenAPIGenerator(input, config);
 		gen.generate(getDestinationDir());
+
+		gen.report(System.out);
 	}
 
 	public void setInput(File f) {

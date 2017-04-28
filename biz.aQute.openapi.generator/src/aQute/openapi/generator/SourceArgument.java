@@ -24,7 +24,9 @@ public class SourceArgument {
 		String s = getType().conversion(access, getPar().collectionFormat);
 		if (s == null)
 			return access;
-		else
+		else if (s.startsWith("^")) {
+			return s.substring(1);
+		} else
 			return "context." + s;
 	}
 
