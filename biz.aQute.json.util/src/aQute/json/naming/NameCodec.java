@@ -96,7 +96,7 @@ public class NameCodec {
 	 * @return the decoded name
 	 */
 	public static String decode(String name) {
-		if ( name.equals("$ref"))
+		if ( name.equals("$ref") || name.equals("$schema"))
 			return name;
 
 		if (name.endsWith("$"))

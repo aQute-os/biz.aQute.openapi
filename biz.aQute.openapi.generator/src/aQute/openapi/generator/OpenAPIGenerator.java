@@ -290,7 +290,7 @@ public class OpenAPIGenerator extends Env {
 	}
 
 	public SourceType getSourceType(ItemsObject schema) {
-		return SourceType.getSourceType(this, schema);
+		return SourceType.getSourceType(this, schema, null);
 	}
 
 	public Object			dtoType;

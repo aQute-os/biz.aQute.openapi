@@ -10,8 +10,6 @@ public class CasingTest {
 
 		@Override
 		protected void case$() throws Exception {
-			// TODO Auto-generated method stub
-
 		}
 
 	}

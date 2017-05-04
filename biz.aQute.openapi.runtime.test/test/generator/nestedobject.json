@@ -1,0 +1,43 @@
+{
+    "swagger": "2.0",
+    "basePath": "/nestedobject",
+    "info": {},
+    "paths": {
+        "/nested": {
+            "post": {
+                "operationId": "nested",
+                "responses": {
+          			"200": {
+            			"schema": {
+              				"$ref": "#/definitions/Nested"
+            			}
+          			}
+            	}
+            }
+        }
+    },
+    "definitions": {
+		"Nested": {
+  			"type": "object",
+        	"required": [
+          		"values"
+        	],
+  			"properties": {
+	            "values": {
+	            	"type": "array",
+	            	"items": {
+	                	"type": "object",
+	                	"required": [
+	                  		"tag"
+	                	],
+	                	"properties": {
+	                  		"tag": {
+	                    		"type": "string"
+	                  		}
+	                	}
+	              	}
+	            }
+      		}
+    	}
+   }
+}

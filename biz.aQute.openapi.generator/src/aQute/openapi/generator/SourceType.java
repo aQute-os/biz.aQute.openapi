@@ -74,9 +74,14 @@ public abstract class SourceType {
 		assertNotNumber(schema);
 	}
 
-	public static SourceType getSourceType(OpenAPIGenerator gen, ItemsObject schema) {
+	public static SourceType getSourceType(OpenAPIGenerator gen, ItemsObject schema, String contextName) {
 		if (schema == null)
 			return SourceType.VOID;
+
+		String n = getRefName(schema.$ref);
+		if (n != null) {
+			contextName = n;
+		}
 
 		if (types.containsKey(schema))
 			return types.get(schema);
@@ -115,6 +120,7 @@ public abstract class SourceType {
 				}
 
 			case "string" :
+
 				switch (schema.format) {
 					case "byte" :
 						return new Base64Encoded(gen);
@@ -134,7 +140,16 @@ public abstract class SourceType {
 					default :
 					case "default" :
 					case "string" :
-						return new StringType(gen, schema);
+						StringType stringType = new StringType(gen, schema);
+						if (schema.$ref != null) {
+							if (contextName != null) {
+								SourceType enum1 = stringType.getEnum(contextName);
+								if (enum1 != null) {
+									return enum1;
+								}
+							}
+						}
+						return stringType;
 				}
 
 			case "boolean" :
@@ -142,18 +157,28 @@ public abstract class SourceType {
 
 			case "object" :
 				if ("object".equals(schema.type) && schema instanceof SchemaObject) {
-					return object(gen, (SchemaObject) schema);
+					return object(gen, (SchemaObject) schema, contextName);
 				}
 				return VOID;
 
 			case "array" :
-				return array(gen, schema);
+				return array(gen, schema, contextName);
 
 			case "file" :
 				return new FileType(gen, schema);
 		}
 
 		return VOID;
+	}
+
+	private static String getRefName(String ref) {
+		if (ref == null) {
+			return null;
+		}
+		int n = ref.lastIndexOf('/');
+		String name = ref.substring(n + 1);
+
+		return name;
 	}
 
 	static class VoidType extends SimpleType {
@@ -427,14 +452,16 @@ public abstract class SourceType {
 		private ItemsObject	schema;
 		private SourceType	componentType;
 		private Boolean		hasValidator;
+		private String		contextName;
 
-		public ArrayType(OpenAPIGenerator gen, ItemsObject schema) {
+		public ArrayType(OpenAPIGenerator gen, ItemsObject schema, String name) {
 			super(gen);
+			this.contextName = name;
 			this.setSchema(schema);
 		}
 
 		public void build() {
-			setComponentType(getSourceType(gen, getSchema().items));
+			setComponentType(getSourceType(gen, getSchema().items, contextName));
 		}
 
 		@Override
@@ -482,7 +509,7 @@ public abstract class SourceType {
 			if (enum1 == null)
 				return null;
 
-			ArrayType arrayType = new ArrayType(gen, getSchema());
+			ArrayType arrayType = new ArrayType(gen, getSchema(), typeName);
 			arrayType.setComponentType(enum1);
 			return arrayType;
 		}
@@ -555,10 +582,10 @@ public abstract class SourceType {
 		final Map<String,SourceProperty>	properties	= new HashMap<>();
 		private Boolean						hasValidator;
 
-		ObjectType(OpenAPIGenerator gen, SchemaObject schema) {
+		ObjectType(OpenAPIGenerator gen, SchemaObject schema, String contextName) {
 			super(gen);
 			this.schema = schema;
-			this.className = toClassName(this.getSchema().$ref);
+			this.className = gen.toTypeName(contextName);
 		}
 
 		void build() {
@@ -572,7 +599,7 @@ public abstract class SourceType {
 			List<String> required = schema.required == null ? Collections.emptyList() : schema.required;
 
 			for (Entry<String,SchemaObject> e : schema.properties.entrySet()) {
-				SourceType type = SourceType.getSourceType(gen, e.getValue());
+				SourceType type = SourceType.getSourceType(gen, e.getValue(), e.getKey());
 
 				boolean optional = !required.contains(e.getKey());
 
@@ -597,7 +624,7 @@ public abstract class SourceType {
 			}
 		}
 
-		private String toClassName(String ref) {
+		String toClassName(String ref) {
 			if (ref == null) {
 				OpenAPIGenerator.getLogger().info("No ref for a type ");
 				return "Anonymous_" + index++;
@@ -655,8 +682,8 @@ public abstract class SourceType {
 
 	}
 
-	private static SourceType object(OpenAPIGenerator gen, SchemaObject schema) {
-		ObjectType objectType = new ObjectType(gen, schema);
+	private static SourceType object(OpenAPIGenerator gen, SchemaObject schema, String contextName) {
+		ObjectType objectType = new ObjectType(gen, schema, contextName);
 		types.put(schema, objectType);
 		objectType.build();
 		return objectType;
@@ -670,8 +697,8 @@ public abstract class SourceType {
 		return this != wrapper();
 	}
 
-	private static SourceType array(OpenAPIGenerator gen, ItemsObject schema) {
-		ArrayType arrayType = new ArrayType(gen, schema);
+	private static SourceType array(OpenAPIGenerator gen, ItemsObject schema, String contextName) {
+		ArrayType arrayType = new ArrayType(gen, schema, contextName);
 		types.put(schema, arrayType);
 		arrayType.build();
 		return arrayType;

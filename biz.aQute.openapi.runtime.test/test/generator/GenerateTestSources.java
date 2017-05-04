@@ -6,9 +6,16 @@ import java.io.InputStream;
 import aQute.lib.io.IO;
 import aQute.openapi.generator.Configuration;
 import aQute.openapi.generator.OpenAPIGenerator;
-import biz.aQute.openapi.runtime.test.EnumTest;
 
 public class GenerateTestSources {
+
+	public static void createNestedObjects() throws Exception {
+		GenerateTestSources.generate("nestedobject", "nestedobject.json", new Configuration());
+	}
+
+	public static void createNakedEnum() throws Exception {
+		GenerateTestSources.generate("nakedenum", "nakedenum.json", new Configuration());
+	}
 
 	public static void createCasing() throws Exception {
 		GenerateTestSources.generate("casing", "casing.json", new Configuration());
@@ -81,6 +88,8 @@ public class GenerateTestSources {
 	}
 
 	public static void main(String args[]) throws Exception {
+		createNakedEnum();
+		createNestedObjects();
 		createCasing();
 		createEnums();
 		createApiKeySecurity();

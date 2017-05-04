@@ -1,0 +1,29 @@
+{
+    "swagger": "2.0",
+    "basePath": "/enums",
+    "info": {},
+    "paths": {
+        "/casing": {
+            "post": {
+                "operationId": "NakedEnum",
+                "responses": {
+          			"200": {
+            			"description": "Control mode",
+            			"schema": {
+              				"$ref": "#/definitions/NakedEnum"
+            			}
+          			}
+            	}
+            }
+        }
+    },
+    "definitions": {
+    	"NakedEnum": {
+      			"type": "string",
+      			"enum": [
+        			"A",
+        			"B"
+      			]
+    	}
+   }
+}
