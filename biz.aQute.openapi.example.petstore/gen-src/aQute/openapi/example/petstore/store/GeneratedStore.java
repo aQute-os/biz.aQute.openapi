@@ -3,6 +3,7 @@ package aQute.openapi.example.petstore.store;
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
+
 import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
