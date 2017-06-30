@@ -1,6 +1,7 @@
 package aQute.openapi.provider;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,21 +15,46 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.osgi.service.http.NamespaceException;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.osgi.util.tracker.ServiceTracker;
 
 import aQute.json.codec.JSONCodec;
+import aQute.openapi.provider.OpenAPIRuntime.Configuration;
+import osgi.enroute.authorization.api.Authority;
+import osgi.enroute.authorization.api.AuthorityAdmin;
 
-@Component(service = OpenAPIRuntime.class)
+@Designate(ocd = Configuration.class, factory = false)
+@Component(service = OpenAPIRuntime.class, configurationPid = "aQute.openapi.runtime")
 public class OpenAPIRuntime {
-	final static JSONCodec				codec		= new JSONCodec();
-	static OpenAPIBase.Codec			deflt		= new CodecWrapper(codec);
+	final static JSONCodec				codec				= new JSONCodec();
+	static OpenAPIBase.Codec			deflt				= new CodecWrapper(codec);
 
 	ServiceTracker<OpenAPIBase,Tracker>	tracker;
 	BundleContext						context;
-	final Map<String,Dispatcher>		dispatchers	= new ConcurrentHashMap<>();
-	final ThreadLocal<OpenAPIContext>	contexts	= new ThreadLocal<>();
+	final Map<String,Dispatcher>		dispatchers			= new ConcurrentHashMap<>();
+	final ThreadLocal<OpenAPIContext>	contexts			= new ThreadLocal<>();
+	int									delayOn404Timeout	= 30;
+
+	@Reference(policyOption = ReferencePolicyOption.GREEDY)
+	AuthorityAdmin						authorityAdmin;
+	@Reference(policyOption = ReferencePolicyOption.GREEDY)
+	Authority							authority;
+
+	@ObjectClassDefinition
+	public @interface Configuration {
+		@AttributeDefinition(description = "Register these prefixes ahead of time so that they can handle timeouts and errors")
+		String[] registerOnStart() default {};
+
+		@AttributeDefinition(description = "Delay and try again until found timeout")
+		int delayOnNotFoundInSecs() default 30;
+	}
 
 	class Tracker {
 		OpenAPIBase	base;
@@ -36,16 +62,8 @@ public class OpenAPIRuntime {
 
 		Tracker(OpenAPIBase service) {
 			base = service;
-			dispatcher = dispatchers.computeIfAbsent(base.prefix, (key) -> create(key));
+			dispatcher = getDispatcher(base.prefix);
 			dispatcher.add(this);
-		}
-
-		Dispatcher create(String prefix) {
-			try {
-				return new Dispatcher(OpenAPIRuntime.this, prefix);
-			} catch (Exception e) {
-				throw new IllegalArgumentException(e);
-			}
 		}
 
 		void close() {
@@ -54,8 +72,20 @@ public class OpenAPIRuntime {
 
 	}
 
+	Dispatcher getDispatcher(String prefix) {
+		return dispatchers.computeIfAbsent(prefix, this::create);
+	}
+
+	Dispatcher create(String prefix) {
+		try {
+			return new Dispatcher(OpenAPIRuntime.this, prefix);
+		} catch (Exception e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
+
 	@Activate
-	void activate(BundleContext context) {
+	public void activate(BundleContext context, Configuration configuration) {
 		this.context = context;
 		tracker = new ServiceTracker<OpenAPIBase,Tracker>(context, OpenAPIBase.class, null) {
 			@Override
@@ -74,13 +104,30 @@ public class OpenAPIRuntime {
 				context.ungetService(reference);
 			}
 		};
+		modified(configuration);
 		tracker.open();
 	}
 
+	@Modified
+	void modified(Configuration configuration) {
+		if (configuration.registerOnStart() != null) {
+			for (String uriPrefix : configuration.registerOnStart()) {
+				getDispatcher(uriPrefix);
+			}
+		}
+		delayOn404Timeout = configuration.delayOnNotFoundInSecs();
+	}
+
 	@Deactivate
-	void deactivate() {
+	public void deactivate() {
 		this.tracker.close();
-		this.dispatchers.values().forEach(d -> d.close());
+		for (Dispatcher d : this.dispatchers.values()) {
+			try {
+				d.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public Tracker add(OpenAPIBase service) {
@@ -96,12 +143,15 @@ public class OpenAPIRuntime {
 	 * @param servlet
 	 * @return a closeable
 	 */
-	public Closeable registerServlet(String alias, Servlet servlet)
-			throws ServletException, NamespaceException {
+	public Closeable registerServlet(String alias, Servlet servlet) throws ServletException, NamespaceException {
+		System.out.println("Registering servlet " + alias);
 		Hashtable<String,Object> p = new Hashtable<>();
 		p.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN, alias + "/*");
 		ServiceRegistration<Servlet> registration = context.registerService(Servlet.class, servlet, p);
-		return () -> registration.unregister();
+		return () -> {
+			System.out.println("Unregistering servlet " + alias);
+			registration.unregister();
+		};
 	}
 
 }

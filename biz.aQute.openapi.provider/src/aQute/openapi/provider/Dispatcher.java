@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.http.NamespaceException;
 
-import aQute.lib.exceptions.Exceptions;
 import aQute.openapi.provider.OpenAPIRuntime.Tracker;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import aQute.openapi.security.api.OpenAPISecurityProvider;
@@ -27,6 +26,7 @@ public class Dispatcher extends HttpServlet {
 	final List<Tracker>												targets				= new CopyOnWriteArrayList<>();
 	final Map<OpenAPISecurityDefinition,SecurityProviderTracker>	security			= new ConcurrentHashMap<>();
 	final Closeable													registration;
+	final Object													lock				= new Object();
 
 	public Dispatcher(OpenAPIRuntime runtime, String prefix) throws ServletException, NamespaceException {
 		this.runtime = runtime;
@@ -37,12 +37,17 @@ public class Dispatcher extends HttpServlet {
 		registration = runtime.registerServlet(this.prefix, this);
 	}
 
-	public synchronized void add(Tracker base) {
-		this.targets.add(base);
+	public void add(Tracker base) {
+		synchronized (lock) {
+			this.targets.add(base);
+			lock.notifyAll();
+		}
 	}
 
 	public void remove(Tracker base) {
-		this.targets.remove(base);
+		synchronized (lock) {
+			this.targets.remove(base);
+		}
 	}
 
 	@Override
@@ -60,26 +65,34 @@ public class Dispatcher extends HttpServlet {
 					path = path.substring(1);
 
 				String segments[] = path.split("/");
+				int counter = runtime.delayOn404Timeout;
+				do {
+					for (Tracker target : targets) {
+						OpenAPIBase base = target.base;
+						context.setTarget(base);
+						base.before_(context);
+						try {
+							if (base.dispatch_(context, segments, 0)) {
 
-				for (Tracker target : targets) {
-					OpenAPIBase base = target.base;
-					context.setTarget(base);
-					base.before_(context);
-					try {
-						if (base.dispatch_(context, segments, 0)) {
+								if (response.getContentType() == null)
+									response.setContentType("application/json");
 
-							if (response.getContentType() == null)
-								response.setContentType("application/json");
-
-							return;
+								return;
+							}
+						} finally {
+							base.after_(context);
 						}
-					} finally {
-						base.after_(context);
 					}
-				}
 
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
+					if (counter-- > 0) {
+						synchronized (lock) {
+							lock.wait(1000);
+						}
+					} else {
+						response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+						return;
+					}
+				} while (true);
 			} finally {
 				runtime.contexts.remove();
 			}
@@ -106,9 +119,9 @@ public class Dispatcher extends HttpServlet {
 		return super.toString();
 	}
 
-	public void close() {
+	public void close() throws IOException {
 		security.values().forEach(SecurityProviderTracker::close);
-		Exceptions.wrap(registration::close);
+		registration.close();
 	}
 
 	public OpenAPISecurityProvider getSecurityProvider(OpenAPISecurityDefinition def) {

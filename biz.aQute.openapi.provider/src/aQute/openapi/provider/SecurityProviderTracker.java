@@ -20,8 +20,8 @@ public class SecurityProviderTracker extends ServiceTracker<OpenAPISecurityProvi
 
 	private static Filter filter(OpenAPISecurityDefinition def) {
 		try {
-			String filterString = String.format("(&(objectClass=%s)(name=%s)(type=%s)(|(base=%s)(!(path=*))))",
-					OpenAPISecurityProvider.class.getName(), def.name, def.type, def.base);
+			String filterString = String.format("(&(objectClass=%s)(name=%s)(type=%s))",
+					OpenAPISecurityProvider.class.getName(), def.id, def.type, def.base);
 			return FrameworkUtil.createFilter(filterString);
 		} catch (InvalidSyntaxException e) {
 			throw new RuntimeException(e);

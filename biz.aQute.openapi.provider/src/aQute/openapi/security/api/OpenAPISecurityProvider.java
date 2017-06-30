@@ -14,6 +14,14 @@ public interface OpenAPISecurityProvider {
 	String	BASE	= "openapi.base";
 
 
+	/**
+	 * Create an authentication object for verifying the authentication state
+	 * machine.
+	 *
+	 * @param context the current context
+	 * @param dto the security definition
+	 * @return an Authentication
+	 */
 	Authentication authenticate(OpenAPIContext context, OpenAPISecurityDefinition dto);
 
 }

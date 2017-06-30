@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+
 public class OpenAPISecurityDefinition {
 
 	public static class OAuth2Flow {
@@ -86,7 +87,7 @@ public class OpenAPISecurityDefinition {
 		return def;
 	}
 
-	public static OpenAPISecurityDefinition implicit(String id, String base, String authorizationUrl,
+	public static OpenAPISecurityDefinition implicit(String id, String base, String authorizationUrl, String TODO,
 			String... scopes) {
 		OpenAPISecurityDefinition def = new OpenAPISecurityDefinition(id, base, "implicit");
 		OAuth2Flow flow = new OAuth2Flow();

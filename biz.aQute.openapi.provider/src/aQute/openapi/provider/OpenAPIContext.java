@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +28,14 @@ import aQute.lib.converter.Converter;
 import aQute.lib.io.IO;
 import aQute.lib.strings.Strings;
 import aQute.openapi.provider.OpenAPIBase.Method;
+import aQute.openapi.security.api.Authentication;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
+import aQute.openapi.security.api.OpenAPISecurityProvider;
+import osgi.enroute.authorization.api.AuthorityAdmin;
 
 public class OpenAPIContext {
+	final static Logger				logger			= LoggerFactory.getLogger(OpenAPIRuntime.class);
+
 	private static final String[]	EMPTY			= new String[0];
 
 	final HttpServletRequest		request;
@@ -38,8 +44,8 @@ public class OpenAPIContext {
 	final Map<String,String>		pathParameters	= new HashMap<>();
 	final static Logger				log				= LoggerFactory.getLogger(OpenAPIContext.class);
 	final Dispatcher				dispatcher;
-	private String					operation;
 	private Method					method;
+	private String					operation;
 	private List<String>			stack			= new ArrayList<>();
 	private List<String>			errors			= null;
 	private OpenAPIBase				target;
@@ -51,11 +57,17 @@ public class OpenAPIContext {
 		this.dispatcher = dispatcher;
 		this.request = request;
 		this.response = response;
-		this.method = Method.valueOf(request.getMethod().toUpperCase());
 	}
 
 	public boolean isMethod(Method method) {
-		return this.method == method;
+		return method() == method;
+	}
+
+	public Method method() {
+		if (this.method == null) {
+			this.method = Method.valueOf(request.getMethod().toUpperCase());
+		}
+		return this.method;
 	}
 
 	public void pathParameter(String key, String value) {
@@ -176,15 +188,16 @@ public class OpenAPIContext {
 		stack.add(Integer.toString(i));
 	}
 
-	public void validate(boolean expression, Object value, String reference, String validation) {
+	public boolean validate(boolean expression, Object value, String reference, String validation) {
 		if (expression)
-			return;
+			return true;
 
 		String format = String.format("%s %s=%s FAILS: %s", Strings.join("/", stack), reference, value, validation);
 		if (errors == null)
 			errors = new ArrayList<>();
 
 		errors.add(format);
+		return false;
 	}
 
 	public void end() {
@@ -243,7 +256,8 @@ public class OpenAPIContext {
 	}
 
 	public void report(Exception e) {
-		e.printStackTrace();
+		logger.info("{} {} {} {}", request.getMethod(), request.getRequestURI(), request.getRemoteAddr(),
+				e.getMessage());
 	}
 
 	public String[] csv(String value) {
@@ -281,8 +295,8 @@ public class OpenAPIContext {
 		return Double.valueOf(value);
 	}
 
-	public void require(Object value, String name) {
-		validate(value != null, value, name, " required but not set");
+	public boolean require(Object value, String name) {
+		return validate(value != null, value, name, " required but not set");
 	}
 
 	public char[] toPassword(String value) {
@@ -297,7 +311,7 @@ public class OpenAPIContext {
 	}
 
 	public String getUser() {
-		return (String) request.getSession().getAttribute("user");
+		return authenticator == null ? authenticator.getUser() : null;
 	}
 
 	public String getOriginalIP() {
@@ -323,29 +337,52 @@ public class OpenAPIContext {
 		IO.copy(in, response.getOutputStream());
 	}
 
-	public OpenAPIContext authenticate(OpenAPISecurityDefinition def, String... scopes) {
+	public OpenAPIContext or() {
+		if (authenticator != null)
+			authenticator.or();
+		return this;
+	}
+
+	public OpenAPIContext verify(OpenAPISecurityDefinition def, String... args) throws Exception {
 		if (authenticator == null)
-			this.authenticator = new Authenticator(this);
+			this.authenticator = new Authenticator();
 
-		return authenticator.authenticate(def, scopes);
+		Authentication auth = null;
+		OpenAPISecurityProvider securityProvider = dispatcher.getSecurityProvider(def);
+		if (securityProvider != null)
+			auth = securityProvider.authenticate(this, def);
+
+		authenticator.authenticate(auth, args);
+		return this;
 	}
 
-	OpenAPIContext or() {
-		return authenticator.or();
-	}
-
-	public void verify(OpenAPISecurityDefinition def, String... args) {
+	public void verify() throws Exception {
 		if (authenticator != null)
 			authenticator.verify();
 	}
 
-	public void authorize(String permission, String... args) throws Exception {
-		// for (Authority a : runtime.authority) {
-		// if (a.hasPermission(permission, args)) {
-		// return;
-		// }
-		// }
-		throw new OpenAPIBase.UnauthorizedResponse(
-				"Not authorized " + permission + " with arguments " + Arrays.toString(args));
+	public boolean hasPermission(String action, String... arguments) throws Exception {
+		return runtime.authority.hasPermission(action, arguments);
+	}
+
+	public void checkPermission(String name, String... resource) throws Exception {
+		if (!hasPermission(name, resource))
+			throw new SecurityException("Unauthorized");
+	}
+
+	public String path() {
+		return request.getPathInfo();
+	}
+
+	public <T> T call(Callable<T> callable) throws Exception {
+		if (authenticator == null)
+			return callable.call();
+
+		AuthorityAdmin authority = runtime.authorityAdmin;
+		return authority.call(authenticator.user, callable);
+	}
+
+	public boolean isEncrypted() {
+		return request.getScheme().equalsIgnoreCase("https");
 	}
 }

@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,11 +16,13 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.WeakHashMap;
 import java.util.function.Function;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +31,7 @@ import aQute.lib.exceptions.Exceptions;
 
 public abstract class OpenAPIBase {
 
+	final Map<Class< ? >,Object> securities = Collections.synchronizedMap(new WeakHashMap<>());
 
 	public interface Codec {
 		String encode(Object object, OutputStream out) throws Exception;
@@ -115,21 +120,29 @@ public abstract class OpenAPIBase {
 		}
 	}
 
+	public enum AuthenticationScheme {
+		Basic
+
+	}
+
 	public static class UnauthorizedResponse extends Response {
 		private static final long serialVersionUID = 1L;
 
-		public UnauthorizedResponse(String reason) {
+		public UnauthorizedResponse(Object reason, AuthenticationScheme scheme, String realm,
+				Map<String,String> parameters) {
 			super(HttpServletResponse.SC_UNAUTHORIZED, reason);
-		}
-
-		public UnauthorizedResponse(Object reason) {
-			super(HttpServletResponse.SC_UNAUTHORIZED, reason);
+			StringBuilder sb = new StringBuilder();
+			sb.append(scheme.toString());
+			WWWUtils.property(sb, "realm", realm);
+			WWWUtils.properties(sb, parameters);
+			headers.put("WWW-Authenticate", sb.toString());
 		}
 
 		public UnauthorizedResponse(String reason, Throwable ex) {
 			super(HttpServletResponse.SC_UNAUTHORIZED, reason, ex);
 		}
 	}
+
 
 	public static class NotFoundResponse extends Response {
 		private static final long serialVersionUID = 1L;
@@ -416,4 +429,39 @@ public abstract class OpenAPIBase {
 		} else
 			throw new IllegalArgumentException("Not a Date class or TemporalAccess " + dateAndOrTimeClass);
 	}
+
+	public boolean hasPermission(String action, String... arguments) throws Exception {
+		return getOpenAPIContext().hasPermission(action, arguments);
+	}
+
+	public void checkPermission(String action, String... arguments) throws Exception {
+		getOpenAPIContext().checkPermission(action, arguments);
+	}
+
+	public <T> T getSemanticSecurity(Class<T> type) {
+		Object o = securities.get(type);
+		if (o == null) {
+			o = Proxy.newProxyInstance(type.getClassLoader(), new Class< ? >[] {
+					type
+			}, new InvocationHandler() {
+
+				@Override
+				public Object invoke(Object proxy, java.lang.reflect.Method method, Object[] args) throws Throwable {
+					String action = method.getName().replace('_', ':');
+					String as[] = new String[args.length];
+					for (int i = 0; i < as.length; i++)
+						as[i] = args[i] == null ? "" : args.toString();
+
+					if (method.getReturnType() == boolean.class)
+						return hasPermission(action, as);
+					else
+						checkPermission(action, as);
+					return null;
+				}
+			});
+			securities.put(type, o);
+		}
+		return type.cast(o);
+	}
+
 }
