@@ -18,7 +18,7 @@ public class OpenAPIPlugin implements Plugin<Project> {
 		OpenAPITask task = project.getTasks().create(OPENAPI, OpenAPITask.class);
 
 		Task compileJava = project.getTasks().getByPath("compileJava");
-		compileJava.dependsOn(task);
+		compileJava.mustRunAfter(task);
 
 		project.afterEvaluate(p -> {
 			SourceSetContainer set = (SourceSetContainer) p.getProperties().get("sourceSets");
