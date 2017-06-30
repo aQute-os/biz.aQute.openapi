@@ -1,0 +1,5 @@
+Private-Package: biz.aQute.authority.dummy.provider
+Export-Package: osgi.enroute.authorization.api
+
+-buildpath: \
+	osgi.enroute.base.api
