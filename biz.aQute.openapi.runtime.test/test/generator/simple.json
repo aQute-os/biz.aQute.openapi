@@ -1,0 +1,19 @@
+{
+	"swagger": "2.0",
+	"info":
+	{
+		"version": "v1",
+		"title": "simple"
+	},
+	"basePath": "/v1",
+	"paths":
+	{
+		"/simple":
+		{
+			"get":
+			{
+				"operationId": "simple"
+			}
+		}
+	}
+}

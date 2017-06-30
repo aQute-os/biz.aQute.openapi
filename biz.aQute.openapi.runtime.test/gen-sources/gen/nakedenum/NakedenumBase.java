@@ -91,7 +91,7 @@ private void nakedEnum_post_(OpenAPIContext context) throws Exception{
 
     context.setOperation("NakedEnum");
 
-    Object result = nakedEnum();
+    Object result = context.call( ()-> nakedEnum());
     context.setResult(result, 200);
 
 }

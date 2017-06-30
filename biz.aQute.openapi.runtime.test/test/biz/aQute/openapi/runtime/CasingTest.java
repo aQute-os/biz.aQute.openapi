@@ -1,4 +1,4 @@
-package biz.aQute.openapi.runtime.test;
+package biz.aQute.openapi.runtime;
 
 import org.junit.Test;
 

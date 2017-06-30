@@ -104,7 +104,7 @@ private void nested_post_(OpenAPIContext context) throws Exception{
 
     context.setOperation("nested");
 
-    Object result = nested();
+    Object result = context.call( ()-> nested());
     context.setResult(result, 200);
 
 }

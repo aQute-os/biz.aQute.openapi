@@ -222,10 +222,9 @@ AllEnumVariations body_ = context.body(AllEnumVariations.class);
     //  VALIDATORS 
 
     context.begin("enum");
-    context.require(body_,"body");
     context.end();
 
-    enum$(body_);
+    context.call( () -> { enum$(body_); return null; });
     context.setResult(null, 200);
 
 }

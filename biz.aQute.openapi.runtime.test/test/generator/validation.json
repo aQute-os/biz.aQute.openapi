@@ -1,0 +1,307 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v1",
+    "title": "Iguana LDM"
+  },
+
+  "basePath": "/api/v1",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/devicemanagement/modbus/mappingFiles": {
+      "get": {
+        "tags": [
+          "DeviceManagementModbusApi"
+        ],
+        "summary": "Return a list of mapping file names.",
+        "operationId": "GetModbusMappingFiles",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "list of mapping file names",
+            "schema": {
+              "$ref": "#/definitions/MappingFileList"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/devicemanagement/modbus/devices/{deviceId}": {
+      "delete": {
+        "tags": [
+          "DeviceManagementModbusApi"
+        ],
+        "summary": "Remove the specified modbus devices from the plant.",
+        "operationId": "RemoveModbusDevice",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "Identifier for the device.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/devicemanagement/modbus/devices": {
+      "get": {
+        "tags": [
+          "DeviceManagementModbusApi"
+        ],
+        "summary": "Return a list registered modbus devices.",
+        "operationId": "GetModbusDevices",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "device list",
+            "schema": {
+              "$ref": "#/definitions/ModbusDeviceDataResponseList"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": [
+          "DeviceManagementModbusApi"
+        ],
+        "summary": "Adds the specified modbus devices to the plant.",
+        "operationId": "AddModbusDeviceToPlant",
+        "consumes": [
+          "application/json",
+          "text/json"
+        ],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "device",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ModbusDeviceData"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "registered device data",
+            "schema": {
+              "$ref": "#/definitions/ModbusDeviceDataResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      },
+      "put": {
+        "tags": [
+          "DeviceManagementModbusApi"
+        ],
+        "summary": "Adds the specified modbus devices to the plant.",
+        "operationId": "EditModbusDeviceToPlant",
+        "consumes": [
+          "application/json",
+          "text/json"
+        ],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "device",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ModbusDeviceData"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "registered device data",
+            "schema": {
+              "$ref": "#/definitions/ModbusDeviceDataResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "definitions": {
+    "MappingFileName": {
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "mapping file name (e.g. ModbusMapping.json, ...)",
+		  "maxLength": 32,
+          "minLength": 3,
+          "type": "string"
+        }
+      }
+    },
+    "MappingFileList": {
+      "description": "The mapping file list.",
+      "type": "object",
+      "properties": {
+        "mappingFiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MappingFileName"
+          }
+        }
+      }
+    },
+    "ModbusDeviceData": {
+      "required": [
+        "ip",
+        "port",
+        "unitId",
+        "mappingFileName"
+      ],
+      "description": "Data for modbus device creation",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "User defined name of the modbus device (e.g. \"My modbus device\")",
+		  "maxLength": 32,
+          "minLength": 3,
+          "type": "string"
+        },
+        "ip": {
+          "description": "Ip address of the modbus device (e.g. \"172.22.0.134\")",
+		  "pattern": "\\b[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}",
+          "type": "string"
+        },
+        "unitId": {
+          "description": "UnitId for modbus communication. This id select an virtual device within the real device (e.g. \"126\")",
+          "maximum": 127,
+          "minimum": 0,
+		  "type": "integer"
+        },
+         "port": {
+          "description": "Port for TcpIP connected (e.g. \"502\")",
+		  "maximum": 65535,
+          "minimum": 0,
+		  "format": "int64",
+		  "type": "integer"
+        },
+		"mappingFileName": {
+          "description": "Name of the selected mapping file. (e.g. \"ModbusMapping.json\")",
+		  "maxLength": 32,
+          "minLength": 3,
+          "type": "string"
+        }
+      }
+    },
+    "ModbusDeviceDataResponse": {
+      "required": [
+      	"name",
+        "deviceId",
+        "ip",
+        "port",
+        "unitId"
+      ],
+      "description": "Data for modbus device creation",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "User defined name of the modbus device (e.g. \"My modbus device\")",
+		  "maxLength": 32,
+          "minLength": 3,
+          "type": "string"
+        },
+        "deviceId": {
+          "description": "Device id of modbus device (e.g. mb:172.22.0.155_502_3)",
+          "type": "string"
+        },
+        "ip": {
+          "description": "Ip address of the modbus device (e.g. \"172.22.0.134\")",
+		  "pattern": "\\b[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}",
+          "type": "string"
+        },
+        "port": {
+          "description": "Port for TcpIP connected (e.g. \"502\")",
+		  "maximum": 65535,
+          "minimum": 0,
+		  "format": "int64",
+		  "type": "integer"
+        },
+        "unitId": {
+          "description": "UnitId for modbus communication. This id select an virtual device within the real device (e.g. \"126\")",
+          "maximum": 127,
+          "minimum": 0,
+		  "format": "int64",
+		  "type": "integer"
+        },
+        "mappingFileName": {
+          "description": "Name of the selected mapping file. (e.g. \"ModbusMapping.json\")",
+		  "maxLength": 32,
+          "minLength": 3,
+          "type": "string"
+        }
+      }
+    },
+    "ModbusDeviceDataResponseList": {
+      "description": "The list of modbus ModbusDeviceData to create the devices.",
+      "type": "object",
+      "properties": {
+        "modbusDeviceDataResponseList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModbusDeviceDataResponse"
+          }
+        }
+      }
+    }
+  }
+}

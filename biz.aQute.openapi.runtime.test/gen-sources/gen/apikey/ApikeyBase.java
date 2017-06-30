@@ -12,9 +12,15 @@ import java.time.LocalDate;
  * 
  * <ul>
  * 
- * <li>{@link #use(String) GET /operation =  use}
+ * <li>{@link #overrideNoSecurity() GET /overrideNoSecurity =  overrideNoSecurity}
  * 
- * <li>{@link #login(String) PUT /operation =  login}
+ * <li>{@link #orAndSecurity() GET /orAndSecurity =  orAndSecurity}
+ * 
+ * <li>{@link #andSecurity() GET /andSecurity =  andSecurity}
+ * 
+ * <li>{@link #defaultSecurity() GET /defaultSecurity =  defaultSecurity}
+ * 
+ * <li>{@link #orSecurity() GET /orSecurity =  orSecurity}
  * 
  * </ul>
  * 
@@ -27,59 +33,61 @@ public static final String BASE_PATH = "/v1";
 
 /**
  * 
- * GET /operation = use
- * 
- * @param Key –  (header)
- * 
-   * @returns 200 / null
- * 200
+ * GET /overrideNoSecurity = overrideNoSecurity
  * 
  */
 
-protected abstract Response use(String Key) throws Exception;
+protected abstract void overrideNoSecurity() throws Exception;
 
 /**
  * 
- * PUT /operation = login
- * 
- * @param Key –  (header)
- * 
-   * @returns 200 / null
-   * @returns 401 / null
- * 200
- * 
- * 401
+ * GET /orAndSecurity = orAndSecurity
  * 
  */
 
-protected abstract Response login(Optional<String> Key) throws Exception, OpenAPIBase.UnauthorizedResponse;
+protected abstract void orAndSecurity() throws Exception;
 
 /**
  * 
- * Response
+ * GET /andSecurity = andSecurity
  * 
  */
 
-public static class Response extends OpenAPIBase.DTO {
+protected abstract void andSecurity() throws Exception;
 
-    public Optional<String> error = Optional.empty();
+/**
+ * 
+ * GET /defaultSecurity = defaultSecurity
+ * 
+ */
 
-    public Response error(String error){ this.error=Optional.ofNullable(error); return this; }
-    public Optional<String> error(){ return this.error; }
+protected abstract void defaultSecurity() throws Exception;
 
-}
+/**
+ * 
+ * GET /orSecurity = orSecurity
+ * 
+ */
+
+protected abstract void orSecurity() throws Exception;
 
   /*****************************************************************/
 
 
 
-     public static OpenAPISecurityDefinition api_key =  OpenAPISecurityDefinition.apiKey("api_key", BASE_PATH, "header", "Key");
+     public static OpenAPISecurityDefinition api_key =  OpenAPISecurityDefinition.apiKey("api_key", BASE_PATH, "header", "ApiKey");
+
+
+     public static OpenAPISecurityDefinition oauth =  OpenAPISecurityDefinition.implicit("oauth", BASE_PATH, "http://swagger.io/api/oauth/dialog", null, "a A", "b B");
 
 
   public ApikeyBase() {
     super(BASE_PATH,
-         "use                  GET    /operation  RETURN Response",
-         "login                PUT    /operation  RETURN Response");
+         "overrideNoSecurity   GET    /overrideNoSecurity",
+         "orAndSecurity        GET    /orAndSecurity",
+         "andSecurity          GET    /andSecurity",
+         "defaultSecurity      GET    /defaultSecurity",
+         "orSecurity           GET    /orSecurity");
   }
   public static java.time.Instant toDateTime(String s) {
     return java.time.Instant.parse(s);
@@ -96,51 +104,107 @@ public static class Response extends OpenAPIBase.DTO {
 
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
 
-    if( index < segments.length && "operation".equals(segments[index])) {
+    if( index < segments.length && "overrideNoSecurity".equals(segments[index])) {
       index++;
       if ( segments.length == index) {
-        if ( context.isMethod(OpenAPIBase.Method.PUT)) {
-          login_put_(context);
-          return true;
-        }  else         if ( context.isMethod(OpenAPIBase.Method.GET)) {
-          use_get_(context);
+        if ( context.isMethod(OpenAPIBase.Method.GET)) {
+          overrideNoSecurity_get_(context);
           return true;
         } 
       }
 
-      // end operation
+      // end overrideNoSecurity
+    }  else     if( index < segments.length && "orAndSecurity".equals(segments[index])) {
+      index++;
+      if ( segments.length == index) {
+        if ( context.isMethod(OpenAPIBase.Method.GET)) {
+          orAndSecurity_get_(context);
+          return true;
+        } 
+      }
+
+      // end orAndSecurity
+    }  else     if( index < segments.length && "andSecurity".equals(segments[index])) {
+      index++;
+      if ( segments.length == index) {
+        if ( context.isMethod(OpenAPIBase.Method.GET)) {
+          andSecurity_get_(context);
+          return true;
+        } 
+      }
+
+      // end andSecurity
+    }  else     if( index < segments.length && "defaultSecurity".equals(segments[index])) {
+      index++;
+      if ( segments.length == index) {
+        if ( context.isMethod(OpenAPIBase.Method.GET)) {
+          defaultSecurity_get_(context);
+          return true;
+        } 
+      }
+
+      // end defaultSecurity
+    }  else     if( index < segments.length && "orSecurity".equals(segments[index])) {
+      index++;
+      if ( segments.length == index) {
+        if ( context.isMethod(OpenAPIBase.Method.GET)) {
+          orSecurity_get_(context);
+          return true;
+        } 
+      }
+
+      // end orSecurity
     } 
 
     return false;
   }
 
-private void use_get_(OpenAPIContext context) throws Exception{
+private void overrideNoSecurity_get_(OpenAPIContext context) throws Exception{
 
-    context.setOperation("use");
-    context.verify(gen.apikey.ApikeyBase.api_key, context.header("Key"));
+    context.setOperation("overrideNoSecurity");
 
-String Key_ = context.toString(context.header("Key"));
-
-
-    //  VALIDATORS 
-
-    context.begin("use");
-    context.require(Key_,"Key");
-    context.end();
-
-    Object result = use(Key_);
-    context.setResult(result, 200);
+    context.call( () -> { overrideNoSecurity(); return null; });
+    context.setResult(null, 200);
 
 }
 
-private void login_put_(OpenAPIContext context) throws Exception{
+private void orAndSecurity_get_(OpenAPIContext context) throws Exception{
 
-    context.setOperation("login");
+    context.setOperation("orAndSecurity");
+    context.verify(gen.apikey.ApikeyBase.api_key).verify(gen.apikey.ApikeyBase.oauth,"a").or().verify(gen.apikey.ApikeyBase.api_key).verify(gen.apikey.ApikeyBase.oauth,"a").verify();
 
-Optional<String> Key_ = context.optional(context.toString(context.header("Key")));
+    context.call( () -> { orAndSecurity(); return null; });
+    context.setResult(null, 200);
 
-    Object result = login(Key_);
-    context.setResult(result, 200);
+}
+
+private void andSecurity_get_(OpenAPIContext context) throws Exception{
+
+    context.setOperation("andSecurity");
+    context.verify(gen.apikey.ApikeyBase.api_key).verify(gen.apikey.ApikeyBase.oauth,"a").verify();
+
+    context.call( () -> { andSecurity(); return null; });
+    context.setResult(null, 200);
+
+}
+
+private void defaultSecurity_get_(OpenAPIContext context) throws Exception{
+
+    context.setOperation("defaultSecurity");
+    context.verify(gen.apikey.ApikeyBase.api_key).verify();
+
+    context.call( () -> { defaultSecurity(); return null; });
+    context.setResult(null, 200);
+
+}
+
+private void orSecurity_get_(OpenAPIContext context) throws Exception{
+
+    context.setOperation("orSecurity");
+    context.verify(gen.apikey.ApikeyBase.api_key).or().verify(gen.apikey.ApikeyBase.oauth,"a").verify();
+
+    context.call( () -> { orSecurity(); return null; });
+    context.setResult(null, 200);
 
 }
 

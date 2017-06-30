@@ -1,4 +1,4 @@
-package gen.casing;
+package gen.validation;
 
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
@@ -12,30 +12,18 @@ import java.time.LocalDate;
  * 
  * <ul>
  * 
- * <li>{@link #case$() POST /casing =  Case}
- * 
  * </ul>
  * 
  */
 
-@RequireCasingBase
-public abstract class CasingBase extends OpenAPIBase {
+public abstract class ValidationBase extends OpenAPIBase {
 
-public static final String BASE_PATH = "/enums";
-
-/**
- * 
- * POST /casing = Case
- * 
- */
-
-protected abstract void case$() throws Exception;
+public static final String BASE_PATH = "/api/v1";
 
   /*****************************************************************/
 
-  public CasingBase() {
-    super(BASE_PATH,
-         "Case                 POST   /casing");
+  public ValidationBase() {
+    super(BASE_PATH);
   }
   public static java.time.Instant toDateTime(String s) {
     return java.time.Instant.parse(s);
@@ -52,29 +40,9 @@ protected abstract void case$() throws Exception;
 
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
 
-    if( index < segments.length && "casing".equals(segments[index])) {
-      index++;
-      if ( segments.length == index) {
-        if ( context.isMethod(OpenAPIBase.Method.POST)) {
-          case$_post_(context);
-          return true;
-        } 
-      }
-
-      // end casing
-    } 
 
     return false;
   }
-
-private void case$_post_(OpenAPIContext context) throws Exception{
-
-    context.setOperation("Case");
-
-    context.call( () -> { case$(); return null; });
-    context.setResult(null, 200);
-
-}
 
 }
 

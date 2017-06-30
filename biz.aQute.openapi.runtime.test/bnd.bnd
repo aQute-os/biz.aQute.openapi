@@ -4,6 +4,11 @@
 	biz.aQute.openapi.generator;version=latest,\
 	osgi.enroute.base.api,\
 	org.apache.felix.http.jetty,\
-	biz.aQute.bndlib,\
+	biz.aQute.bnd;packages=*,\
 	osgi.core;version=6.0,\
 	osgi.cmpn;version=6.0
+
+-testpath: \
+	org.apache.felix.framework
+
+src=src,gen-sources

@@ -9,6 +9,18 @@ import aQute.openapi.generator.OpenAPIGenerator;
 
 public class GenerateTestSources {
 
+	public static void basicauth() throws Exception {
+		GenerateTestSources.generate("basicauth", "basicauth.json", new Configuration());
+	}
+
+	public static void simple() throws Exception {
+		GenerateTestSources.generate("simple", "simple.json", new Configuration());
+	}
+
+	public static void validation() throws Exception {
+		GenerateTestSources.generate("validation", "validation.json", new Configuration());
+	}
+
 	public static void createNestedObjects() throws Exception {
 		GenerateTestSources.generate("nestedobject", "nestedobject.json", new Configuration());
 	}
@@ -88,6 +100,9 @@ public class GenerateTestSources {
 	}
 
 	public static void main(String args[]) throws Exception {
+		basicauth();
+		simple();
+		validation();
 		createNakedEnum();
 		createNestedObjects();
 		createCasing();

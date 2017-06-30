@@ -8,8 +8,17 @@
 	"securityDefinitions": {
 		"api_key": {
 		    "type": "apiKey",
-			"name": "Key",
+			"name": "ApiKey",
 			"in": "header"
+		},
+		"oauth": {
+		    "type": 			"oauth2",
+		    "authorizationUrl": "http://swagger.io/api/oauth/dialog",
+    		"flow": 			"implicit",
+    		"scopes": {
+      			"a": "A",
+      			"b": "B"
+    		}
 		}
 	},
 	"security": [
@@ -20,63 +29,64 @@
 	"basePath": "/v1",
 	"paths":
 	{
-		"/operation":
+		"/defaultSecurity":
 		{
 			"get":
 			{
-				"operationId": "use",
-				"parameters":
-				[
-					{
-						"name": "Key",
-						"in": "header",
-						"required": true,
-						"type":"string"
-					}
-				],
-				"responses":
-				{
-					"200":
-					{
-						"schema":
-						{
-							"$ref": "#/definitions/Response"
-						}
-					}
-				}
-			},
-			"put":
-			{
-				"operationId": "login",
-				"security": [],
-				"parameters":
-				[
-					{
-						"name": "Key",
-						"in": "header",
-						"required": false,
-						"type":"string"
-					}
-				],
-				"responses":
-				{
-					"200":
-					{
-						"schema":
-						{
-							"$ref": "#/definitions/Response"
-						}
-					},
-					"401":
-					{
-						"schema":
-						{
-						  	"$ref": "#/definitions/Response"
-						}
-					}
-				}
+				"operationId": "defaultSecurity"
 			}
-
+		},
+		"/overrideNoSecurity":
+		{
+			"get":
+			{
+				"operationId": "overrideNoSecurity",
+				"security": []
+			}
+		},
+		"/orSecurity":
+		{
+			"get":
+			{
+				"operationId": "orSecurity",
+				"security": [
+					{
+						"api_key":[]
+					}, {
+						"oauth":["a"]
+					}
+				]
+			}
+		},
+		"/andSecurity":
+		{
+			"get":
+			{
+				"operationId": "andSecurity",
+				"security": [
+					{
+						"api_key":[],
+						"oauth":["a"]
+					}
+				]
+			}
+		},
+		"/orAndSecurity":
+		{
+			"get":
+			{
+				"operationId": "orAndSecurity",
+				"security": [
+					{
+						"api_key":[],
+						"oauth":["a"]
+					},
+					{
+						"api_key":[],
+						"oauth":["a"]
+					}
+				]
+			}
 		}
 	},
 

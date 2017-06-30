@@ -1,9 +1,7 @@
-package biz.aQute.openapi.runtime.test;
+package biz.aQute.openapi.runtime;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 
 import org.junit.Assert;
 import org.junit.Rule;

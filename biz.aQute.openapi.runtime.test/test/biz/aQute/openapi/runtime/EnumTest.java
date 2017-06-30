@@ -1,4 +1,4 @@
-package biz.aQute.openapi.runtime.test;
+package biz.aQute.openapi.runtime;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,8 +10,6 @@ import java.util.Optional;
 import org.junit.Test;
 
 import aQute.json.codec.JSONCodec;
-import aQute.openapi.generator.Configuration;
-import generator.GenerateTestSources;
 import osgi.enroute.dto.api.TypeReference;
 
 public class EnumTest extends gen.enums.EnumsBase {

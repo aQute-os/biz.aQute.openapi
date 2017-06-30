@@ -1,0 +1,25 @@
+{
+	"swagger": "2.0",
+	"securityDefinitions": {
+		"basicauth": {
+		    "type": "basic"
+		}
+	},
+	"security": [ {
+			"basicauth":[]
+		} ],
+	"basePath": "/basic",
+	"paths": {
+		"/authenticated": {
+			"get": {
+				"operationId": "authenticated"
+			}
+		},
+		"unauthenticated": {
+			"get": {
+				"operationId": "unauthenticated",
+				"security": []
+			}
+		}
+	}
+}

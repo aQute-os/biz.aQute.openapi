@@ -1,4 +1,4 @@
-package gen.casing;
+package gen.simple;
 
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
@@ -12,30 +12,30 @@ import java.time.LocalDate;
  * 
  * <ul>
  * 
- * <li>{@link #case$() POST /casing =  Case}
+ * <li>{@link #simple() GET /simple =  simple}
  * 
  * </ul>
  * 
  */
 
-@RequireCasingBase
-public abstract class CasingBase extends OpenAPIBase {
+@RequireSimpleBase
+public abstract class SimpleBase extends OpenAPIBase {
 
-public static final String BASE_PATH = "/enums";
+public static final String BASE_PATH = "/v1";
 
 /**
  * 
- * POST /casing = Case
+ * GET /simple = simple
  * 
  */
 
-protected abstract void case$() throws Exception;
+protected abstract void simple() throws Exception;
 
   /*****************************************************************/
 
-  public CasingBase() {
+  public SimpleBase() {
     super(BASE_PATH,
-         "Case                 POST   /casing");
+         "simple               GET    /simple");
   }
   public static java.time.Instant toDateTime(String s) {
     return java.time.Instant.parse(s);
@@ -52,26 +52,26 @@ protected abstract void case$() throws Exception;
 
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
 
-    if( index < segments.length && "casing".equals(segments[index])) {
+    if( index < segments.length && "simple".equals(segments[index])) {
       index++;
       if ( segments.length == index) {
-        if ( context.isMethod(OpenAPIBase.Method.POST)) {
-          case$_post_(context);
+        if ( context.isMethod(OpenAPIBase.Method.GET)) {
+          simple_get_(context);
           return true;
         } 
       }
 
-      // end casing
+      // end simple
     } 
 
     return false;
   }
 
-private void case$_post_(OpenAPIContext context) throws Exception{
+private void simple_get_(OpenAPIContext context) throws Exception{
 
-    context.setOperation("Case");
+    context.setOperation("simple");
 
-    context.call( () -> { case$(); return null; });
+    context.call( () -> { simple(); return null; });
     context.setResult(null, 200);
 
 }

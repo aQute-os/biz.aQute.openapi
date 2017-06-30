@@ -153,14 +153,9 @@ String query_ = context.toString(context.parameter("query"));
     //  VALIDATORS 
 
     context.begin("postParameter");
-    context.require(form1_,"form1");
-    context.require(form2_,"form2");
-    context.require(path_,"path");
-    context.require(header_,"header");
-    context.require(query_,"query");
     context.end();
 
-    Object result = postParameter(form1_, form2_, path_, header_, query_);
+    Object result = context.call( ()-> postParameter(form1_, form2_, path_, header_, query_));
     context.setResult(result, 200);
 
 }
@@ -177,13 +172,9 @@ String query_ = context.toString(context.parameter("query"));
     //  VALIDATORS 
 
     context.begin("putParameter");
-    context.require(body_,"body");
-    context.require(path_,"path");
-    context.require(header_,"header");
-    context.require(query_,"query");
     context.end();
 
-    Object result = putParameter(body_, path_, header_, query_);
+    Object result = context.call( ()-> putParameter(body_, path_, header_, query_));
     context.setResult(result, 200);
 
 }

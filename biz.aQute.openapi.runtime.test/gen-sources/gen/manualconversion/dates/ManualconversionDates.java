@@ -100,10 +100,9 @@ Dates token_ = context.body(Dates.class);
     //  VALIDATORS 
 
     context.begin("putDates");
-    context.require(token_,"token");
     context.end();
 
-    Object result = putDates(token_);
+    Object result = context.call( ()-> putDates(token_));
     context.setResult(result, 200);
 
 }

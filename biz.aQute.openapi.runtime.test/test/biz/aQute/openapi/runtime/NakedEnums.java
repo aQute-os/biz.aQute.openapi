@@ -1,4 +1,4 @@
-package biz.aQute.openapi.runtime.test;
+package biz.aQute.openapi.runtime;
 
 import org.junit.Test;
 
@@ -9,7 +9,7 @@ public class NakedEnums {
 
 	@SuppressWarnings("unused")
 	@Test
-	void testNakedEnum() {
+	public void testNakedEnum() {
 		NakedEnum a = NakedenumBase.NakedEnum.A;
 		NakedEnum b = NakedenumBase.NakedEnum.B;
 	}
