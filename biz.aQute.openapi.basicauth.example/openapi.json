@@ -1,0 +1,51 @@
+ {
+	"swagger": "2.0",
+	"securityDefinitions": {
+		"basicauth": {
+			"type": "basic"
+		}
+	},
+	"security": [ {
+		"basicauth": []
+	} ],
+	"basePath": "/openapi/security/basic",
+		"paths": {
+			"/authenticated/{action}": {
+				"get": {
+					"operationId": "authenticated",
+					"parameters": [{
+							"name"		: "action",
+							"in"		: "path",
+							"required"	: true,
+							"type"		: "string"
+					}],
+	                "responses": {
+	          			"200": {
+							"schema": {
+								"type": "boolean"
+							}
+	          			}
+	            	}
+				}
+			},
+			"/unauthenticated/{action}": {
+				"get": {
+					"operationId": "unauthenticated",
+					"security": [],
+					"parameters": [ {
+							"name"		: "action",
+							"in"		: "path",
+							"required"	: true,
+							"type"		: "string"
+					}],
+	                "responses": {
+	          			"200": {
+							"schema": {
+								"type": "boolean"
+							}
+	          			}
+	            	}
+				}
+			}
+		}
+	}

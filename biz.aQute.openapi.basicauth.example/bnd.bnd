@@ -1,0 +1,14 @@
+
+Bundle-Description: \
+	An OpenAPI example for using basic authentication and the \
+	setting up the authorization.
+
+Private-Package: \
+	biz.aQute.openapi.basicauth.example
+
+-buildpath: \
+	biz.aQute.openapi.provider, \
+	osgi.enroute.base.api
+
+# needed to tell bnd that we have generated sources
+src = src, gen-src

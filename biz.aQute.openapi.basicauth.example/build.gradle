@@ -1,0 +1,22 @@
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+    dependencies {
+        classpath group: 'biz.aQute', name: 'biz.aQute.openapi.gradle.plugin',
+                  version: '1.0.0-SNAPSHOT'
+    }
+}
+
+apply plugin: 'biz.aQute.openapi'
+
+openapi {
+	input			= file( 'openapi.json' )
+	output			= file( 'gen-src')
+
+	configuration.tags				= "*"
+	configuration.typePrefix		= "BasicAuth"
+	configuration.baseName			= "OpenAPIBase"
+	configuration.packagePrefix		= "biz.aQute.openapi.basicauth.example";
+}
+
