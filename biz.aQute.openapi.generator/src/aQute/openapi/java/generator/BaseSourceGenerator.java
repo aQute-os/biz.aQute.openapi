@@ -3,11 +3,13 @@ package aQute.openapi.java.generator;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Formatter;
@@ -29,10 +31,10 @@ public class BaseSourceGenerator {
 		this.output = output;
 	}
 
-	protected void generate(String path, Runnable body) throws FileNotFoundException {
+	protected void generate(String path, Runnable body) throws FileNotFoundException, UnsupportedEncodingException {
 		File target = IO.getFile(getOutput(), path);
 		target.getParentFile().mkdirs();
-		try (Formatter formatter = new Formatter(target);) {
+		try (Formatter formatter = new Formatter(target, StandardCharsets.UTF_8.toString());) {
 			this.setFormatter(formatter);
 			body.run();
 		}

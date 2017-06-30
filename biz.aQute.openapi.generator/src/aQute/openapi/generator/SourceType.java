@@ -771,6 +771,10 @@ public abstract class SourceType {
 		public SourceType getTarget() {
 			return target;
 		}
+
+		public boolean hasValidator() {
+			return target.hasValidator();
+		}
 	}
 
 	public boolean isOptional() {

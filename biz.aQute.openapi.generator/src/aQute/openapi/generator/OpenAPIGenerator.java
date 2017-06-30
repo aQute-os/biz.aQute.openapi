@@ -1,7 +1,6 @@
 package aQute.openapi.generator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -275,7 +274,7 @@ public class OpenAPIGenerator extends Env {
 		sb.append("$").append(Hex.nibble(c / 16)).append(Hex.nibble(c % 16));
 	}
 
-	public void generate(File output) throws FileNotFoundException {
+	public void generate(File output) throws Exception {
 		JavaGenerator g = new JavaGenerator(this, output);
 		for (SourceFile source : sources.values()) {
 			g.generate(source);
@@ -296,6 +295,9 @@ public class OpenAPIGenerator extends Env {
 	public Object			dtoType;
 
 	public String getVersion() {
+		if (getSwagger().info == null)
+			return "1.0.0";
+
 		String v = getSwagger().info.version;
 		if (v == null)
 			v = "1.0.0";

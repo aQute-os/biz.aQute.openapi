@@ -1,7 +1,6 @@
 package aQute.openapi.java.generator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -45,13 +44,14 @@ public class JavaGenerator extends BaseSourceGenerator {
 	final OpenAPIGenerator	gen;
 	protected SourceFile	sourceFile;
 	private SourceMethod	method;
+	private String			level	= "";
 
 	public JavaGenerator(OpenAPIGenerator gen, File output) {
 		super(output);
 		this.gen = gen;
 	}
 
-	public void generate(SourceFile sourceFile) throws FileNotFoundException {
+	public void generate(SourceFile sourceFile) throws Exception {
 		this.sourceFile = sourceFile;
 
 		String javaClassPath = sourceFile.getPath();
@@ -258,9 +258,9 @@ public class JavaGenerator extends BaseSourceGenerator {
 
 	private void doAbstractMethodInvocation() {
 		if (!method.getReturnType().isVoid())
-			format("    Object result = %s(", method.getName());
+			format("    Object result = context.call( ()-> %s(", method.getName());
 		else
-			format("    %s(", method.getName());
+			format("    context.call( () -> { %s(", method.getName());
 
 		String del = "";
 		for (SourceArgument a : method.getArguments()) {
@@ -269,7 +269,11 @@ public class JavaGenerator extends BaseSourceGenerator {
 			del = ", ";
 		}
 
-		format(");\n");
+		if (!method.getReturnType().isVoid())
+			format("));\n");
+		else
+			format("); return null; });\n");
+
 	}
 
 	private void doValidators(OperationObject operation) {
@@ -278,16 +282,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 
 		for (SourceArgument a : method.getArguments()) {
 			String name = a.getName() + "_";
-			if (a.getType().hasValidator()) {
-				if (a.getPar().required) {
-					doValidators(a.getType(), name);
-				} else {
-					doOptionalValidator(a, name);
-				}
-			}
-			if (a.getPar().required) {
-				format("    context.require(%s,%s);\n", name, escapeString(a.getPar().name));
-			}
+			doValidators(a.getType(), name);
 		}
 		format("    context.end();\n\n");
 	}
@@ -301,12 +296,6 @@ public class JavaGenerator extends BaseSourceGenerator {
 		return hasValidator;
 	}
 
-	private void doOptionalValidator(SourceArgument a, String name) {
-		format("    if(%s.isPresent()) {\n", name);
-		doValidators(a.getType(), name + ".get()");
-		format("    }\n", a.getName());
-	}
-
 	protected void doLocalVariable(SourceArgument a, String name) {
 		if (!a.getPar().required) {
 			format("Optional<%s> %s = context.optional(%s);\n", a.getType().wrapper().reference(), name, a.access());
@@ -316,12 +305,13 @@ public class JavaGenerator extends BaseSourceGenerator {
 
 	protected void doMethodSecurity() {
 		OperationObject operation = method.getOperation();
-		if (operation.security == null)
+		if (operation.security == null || operation.security.isEmpty())
 			return;
 
-		for (Map<String,List<String>> sec : operation.security) {
-
-			for (Map.Entry<String,List<String>> e : sec.entrySet()) {
+		String separator = "    context";
+		for (Map<String,List<String>> sec : operation.security) { // OR
+			format("%s", separator);
+			for (Map.Entry<String,List<String>> e : sec.entrySet()) { // AND
 
 				SecuritySchemeObject sso = gen.getSwagger().securityDefinitions.get(e.getKey());
 
@@ -330,42 +320,15 @@ public class JavaGenerator extends BaseSourceGenerator {
 					continue;
 				}
 
-				switch (sso.type) {
-					case apiKey :
-						String access;
-						switch (sso.in) {
-							default :
-								OpenAPIGenerator.getLogger()
-										.error("Invalid type for the security Api Key header/path {}", sso.in);
-							case header :
-								access = String.format("context.header(%s)", escapeString(sso.name));
-								break;
-							case query :
-								access = String.format("toString(context.parameter(%s))", escapeString(sso.name));
-								break;
-						}
-						format("    context.verify(%s.%s, %s);\n", gen.getBaseSourceFile().getFQN(), e.getKey(),
-								access);
-						break;
-					case basic :
-						format("    context.verify(%s.%s);\n", gen.getBaseSourceFile().getFQN(), e.getKey());
-
-						break;
-					case oauth2 :
-
-						format("    context.verify(%s.%s", gen.getBaseSourceFile().getFQN(), e.getKey());
-						for (String scope : e.getValue()) {
-							format(",%s", escapeString(scope));
-						}
-						format(");\n");
-						break;
-					default :
-						break;
+				format(".verify(%s.%s", gen.getBaseSourceFile().getFQN(), e.getKey());
+				for (String scope : e.getValue()) {
+					format(",%s", escapeString(scope));
 				}
+				format(")");
 			}
+			separator = ".or()";
 		}
-
-		format("\n");
+		format(".verify();\n");
 	}
 
 	protected void doDispatch() {
@@ -592,7 +555,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 			}
 
 			String varName = gen.toMemberName(security);
-			format("     public static OpenAPISecurityDefinition %s = ", security, escapeString(varName));
+			format("     public static OpenAPISecurityDefinition %s = ", varName);
 
 			switch (so.type) {
 				case apiKey :
@@ -709,12 +672,12 @@ public class JavaGenerator extends BaseSourceGenerator {
 			format("\n");
 
 			if (t.hasValidator()) {
-				format("    protected void validate(OpenAPIContext context, String name) {\n");
+				format("    public void validate(OpenAPIContext context, String name) {\n");
 				format("       context.begin(name);\n");
 
 				for (SourceProperty property : t.getProperties()) {
 
-					doValidators(property.getType(), property.getKey());
+					doValidators(property.getType(), "this." + property.getKey());
 				}
 
 				format("     context.end();\n");
@@ -755,6 +718,17 @@ public class JavaGenerator extends BaseSourceGenerator {
 		if (!type.hasValidator())
 			return;
 
+		boolean close = false;
+		if (type instanceof OptionalType) {
+			format("       if  (%s.isPresent() ) {\n", reference);
+			type = ((OptionalType) type).getTarget();
+			reference = reference + ".get()";
+			close = true;
+		} else if (!type.isPrimitive()) {
+			format("       if  ( context.require(%s, %s) ) {\n", reference, escapeString(reference));
+			close = true;
+		}
+
 		if (type instanceof SourceType.NummericType) {
 			doNummericValidator((SourceType.NummericType) type, reference);
 		} else if (type instanceof SourceType.SimpleType) {
@@ -765,6 +739,9 @@ public class JavaGenerator extends BaseSourceGenerator {
 			doArrayTypeValidator((SourceType.ArrayType) type, reference);
 		} else
 			gen.error("Unknown type %s with a validator?", type);
+
+		if (close)
+			format("       }\n", reference);
 	}
 
 	protected void doValidate(String expression, String reference) {
@@ -782,12 +759,17 @@ public class JavaGenerator extends BaseSourceGenerator {
 		}
 
 		if (type.getComponentType().hasValidator()) {
-			format("    int %s_counter=0;\n", reference);
-			format("    for( %s %s_item : %2$s) {\n", type.getComponentType().reference(), reference);
-			format("        context.begin(%s_counter++);\n", reference);
-			doValidators(type.getComponentType(), reference + "_item");
+			level += "_";
+			String counter = "counter" + level;
+			String item = "item" + level;
+
+			format("    int %s=0;\n", counter);
+			format("    for( %s %s : %s) {\n", type.getComponentType().reference(), item, reference);
+			format("        context.begin(%s++);\n", counter);
+			doValidators(type.getComponentType(), item);
 			format("        context.end();\n");
 			format("    }\n");
+			level = level.substring(0, level.length() - 1);
 		}
 	}
 
