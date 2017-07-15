@@ -54,7 +54,7 @@ protected abstract NakedEnum nakedEnum() throws Exception;
   /*****************************************************************/
 
   public NakedenumBase() {
-    super(BASE_PATH,
+    super(BASE_PATH,gen.nakedenum.NakedenumBase.class,
          "NakedEnum            POST   /casing  RETURN NakedEnum");
   }
   public static java.time.Instant toDateTime(String s) {

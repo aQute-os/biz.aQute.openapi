@@ -66,7 +66,7 @@ public static class Dates extends OpenAPIBase.DTO {
   /*****************************************************************/
 
   public DefaultdatetimeDates() {
-    super(BASE_PATH,
+    super(BASE_PATH,gen.defaultdatetime.DefaultdatetimeBase.class,
          "putDates             PUT    /dates  PAYLOAD Dates  RETURN Dates");
   }
 

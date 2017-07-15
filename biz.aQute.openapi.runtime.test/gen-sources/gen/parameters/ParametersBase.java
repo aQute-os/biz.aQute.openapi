@@ -98,7 +98,7 @@ public static class Body extends OpenAPIBase.DTO {
   /*****************************************************************/
 
   public ParametersBase() {
-    super(BASE_PATH,
+    super(BASE_PATH,gen.parameters.ParametersBase.class,
          "postParameter        POST   /parameter/{path}?query  RETURN Response",
          "putParameter         PUT    /parameter/{path}?query  PAYLOAD Body  RETURN Response");
   }

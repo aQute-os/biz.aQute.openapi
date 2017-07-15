@@ -16,17 +16,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.osgi.service.http.NamespaceException;
 
 import aQute.openapi.provider.OpenAPIRuntime.Tracker;
-import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import aQute.openapi.security.api.OpenAPISecurityProvider;
 
 public class Dispatcher extends HttpServlet {
-	private static final long										serialVersionUID	= 1L;
-	final String													prefix;
-	final OpenAPIRuntime											runtime;
-	final List<Tracker>												targets				= new CopyOnWriteArrayList<>();
-	final Map<OpenAPISecurityDefinition,SecurityProviderTracker>	security			= new ConcurrentHashMap<>();
-	final Closeable													registration;
-	final Object													lock				= new Object();
+	private static final int					SECURITY_PROVIDER_TIMEOUT	= 5000;
+	private static final long					serialVersionUID			= 1L;
+	final String								prefix;
+	final OpenAPIRuntime						runtime;
+	final List<Tracker>							targets						= new CopyOnWriteArrayList<>();
+	final Map<String,SecurityProviderTracker>	security					= new ConcurrentHashMap<>();
+	final Closeable								registration;
+	final Object								lock						= new Object();
 
 	public Dispatcher(OpenAPIRuntime runtime, String prefix) throws ServletException, NamespaceException {
 		this.runtime = runtime;
@@ -58,7 +58,6 @@ public class Dispatcher extends HttpServlet {
 			runtime.contexts.set(context);
 			try {
 				String path = request.getPathInfo();
-
 				if (path.endsWith("/"))
 					path = path.substring(1, path.length() - 1);
 				else
@@ -104,8 +103,10 @@ public class Dispatcher extends HttpServlet {
 			Object result = e.getResult();
 			context.report(e);
 		} catch (SecurityException se) {
+			OpenAPIRuntime.logger.warn("Forbidden {} {}", se, request.getPathInfo());
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		} catch (Exception e) {
+			OpenAPIRuntime.logger.warn("Server Error {} {}", e, request.getPathInfo());
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			context.report(e);
 		}
@@ -124,13 +125,19 @@ public class Dispatcher extends HttpServlet {
 		registration.close();
 	}
 
-	public OpenAPISecurityProvider getSecurityProvider(OpenAPISecurityDefinition def) {
-		return security.computeIfAbsent(def, this::newTracker).getService();
-	}
+	public OpenAPISecurityProvider getSecurityProvider(String id, String type) throws InterruptedException {
+		String key = id + "-" + type;
+		SecurityProviderTracker t;
 
-	private SecurityProviderTracker newTracker(OpenAPISecurityDefinition def) {
-		SecurityProviderTracker sp = new SecurityProviderTracker(runtime.context, def);
-		sp.open();
-		return sp;
+		synchronized (security) {
+			t = security.get(key);
+			if (t == null) {
+				t = new SecurityProviderTracker(runtime.context, id, type);
+				security.put(key, t);
+				t.open();
+			}
+		}
+		OpenAPISecurityProvider provider = t.waitForService(SECURITY_PROVIDER_TIMEOUT);
+		return provider;
 	}
 }

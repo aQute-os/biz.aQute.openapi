@@ -67,7 +67,7 @@ public static class Values extends OpenAPIBase.DTO {
   /*****************************************************************/
 
   public NestedobjectBase() {
-    super(BASE_PATH,
+    super(BASE_PATH,gen.nestedobject.NestedobjectBase.class,
          "nested               POST   /nested  RETURN Nested");
   }
   public static java.time.Instant toDateTime(String s) {

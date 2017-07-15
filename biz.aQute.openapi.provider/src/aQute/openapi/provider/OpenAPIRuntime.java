@@ -24,6 +24,8 @@ import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.osgi.util.tracker.ServiceTracker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import aQute.json.codec.JSONCodec;
 import aQute.openapi.provider.OpenAPIRuntime.Configuration;
@@ -31,8 +33,9 @@ import osgi.enroute.authorization.api.Authority;
 import osgi.enroute.authorization.api.AuthorityAdmin;
 
 @Designate(ocd = Configuration.class, factory = false)
-@Component(service = OpenAPIRuntime.class, configurationPid = "aQute.openapi.runtime")
+@Component(service = OpenAPIRuntime.class, immediate = true, configurationPid = "aQute.openapi.runtime")
 public class OpenAPIRuntime {
+	final static Logger					logger				= LoggerFactory.getLogger(OpenAPIRuntime.class);
 	final static JSONCodec				codec				= new JSONCodec();
 	static OpenAPIBase.Codec			deflt				= new CodecWrapper(codec);
 

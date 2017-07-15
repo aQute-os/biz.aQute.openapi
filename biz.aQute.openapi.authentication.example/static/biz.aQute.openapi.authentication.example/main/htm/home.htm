@@ -1,0 +1,38 @@
+
+
+<section>
+	<div>
+		{{message}}
+	</div>
+	<table class="table table-striped table-condensed table-bordered">
+		<tr>
+			<th>Type</th>
+			<th>Provider</th>
+			<th>User</th>
+			<th>Identity</th>
+			<th>Expires</th>
+			<th>Identity Key</th>
+			<th>Login</th>
+		</tr>
+		<tr ng-repeat="i in info">
+			<td>{{i.type}}</td>
+			<td>{{i.name}}</td>
+			<td>{{i.currentUser}}</td>
+			<td>{{i.idValue}}</td>
+			<td>{{i.expires}}</td>
+			<td>{{i.idKey}}</td>
+			<td>
+				<div ng-hide=i.currentUser>
+				<a class="btn" href="/.openapi/security/{{i.name}}/{{i.type}}/login"
+			onclick="var w=window.open(this.href, 'mywin','left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); w.parentWindow=window; return false;">
+				Login</a>
+				</div>
+				<div ng-show=i.currentUser>
+				<a class="btn" href="/.openapi/security/{{i.name}}/{{i.type}}/logout"
+			onclick="var w=window.open(this.href, 'mywin','left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); w.parentWindow=window; return false;">
+				Logout</a>
+				</div>
+			</td>
+		</tr>
+	</table>
+</section>

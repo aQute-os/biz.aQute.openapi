@@ -2,7 +2,8 @@
 	osgi.enroute.base.api,\
 	biz.aQute.bndlib;packages=*,\
 	biz.aQute.json.util, \
-	biz.aQute.openapi.provider
+	biz.aQute.openapi.provider, \
+	biz.aQute.openapi.api
 
 
 
@@ -12,3 +13,5 @@ Export-Package: \
 	aQute.openapi.v2.api,\
 	aQute.openapi.java.generator
 src=src,gen-sources
+
+-testpath: \

@@ -490,7 +490,7 @@ public abstract class SourceType {
 
 		@Override
 		public String reference() {
-			return "List<" + getComponentType().reference() + ">";
+			return "List<" + getComponentType().wrapper().reference() + ">";
 		}
 
 		@Override

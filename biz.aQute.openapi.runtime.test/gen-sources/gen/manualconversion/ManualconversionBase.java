@@ -23,7 +23,7 @@ public static final String BASE_PATH = "/v1";
   /*****************************************************************/
 
   public ManualconversionBase() {
-    super(BASE_PATH);
+    super(BASE_PATH,gen.manualconversion.ManualconversionBase.class);
   }
   public static java.time.Instant toDateTime(String s) {
     return java.time.Instant.parse(s);

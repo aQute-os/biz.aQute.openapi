@@ -1,0 +1,30 @@
+{
+	"swagger": "2.0",
+	"basePath": "/non200status",
+	"paths": {
+		"/non200status": {
+			"get": {
+				"operationId": "non200status",
+				"responses": {
+					"204" : {
+						"schema": {
+							"type" : "string"
+						}
+					}
+				}
+			}
+		},
+		"/non200statusexception": {
+			"get": {
+				"operationId": "non200statusexception",
+				"responses": {
+					"204" : {
+						"schema": {
+							"type" : "string"
+						}
+					}
+				}
+			}
+		}
+	}
+}

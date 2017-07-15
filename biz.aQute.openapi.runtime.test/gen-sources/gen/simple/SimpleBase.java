@@ -34,7 +34,7 @@ protected abstract void simple() throws Exception;
   /*****************************************************************/
 
   public SimpleBase() {
-    super(BASE_PATH,
+    super(BASE_PATH,gen.simple.SimpleBase.class,
          "simple               GET    /simple");
   }
   public static java.time.Instant toDateTime(String s) {

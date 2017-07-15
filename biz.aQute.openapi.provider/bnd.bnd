@@ -1,7 +1,12 @@
 
+Provide-Capability: \
+	osgi.implementation;osgi.implementation=biz.aQute.openapi
+
 Export-Package: \
 	aQute.openapi.provider,\
-	aQute.openapi.security.api
+	aQute.openapi.security.api, \
+	aQute.json.codec,\
+	aQute.json.naming
 
 -conditionalpackage: aQute.lib*, aQute.json.util
 
@@ -15,9 +20,7 @@ Export-Package: \
 -testpath: \
 	org.apache.felix.http.jetty
 -runrequires: osgi.identity;filter:='(osgi.identity=biz.aQute.openapi.provider)'
-Private-Package: \
-	aQute.json.codec,\
-	aQute.json.naming
+
 Import-Package: \
 	org.apache.felix.service.command;resolution:=optional,\
 	*

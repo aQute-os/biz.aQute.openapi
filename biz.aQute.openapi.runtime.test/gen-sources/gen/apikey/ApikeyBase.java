@@ -78,11 +78,11 @@ protected abstract void orSecurity() throws Exception;
      public static OpenAPISecurityDefinition api_key =  OpenAPISecurityDefinition.apiKey("api_key", BASE_PATH, "header", "ApiKey");
 
 
-     public static OpenAPISecurityDefinition oauth =  OpenAPISecurityDefinition.implicit("oauth", BASE_PATH, "http://swagger.io/api/oauth/dialog", null, "a A", "b B");
+     public static OpenAPISecurityDefinition oauth =  OpenAPISecurityDefinition.implicit("oauth", BASE_PATH, "http://swagger.io/api/oauth/dialog", null ,"a","b");
 
 
   public ApikeyBase() {
-    super(BASE_PATH,
+    super(BASE_PATH,gen.apikey.ApikeyBase.class,
          "overrideNoSecurity   GET    /overrideNoSecurity",
          "orAndSecurity        GET    /orAndSecurity",
          "andSecurity          GET    /andSecurity",

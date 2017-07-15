@@ -531,7 +531,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 			doSecurityDefinitions();
 
 		format("  public %s() {\n", className);
-		format("    super(BASE_PATH");
+		format("    super(BASE_PATH,%s.class", gen.getBaseSourceFile().getFQN());
 
 		for (SourceMethod oo : sourceFile.getMethods().values()) {
 			format(",\n         %s", escapeString(oo.toString()));
@@ -574,25 +574,25 @@ public class JavaGenerator extends BaseSourceGenerator {
 					switch (so.flow) {
 
 						case "implicit" :
-							format(" OpenAPISecurityDefinition.implicit(%s, BASE_PATH, %s, %s, %s);\n",
+							format(" OpenAPISecurityDefinition.implicit(%s, BASE_PATH, %s, %s %s);\n",
 									escapeString(security), escapeString(so.authorizationUrl), null,
 									toScopes(so.scopes));
 							break;
 
 						case "application" :
-							format(" OpenAPISecurityDefinition.application(%s, BASE_PATH, %s, %s, %s);\n",
+							format(" OpenAPISecurityDefinition.application(%s, BASE_PATH, %s, %s %s);\n",
 									escapeString(security), escapeString(so.authorizationUrl),
 									escapeString(so.tokenUrl), null, toScopes(so.scopes));
 							break;
 						case "password" :
-							format(" OpenAPISecurityDefinition.password(%s, BASE_PATH, %s, %s, %s);\n",
+							format(" OpenAPISecurityDefinition.password(%s, BASE_PATH, %s, %s %s);\n",
 									escapeString(security), escapeString(so.authorizationUrl),
 									escapeString(so.tokenUrl), null, toScopes(so.scopes));
 							break;
 						case "accessCode" :
-							format(" OpenAPISecurityDefinition.accessCode(%s, BASE_PATH, %s, %s, %s);\n",
+							format(" OpenAPISecurityDefinition.accessCode(%s, BASE_PATH, %s, %s %s);\n",
 									escapeString(security), escapeString(so.authorizationUrl),
-									escapeString(so.tokenUrl), null, toScopes(so.scopes));
+									escapeString(so.tokenUrl), toScopes(so.scopes));
 							break;
 					}
 					break;
@@ -602,11 +602,12 @@ public class JavaGenerator extends BaseSourceGenerator {
 	}
 
 	protected String toScopes(Map<String,String> scopes) {
+		if (scopes == null) {
+			return "";
+		}
 		StringBuilder sb = new StringBuilder();
-		String del = "";
 		for (Entry<String,String> scope : scopes.entrySet()) {
-			sb.append(del).append(escapeString(scope.getKey() + " " + scope.getValue()));
-			del = ", ";
+			sb.append(",").append(escapeString(scope.getKey()));
 		}
 		return sb.toString();
 	}

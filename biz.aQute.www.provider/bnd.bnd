@@ -1,0 +1,5 @@
+-buildpath: \
+	osgi.enroute.base.api
+Export-Package: \
+	aQute.www.fsm.util,\
+	aQute.www.http.util

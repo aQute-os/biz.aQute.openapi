@@ -23,7 +23,7 @@ public static final String BASE_PATH = "/v1";
   /*****************************************************************/
 
   public InstantformattingBase() {
-    super(BASE_PATH);
+    super(BASE_PATH,gen.instantformatting.InstantformattingBase.class);
   }
   final static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("y", java.util.Locale.getDefault());
   public static java.time.Instant toDateTime(String s) {

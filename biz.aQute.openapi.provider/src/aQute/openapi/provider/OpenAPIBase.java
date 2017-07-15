@@ -28,6 +28,7 @@ import java.util.function.Function;
 import javax.servlet.http.HttpServletResponse;
 
 import aQute.lib.exceptions.Exceptions;
+import aQute.openapi.util.WWWUtils;
 
 public abstract class OpenAPIBase {
 
@@ -142,7 +143,6 @@ public abstract class OpenAPIBase {
 			super(HttpServletResponse.SC_UNAUTHORIZED, reason, ex);
 		}
 	}
-
 
 	public static class NotFoundResponse extends Response {
 		private static final long serialVersionUID = 1L;
@@ -342,6 +342,7 @@ public abstract class OpenAPIBase {
 	final String						prefix;
 	final ThreadLocal<OpenAPIContext>	contexts	= new ThreadLocal<>();
 	final String[]						ops;
+	final Class< ? extends OpenAPIBase>	parent;
 
 	public abstract boolean dispatch_(OpenAPIContext context, String[] segments, int index) throws Exception;
 
@@ -356,7 +357,15 @@ public abstract class OpenAPIBase {
 	protected OpenAPIBase(String prefix, String... ops) {
 		this.prefix = prefix;
 		this.ops = ops;
+		this.parent = null;
 	}
+
+	protected OpenAPIBase(String prefix, Class< ? extends OpenAPIBase> parent, String... ops) {
+		this.prefix = prefix;
+		this.parent = parent;
+		this.ops = ops;
+	}
+
 
 	protected OpenAPIContext getOpenAPIContext() {
 		return contexts.get();

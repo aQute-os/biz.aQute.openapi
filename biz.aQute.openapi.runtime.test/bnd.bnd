@@ -1,14 +1,17 @@
 -buildpath: \
 	biz.aQute.json.util;version=latest;packages=*,\
 	biz.aQute.openapi.provider;version=latest;packages=*,\
+	biz.aQute.openapi.api;version=latest,\
 	biz.aQute.openapi.generator;version=latest,\
 	osgi.enroute.base.api,\
 	org.apache.felix.http.jetty,\
 	biz.aQute.bnd;packages=*,\
 	osgi.core;version=6.0,\
-	osgi.cmpn;version=6.0
+	osgi.cmpn;version=6.0, \
+	biz.aQute.www.provider
 
 -testpath: \
-	org.apache.felix.framework
+	org.apache.felix.framework, \
+	biz.aQute.openapi.oauth2.provider
 
 src=src,gen-sources

@@ -1,6 +1,13 @@
 
+Require-Capability: \
+	osgi.implementation;filter:="(osgi.implementation=biz.aQute.openapi)"
 
+-conditionalpackage: aQute.lib*
 
 -buildpath: \
 	osgi.enroute.base.api, \
 	biz.aQute.bndlib;packages=*
+Export-Package: \
+	aQute.openapi.user.api,\
+	aQute.openapi.security.api,\
+	aQute.openapi.util

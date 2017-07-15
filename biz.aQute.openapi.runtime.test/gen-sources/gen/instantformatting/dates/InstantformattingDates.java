@@ -66,7 +66,7 @@ public static class Dates extends OpenAPIBase.DTO {
   /*****************************************************************/
 
   public InstantformattingDates() {
-    super(BASE_PATH,
+    super(BASE_PATH,gen.instantformatting.InstantformattingBase.class,
          "putDates             PUT    /dates  PAYLOAD Dates  RETURN Dates");
   }
     public OpenAPIBase.Codec codec_() {

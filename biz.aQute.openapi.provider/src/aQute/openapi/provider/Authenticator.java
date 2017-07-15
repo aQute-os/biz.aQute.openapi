@@ -93,7 +93,7 @@ class Authenticator {
 	}
 
 	public String getUser() {
-		return null;
+		return user;
 	}
 
 }

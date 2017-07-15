@@ -49,7 +49,7 @@ protected abstract void unauthenticated() throws Exception;
 
 
   public BasicauthBase() {
-    super(BASE_PATH,
+    super(BASE_PATH,gen.basicauth.BasicauthBase.class,
          "authenticated        GET    /authenticated",
          "unauthenticated      GET    unauthenticated");
   }

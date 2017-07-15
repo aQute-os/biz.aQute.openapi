@@ -1,0 +1,11 @@
+-workingset authentication
+
+-buildpath: \
+	biz.aQute.openapi.api;version=latest,\
+	biz.aQute.openapi.provider;version=latest,\
+	osgi.enroute.base.api,\
+	org.bitbucket.b_c.jose4j,\
+	biz.aQute.www.provider;version=latest, \
+	org.apache.felix.gogo.runtime,\
+	osgi.enroute.configurer.simple.provider
+

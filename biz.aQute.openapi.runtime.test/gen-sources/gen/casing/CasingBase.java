@@ -34,7 +34,7 @@ protected abstract void case$() throws Exception;
   /*****************************************************************/
 
   public CasingBase() {
-    super(BASE_PATH,
+    super(BASE_PATH,gen.casing.CasingBase.class,
          "Case                 POST   /casing");
   }
   public static java.time.Instant toDateTime(String s) {

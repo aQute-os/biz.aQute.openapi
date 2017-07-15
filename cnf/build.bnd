@@ -13,5 +13,5 @@
 -plugin.maven.install  \
 	aQute.bnd.repository.maven.provider.MavenBndRepository; \
 	name=Install
-	
+
 -buildrepo: Install

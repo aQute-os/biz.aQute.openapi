@@ -258,6 +258,7 @@ public class DummyFramework extends Assert implements AutoCloseable {
 			workspace = Workspace.getWorkspace(IO.work.getParentFile());
 			// TODO fix the loading error
 			// assertTrue(workspace.check());
+			workspace.setOffline(true);
 		}
 		return workspace;
 	}

@@ -322,7 +322,7 @@ public static class MappingFileList extends OpenAPIBase.DTO {
   /*****************************************************************/
 
   public ValidationDeviceManagementModbusApi() {
-    super(BASE_PATH,
+    super(BASE_PATH,gen.validation.ValidationBase.class,
          "AddModbusDeviceToPlant POST   /devicemanagement/modbus/devices  PAYLOAD ModbusDeviceData  RETURN ModbusDeviceDataResponse",
          "EditModbusDeviceToPlant PUT    /devicemanagement/modbus/devices  PAYLOAD ModbusDeviceData  RETURN ModbusDeviceDataResponse",
          "GetModbusDevices     GET    /devicemanagement/modbus/devices  RETURN ModbusDeviceDataResponseList",

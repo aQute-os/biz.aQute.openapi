@@ -4,3 +4,7 @@
 Export-Package: \
 	aQute.json.codec,\
 	aQute.json.naming
+
+
+-conditionalpackage:  \
+	aQute.lib*

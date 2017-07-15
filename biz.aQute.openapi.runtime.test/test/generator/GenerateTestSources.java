@@ -9,6 +9,23 @@ import aQute.openapi.generator.OpenAPIGenerator;
 
 public class GenerateTestSources {
 
+
+	public static void non200status() throws Exception {
+		GenerateTestSources.generate("non200status", "non200status.json", new Configuration());
+	}
+
+	public static void oauth2() throws Exception {
+		GenerateTestSources.generate("oauth2", "oauth2.json", new Configuration());
+	}
+
+	public static void references() throws Exception {
+		GenerateTestSources.generate("references", "references.json", new Configuration());
+	}
+
+	public static void primitives() throws Exception {
+		GenerateTestSources.generate("primitives", "primitives.json", new Configuration());
+	}
+
 	public static void basicauth() throws Exception {
 		GenerateTestSources.generate("basicauth", "basicauth.json", new Configuration());
 	}
@@ -100,6 +117,10 @@ public class GenerateTestSources {
 	}
 
 	public static void main(String args[]) throws Exception {
+		non200status();
+		oauth2();
+		references();
+		primitives();
 		basicauth();
 		simple();
 		validation();

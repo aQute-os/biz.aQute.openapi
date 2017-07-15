@@ -1,0 +1,54 @@
+{
+	"swagger": "2.0",
+	"basePath": "/primitives",
+	"info": {
+
+	},
+	"paths": {
+		"/primitives": {
+			"post": {
+				"operationId": "Primitives",
+				"responses": {
+					"200": {
+						"schema": {
+							"$ref": "#/definitions/Primitives"
+						}
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"Primitives": {
+			"required": [
+				"intarray", "doublearray", "int", "double"
+			],
+			"type": "object",
+			"properties": {
+				"intarray": {
+					"type": "array",
+					"items": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"int": {
+						"type": "integer",
+						"format": "int32"
+				},
+				"doublearray": {
+					"type": "array",
+					"items": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"double": {
+						"type": "number",
+						"format": "double"
+				}
+			}
+		}
+	}
+
+}

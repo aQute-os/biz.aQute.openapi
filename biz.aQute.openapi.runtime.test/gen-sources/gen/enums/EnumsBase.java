@@ -180,7 +180,7 @@ public static class AllEnumVariations extends OpenAPIBase.DTO {
   /*****************************************************************/
 
   public EnumsBase() {
-    super(BASE_PATH,
+    super(BASE_PATH,gen.enums.EnumsBase.class,
          "enum                 POST   /enum  PAYLOAD AllEnumVariations");
   }
   public static java.time.Instant toDateTime(String s) {

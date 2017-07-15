@@ -44,6 +44,7 @@ public class OpenAPIContext {
 	final Map<String,String>		pathParameters	= new HashMap<>();
 	final static Logger				log				= LoggerFactory.getLogger(OpenAPIContext.class);
 	final Dispatcher				dispatcher;
+	final int						beginStatus;
 	private Method					method;
 	private String					operation;
 	private List<String>			stack			= new ArrayList<>();
@@ -57,6 +58,7 @@ public class OpenAPIContext {
 		this.dispatcher = dispatcher;
 		this.request = request;
 		this.response = response;
+		this.beginStatus = response.getStatus();
 	}
 
 	public boolean isMethod(Method method) {
@@ -75,7 +77,7 @@ public class OpenAPIContext {
 	}
 
 	public void setResult(Object result, int resultCode) throws IOException {
-		if (response.getStatus() == 0)
+		if (isBeginStatus())
 			response.setStatus(resultCode);
 
 		doHeaders();
@@ -90,6 +92,10 @@ public class OpenAPIContext {
 				log.error("failed to serialize output for " + operation);
 			}
 		}
+	}
+
+	protected boolean isBeginStatus() {
+		return response.getStatus() == beginStatus;
 	}
 
 	private void doHeaders() {
@@ -311,7 +317,7 @@ public class OpenAPIContext {
 	}
 
 	public String getUser() {
-		return authenticator == null ? authenticator.getUser() : null;
+		return authenticator != null ? authenticator.getUser() : null;
 	}
 
 	public String getOriginalIP() {
@@ -348,9 +354,12 @@ public class OpenAPIContext {
 			this.authenticator = new Authenticator();
 
 		Authentication auth = null;
-		OpenAPISecurityProvider securityProvider = dispatcher.getSecurityProvider(def);
-		if (securityProvider != null)
-			auth = securityProvider.authenticate(this, def);
+		OpenAPISecurityProvider securityProvider = dispatcher.getSecurityProvider(def.id, def.type);
+		if (securityProvider != null) {
+			auth = securityProvider.authenticate(request, response, def);
+		} else {
+			OpenAPIRuntime.logger.error("Failing authentication because missing provider " + def.name);
+		}
 
 		authenticator.authenticate(auth, args);
 		return this;
@@ -384,5 +393,23 @@ public class OpenAPIContext {
 
 	public boolean isEncrypted() {
 		return request.getScheme().equalsIgnoreCase("https");
+	}
+
+	public String getURL() {
+		StringBuffer url = request.getRequestURL();
+		String queryString = request.getQueryString();
+		if (queryString != null) {
+			url.append("?");
+			url.append(queryString);
+		}
+		return url.toString();
+	}
+
+	public HttpServletRequest getRequest() {
+		return request;
+	}
+
+	public HttpServletResponse getResponse() {
+		return response;
 	}
 }

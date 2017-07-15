@@ -1,6 +1,0 @@
-
--buildpath: \
-	osgi.enroute.base.api,\
-	biz.aQute.openapi.provider;version=latest;packages=*,\
-	org.apache.felix.gogo.runtime,\
-	biz.aQute.useradmin.util;version=latest

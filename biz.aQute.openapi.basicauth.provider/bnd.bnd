@@ -1,0 +1,6 @@
+-workingset authentication
+
+-buildpath: \
+	biz.aQute.openapi.api;version=latest,\
+	osgi.enroute.base.api,\
+	org.apache.felix.gogo.runtime;version=0.16

@@ -23,7 +23,7 @@ public static final String BASE_PATH = "/api/v1";
   /*****************************************************************/
 
   public ValidationBase() {
-    super(BASE_PATH);
+    super(BASE_PATH,gen.validation.ValidationBase.class);
   }
   public static java.time.Instant toDateTime(String s) {
     return java.time.Instant.parse(s);

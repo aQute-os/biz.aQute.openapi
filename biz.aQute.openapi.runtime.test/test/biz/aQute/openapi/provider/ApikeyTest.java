@@ -7,6 +7,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.osgi.framework.ServiceRegistration;
@@ -14,7 +17,6 @@ import org.osgi.framework.ServiceRegistration;
 import aQute.bnd.service.url.TaggedData;
 import aQute.lib.converter.Converter;
 import aQute.openapi.provider.OpenAPIBase;
-import aQute.openapi.provider.OpenAPIContext;
 import aQute.openapi.provider.OpenAPIRuntime;
 import aQute.openapi.provider.OpenAPIRuntime.Configuration;
 import aQute.openapi.security.api.Authentication;
@@ -71,7 +73,7 @@ public class ApikeyTest {
 			OpenAPISecurityProvider apiKey = new OpenAPISecurityProvider() {
 
 				@Override
-				public Authentication authenticate(OpenAPIContext context, OpenAPISecurityDefinition dto) {
+				public Authentication authenticate(HttpServletRequest request, HttpServletResponse response, OpenAPISecurityDefinition dto) {
 					return new Authentication() {
 
 						@Override
@@ -82,14 +84,14 @@ public class ApikeyTest {
 
 						@Override
 						public boolean needsCredentials() {
-							String key = context.header("Key");
+							String key = request.getHeader("Key");
 							System.out.println("needsCredentials");
 							return null == key;
 						}
 
 						@Override
 						public boolean isAuthenticated() {
-							String key = context.header("Key");
+							String key = request.getHeader("Key");
 
 							System.out.println("isAuthenticated " + key);
 							return "ok".equals(key);
@@ -107,6 +109,7 @@ public class ApikeyTest {
 						}
 					};
 				}
+
 			};
 
 			Hashtable<String, Object> properties = new Hashtable<>();

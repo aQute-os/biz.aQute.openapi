@@ -1,0 +1,45 @@
+{
+	"swagger": "2.0",
+	"basePath": "/references",
+	"info": {},
+	"paths": {
+		"/primitives": {
+			"post": {
+				"operationId": "References",
+				"responses": {
+					"200": {
+						"schema": {
+							"$ref": "#/definitions/References"
+						}
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"AnEnum": {
+	          "type": "string",
+	          "enum": [
+	            "None",
+	            "Info",
+	            "Warn",
+	            "Error"
+	          ]
+		},
+		"References": {
+			"required": [
+				"anenum"
+			],
+			"type": "object",
+			"properties": {
+				"anenum": {
+						"$ref": "#/definitions/AnEnum"
+				},
+				"benum": {
+						"$ref": "#/definitions/AnEnum"
+				}
+			}
+		}
+	}
+
+}

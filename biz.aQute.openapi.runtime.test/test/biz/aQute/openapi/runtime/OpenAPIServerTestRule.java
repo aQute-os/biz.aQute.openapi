@@ -7,6 +7,7 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.rules.TestRule;
@@ -21,12 +22,12 @@ import aQute.openapi.provider.OpenAPIRuntime;
 public class OpenAPIServerTestRule implements TestRule {
 	public URI				uri;
 	public Server			server	= new Server(0);
-	public ServletHandler	handler;
+	public ServletContextHandler	handler;
 	public OpenAPIRuntime	runtime	= new OpenAPIRuntime() {
 										@Override
 										public java.io.Closeable registerServlet(String alias, Servlet servlet)
 												throws ServletException, NamespaceException {
-											handler.addServletWithMapping(new ServletHolder(servlet), (alias + "/*"));
+											handler.addServlet(new ServletHolder(servlet), (alias + "/*"));
 											return () -> {
 																			};
 										};
@@ -41,8 +42,10 @@ public class OpenAPIServerTestRule implements TestRule {
 			@Override
 			public void evaluate() throws Throwable {
 				try {
-					handler = new ServletHandler();
-					server.setHandler(handler);
+					handler = new ServletContextHandler(
+			                ServletContextHandler.SESSIONS);
+					handler.setContextPath("/");
+			        server.setHandler(handler);
 					server.start();
 
 					while (!(server.isStarted() || server.isRunning()))

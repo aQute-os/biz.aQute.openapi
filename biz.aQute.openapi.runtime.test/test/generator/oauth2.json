@@ -1,0 +1,29 @@
+{
+	"swagger": "2.0",
+	"securityDefinitions": {
+		"oauth2": {
+		    "type": "oauth2",
+		    "flow": "accessCode",
+		    "scopes":{ "openid":"", "email":""},
+		    "authorizationUrl": "",
+		    "tokenUrl": ""
+		}
+	},
+	"security": [ {
+			"oauth2":[]
+		} ],
+	"basePath": "/oauth2",
+	"paths": {
+		"/authenticated": {
+			"get": {
+				"operationId": "authenticated"
+			}
+		},
+		"unauthenticated": {
+			"get": {
+				"operationId": "unauthenticated",
+				"security": []
+			}
+		}
+	}
+}

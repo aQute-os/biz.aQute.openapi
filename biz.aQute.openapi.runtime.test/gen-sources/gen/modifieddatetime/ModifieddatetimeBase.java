@@ -23,7 +23,7 @@ public static final String BASE_PATH = "/v1";
   /*****************************************************************/
 
   public ModifieddatetimeBase() {
-    super(BASE_PATH);
+    super(BASE_PATH,gen.modifieddatetime.ModifieddatetimeBase.class);
   }
   final static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss[.SSS]X", java.util.Locale.getDefault());
   public static java.time.Instant toDateTime(String s) {
