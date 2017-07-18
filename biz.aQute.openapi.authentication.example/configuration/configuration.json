@@ -51,6 +51,7 @@
 	  "idkey":                              "email",
 	  "pwkey":							    "password",
 	  "hash":                               "SHA_256",
-	  "salt":								32
+	  "salt":								32,
+	  "reportingEndpoint":                  "http://localhost:8080/biz.aQute.openapi.authentication.example/close.html"
 	}
 ]

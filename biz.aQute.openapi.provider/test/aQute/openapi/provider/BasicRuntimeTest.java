@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Set;
 
 import javax.servlet.Servlet;
@@ -27,6 +30,8 @@ import local.test.accesstokenapi.GeneratedAccessTokenApi;
 import local.test.accesstokenapi.GeneratedAccessTokenApi.TokenResult;
 
 public class BasicRuntimeTest extends TestCase {
+	static final Clock		clock	= Clock.fixed(Instant.ofEpochMilli(0), ZoneId.of("UTC"));
+
 	Server					server	= new Server(0);
 	URI						uri;
 	private ServletHandler	handler;
@@ -74,7 +79,7 @@ public class BasicRuntimeTest extends TestCase {
 		protected TokenResult accessTokenPost(String username, String password) throws Exception {
 			TokenResult token = new TokenResult();
 			token.accessToken = "AccessToken";
-			token.expireDateTime = OffsetDateTime.now();
+			token.expireDateTime = OffsetDateTime.now(clock);
 			return token;
 		}
 
@@ -93,16 +98,8 @@ public class BasicRuntimeTest extends TestCase {
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("POST");
 		TokenResult tokenResult = new JSONCodec().dec().from(connection.getInputStream()).get(TokenResult.class);
-		assertEquals(1234, tokenResult.expireDateTime);
+		assertEquals(OffsetDateTime.parse("1970-01-01T00:00Z"), tokenResult.expireDateTime);
 		assertEquals("AccessToken", tokenResult.accessToken);
-
-		url = new URL(uri + "api/v1/accessToken/%3123454%35?password=secret");
-		connection = (HttpURLConnection) url.openConnection();
-		connection.setRequestMethod("POST");
-		tokenResult = new JSONCodec().dec().from(connection.getInputStream()).get(TokenResult.class);
-		assertEquals(1234545, tokenResult.expireDateTime);
-		assertEquals("secret", tokenResult.accessToken);
-
 	}
 
 	public void testGogo() throws Exception {
@@ -141,8 +138,7 @@ public class BasicRuntimeTest extends TestCase {
 
 	}
 
-	public void testDateEncoding() throws IOException
-	{
+	public void testDateEncoding() throws IOException {
 		// class X extends sma.accesstokenapi.GeneratedAccessTokenApi {
 		//
 		// @Override

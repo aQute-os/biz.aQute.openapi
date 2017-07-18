@@ -1,0 +1,13 @@
+#
+# biz.aQute.openapi.security.dummy.provider DEBUG LAUNCH SPECFICATION 
+#
+
+-include: ~biz.aQute.openapi.security.dummy.provider.bndrun
+
+-runrequires.debug:  \
+	${debug-bundles}
+
+-runtrace: true
+
+-runbundles: \
+	${error;Resolve first}

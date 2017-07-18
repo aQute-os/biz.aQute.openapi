@@ -24,10 +24,11 @@ import aQute.json.codec.JSONCodec;
 import aQute.openapi.security.api.OpenAPISecurityProvider;
 import aQute.openapi.security.api.OpenAPISecurityProviderInfo;
 
-@Component(service = Servlet.class, property = HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN
-		+ "=/.openapi/security/*", configurationPid = SecurityProviderManager.PID)
+@Component(service = Servlet.class, property = HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "="
+		+ SecurityProviderManager.PATTERN, configurationPid = SecurityProviderManager.PID)
 public class SecurityProviderManager extends HttpServlet {
 	public static final String					PID					= "aQute.openapi.security.manager";
+	public static final String					PATTERN				= "/.openapi/security/*";
 	final static Logger							logger				= LoggerFactory
 			.getLogger(SecurityProviderManager.class);
 	final static JSONCodec						json				= new JSONCodec();

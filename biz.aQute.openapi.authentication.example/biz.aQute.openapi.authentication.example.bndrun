@@ -12,9 +12,8 @@ JPM-Command:				authenticate
 
 -runrequires: \
 	osgi.identity;filter:='(osgi.identity=biz.aQute.openapi.authentication.example)',\
-	osgi.identity;filter:='(osgi.identity=biz.aQute.openapi.oauth2.provider)',\
-	osgi.identity;filter:='(osgi.identity=biz.aQute.useradmin.util)',\
-	osgi.identity;filter:='(osgi.identity=biz.aQute.openapi.basicauth.provider)'
+	osgi.identity;filter:='(&(osgi.identity=biz.aQute.openapi.basicauth.provider)(version>=0.0.0))',\
+	osgi.identity;filter:='(&(osgi.identity=biz.aQute.openapi.oauth2.provider)(version>=0.0.0))'
 
 -runbundles: \
 	biz.aQute.openapi.authentication.example;version=snapshot,\
@@ -36,14 +35,14 @@ JPM-Command:				authenticate
 	osgi.enroute.rest.simple.provider;version='[2.0.0,2.0.1)',\
 	osgi.enroute.twitter.bootstrap.webresource;version='[3.3.5,3.3.6)',\
 	osgi.enroute.web.simple.provider;version='[2.0.0,2.0.1)',\
-	biz.aQute.openapi.api;version=snapshot,\
 	biz.aQute.openapi.oauth2.provider;version=snapshot,\
 	biz.aQute.openapi.provider;version=snapshot,\
-	biz.aQute.useradmin.util;version=snapshot,\
 	biz.aQute.www.provider;version=snapshot,\
 	org.apache.felix.gogo.runtime;version='[0.16.2,0.16.3)',\
 	org.apache.felix.http.api;version='[3.0.0,3.0.1)',\
 	org.bitbucket.b_c.jose4j;version='[0.5.8,0.5.9)',\
 	org.knopflerfish.bundle.useradmin;version='[4.1.1,4.1.2)',\
 	biz.aQute.json.util;version=snapshot,\
-	biz.aQute.openapi.basicauth.provider;version=snapshot
+	biz.aQute.openapi.basicauth.provider;version=snapshot,\
+	biz.aQute.openapi.security.dummy.provider;version=snapshot
+-runblacklist: osgi.identity;filter:='(osgi.identity=biz.aQute.openapi.api)'

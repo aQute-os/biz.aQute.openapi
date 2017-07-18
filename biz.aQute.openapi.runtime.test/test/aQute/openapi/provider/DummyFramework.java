@@ -1,4 +1,4 @@
-package biz.aQute.openapi.runtime;
+package aQute.openapi.provider;
 
 import java.io.File;
 import java.io.FileNotFoundException;

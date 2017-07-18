@@ -9,7 +9,6 @@
 -runtrace: true
 
 -runbundles: \
-	biz.aQute.openapi.api;version=snapshot,\
 	biz.aQute.openapi.authentication.example;version=snapshot,\
 	biz.aQute.openapi.oauth2.provider;version=snapshot,\
 	biz.aQute.openapi.provider;version=snapshot,\

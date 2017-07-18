@@ -585,7 +585,7 @@ public abstract class SourceType {
 		ObjectType(OpenAPIGenerator gen, SchemaObject schema, String contextName) {
 			super(gen);
 			this.schema = schema;
-			this.className = gen.toTypeName(contextName);
+			this.className = gen.toTypeName(contextName == null ? "Type" + index++ : contextName);
 		}
 
 		void build() {

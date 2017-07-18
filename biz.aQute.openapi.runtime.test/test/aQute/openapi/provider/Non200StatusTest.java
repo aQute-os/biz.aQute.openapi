@@ -1,4 +1,4 @@
-package biz.aQute.openapi.runtime;
+package aQute.openapi.provider;
 
 import org.junit.Assert;
 import org.junit.Rule;

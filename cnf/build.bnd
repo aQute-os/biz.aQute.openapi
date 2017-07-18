@@ -7,11 +7,15 @@
 	osgi.enroute.hamcrest.wrapper
 
 
+base.version:           1.0.0
+
 -groupid:               biz.aQute
--pom:                   version=1.0.0-SNAPSHOT
+-pom:                   version=${base.version}-SNAPSHOT
 
 -plugin.maven.install  \
 	aQute.bnd.repository.maven.provider.MavenBndRepository; \
 	name=Install
 
 -buildrepo: Install
+
+Bundle-Version:         ${base.version}.${tstamp}

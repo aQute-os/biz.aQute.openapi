@@ -105,12 +105,13 @@ public class GenTest {
 		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		String format = dateFormat.format(date);
 		System.out.println("SimpleDateFormat(UTC) with yyyy-MM-dd'T'HH:mm:ss.SSSXXX   " + format);
-		
+
 		DateTimeFormatter fi = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX").withZone(ZoneId.of("UTC"));
 		System.out.println("ODT DateTimeFormat with yyyy-MM-dd'T'HH:mm:ss.SSSXXX      " + od.format(fi));
 		System.out.println("ZDT DateTimeFormat with yyyy-MM-dd'T'HH:mm:ss.SSSXXX      " + zd.format(fi));
-		System.out.println("LDT DateTimeFormat with yyyy-MM-dd'T'HH:mm:ss.SSSXXX      "
-				+ ld.format(fi.withZone(ZoneId.of("UTC"))));
+		// System.out.println("LDT DateTimeFormat with
+		// yyyy-MM-dd'T'HH:mm:ss.SSSXXX "
+		// + ld.format(fi.withZone(ZoneId.of("UTC"))));
 		System.out.println("Ins DateTimeFormat with yyyy-MM-dd'T'HH:mm:ss.SSSXXX      " + fi.format(instant));
 		// System.out.println("Ins DateTimeFormat with
 		// yyyy-MM-dd'T'HH:mm:ss.SSSXXX " + fi.format(instant));

@@ -1,5 +1,6 @@
 package biz.aQute.openapi.basicauth.provider;
 
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -67,8 +68,8 @@ public class BasicAuthenticationProvider implements OpenAPISecurityProvider {
 			OpenAPISecurityDefinition dto) {
 
 		Optional<String[]> pair = WWWUtils.parseAuthorizaton(request.getHeader("Authorization"));
-		String userId = pair.orElse(null)[0];
-		String password = pair.orElse(null)[1];
+		String userId= pair.map( p -> p[0]).orElse(null);
+		String password = pair.map( p -> p[1]).orElse(null);
 
 		return new Authentication() {
 			String user;
@@ -207,15 +208,28 @@ public class BasicAuthenticationProvider implements OpenAPISecurityProvider {
 	}
 
 	@Override
-	public OpenAPISecurityProviderInfo getInfo(HttpServletRequest request) {
+	public OpenAPISecurityProviderInfo getInfo(HttpServletRequest request) throws Exception {
 		OpenAPISecurityProviderInfo info = new OpenAPISecurityProviderInfo();
 		info.name = name;
 		info.type = "basic";
 		info.idKey = idkey;
-		String header = request.getHeader("Authorization");
-		Optional<String[]> pair = WWWUtils.parseAuthorizaton(header);
-		info.currentUser = pair.map( p -> getUser(p[0])).orElse(null);
-		info.idValue = pair.map( p -> p[0]).orElse(null);
+
+		Authentication auth = authenticate(request, null, null);
+		if ( auth.isAuthenticated())
+			info.currentUser = auth.getUser();
 		return info;
+	}
+
+	@Override
+	public URI login(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Authentication authenticate = authenticate(request, response, null);
+		if (!authenticate.isAuthenticated()) {
+			authenticate.requestCredentials();
+		}
+		String s = config.reportingEndpoint();
+		if (s.isEmpty())
+			return null;
+
+		return new URI(s + "?error=ok");
 	}
 }

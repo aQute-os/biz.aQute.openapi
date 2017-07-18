@@ -59,6 +59,7 @@ public class OAuth2Authentication implements OpenAPISecurityProvider {
 	OpenAPISecurity	security;
 
 	@Activate
+	public
 	void activate(OAuth2Configuration config) throws Exception {
 		ProviderDefinition def = config.provider().getProviderDefinition();
 		if (def == null)

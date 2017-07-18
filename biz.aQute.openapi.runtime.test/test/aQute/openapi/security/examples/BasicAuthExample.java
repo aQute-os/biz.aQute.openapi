@@ -1,9 +1,9 @@
-package biz.aQute.openapi.security.examples;
+package aQute.openapi.security.examples;
 
 import org.junit.Rule;
 
-import biz.aQute.openapi.runtime.DummyFramework;
-import biz.aQute.openapi.runtime.OpenAPIServerTestRule;
+import aQute.openapi.provider.DummyFramework;
+import aQute.openapi.provider.OpenAPIServerTestRule;
 import gen.basicauth.BasicauthBase;
 
 public class BasicAuthExample {

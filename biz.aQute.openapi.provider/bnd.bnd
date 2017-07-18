@@ -4,7 +4,9 @@ Provide-Capability: \
 
 Export-Package: \
 	aQute.openapi.provider,\
-	aQute.openapi.security.api, \
+	aQute.openapi.util,\
+	aQute.openapi.security.api,\
+	aQute.openapi.user.api,\
 	aQute.json.codec,\
 	aQute.json.naming
 

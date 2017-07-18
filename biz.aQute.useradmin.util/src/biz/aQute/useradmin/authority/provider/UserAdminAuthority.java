@@ -83,7 +83,7 @@ public class UserAdminAuthority implements Authority, AuthorityAdmin, OpenAPISec
 	}
 
 	@Override
-	public boolean hasPermission(String permission, String... arguments) throws Exception {
+	public boolean hasPermission(String permission, String... arguments) {
 		return userAdmin.implies(getUser(), permission, arguments);
 	}
 

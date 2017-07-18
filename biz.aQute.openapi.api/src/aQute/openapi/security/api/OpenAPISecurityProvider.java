@@ -42,7 +42,7 @@ public interface OpenAPISecurityProvider {
 		return null;
 	}
 
-	default OpenAPISecurityProviderInfo getInfo(HttpServletRequest request) {
+	default OpenAPISecurityProviderInfo getInfo(HttpServletRequest request) throws Exception {
 		return null;
 	}
 }

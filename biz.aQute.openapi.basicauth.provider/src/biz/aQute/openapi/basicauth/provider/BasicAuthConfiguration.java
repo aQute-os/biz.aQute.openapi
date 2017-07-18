@@ -30,5 +30,8 @@ import biz.aQute.openapi.basicauth.provider.BasicAuthenticationProvider.Hash;
 
 	@AttributeDefinition(description = "Salt bytes to use in the password hash. hashed = HASH(salt + plain). Salt is unique for each password")
 	int salt() default 32;
+
+	@AttributeDefinition(description = "Redirect after a login or logout")
+	String reportingEndpoint() default "";
 }
 

@@ -1,5 +1,8 @@
 package aQute.openapi.provider;
 
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Stream.of;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,7 +34,7 @@ import aQute.openapi.provider.OpenAPIBase.Method;
 import aQute.openapi.security.api.Authentication;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import aQute.openapi.security.api.OpenAPISecurityProvider;
-import osgi.enroute.authorization.api.AuthorityAdmin;
+import aQute.openapi.user.api.OpenAPISecurity;
 
 public class OpenAPIContext {
 	final static Logger				logger			= LoggerFactory.getLogger(OpenAPIRuntime.class);
@@ -58,7 +61,7 @@ public class OpenAPIContext {
 		this.dispatcher = dispatcher;
 		this.request = request;
 		this.response = response;
-		this.beginStatus = response.getStatus();
+		this.beginStatus = response == null ? 200 : response.getStatus();
 	}
 
 	public boolean isMethod(Method method) {
@@ -371,12 +374,14 @@ public class OpenAPIContext {
 	}
 
 	public boolean hasPermission(String action, String... arguments) throws Exception {
-		return runtime.authority.hasPermission(action, arguments);
+		OpenAPISecurity security = runtime.security;
+		return security.hasPermission(action, arguments);
 	}
 
 	public void checkPermission(String name, String... resource) throws Exception {
 		if (!hasPermission(name, resource))
-			throw new SecurityException("Unauthorized");
+			throw new SecurityException(
+					"Unauthorized " + name + ":" + of(resource).collect(joining(":")));
 	}
 
 	public String path() {
@@ -387,8 +392,8 @@ public class OpenAPIContext {
 		if (authenticator == null)
 			return callable.call();
 
-		AuthorityAdmin authority = runtime.authorityAdmin;
-		return authority.call(authenticator.user, callable);
+		OpenAPISecurity security = runtime.security;
+		return security.dispatch(authenticator.user, callable);
 	}
 
 	public boolean isEncrypted() {

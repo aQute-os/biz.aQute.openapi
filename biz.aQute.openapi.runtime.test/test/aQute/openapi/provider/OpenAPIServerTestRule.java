@@ -1,4 +1,4 @@
-package biz.aQute.openapi.runtime;
+package aQute.openapi.provider;
 
 import java.net.URI;
 import java.net.URL;
@@ -8,7 +8,6 @@ import javax.servlet.ServletException;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -18,21 +17,23 @@ import org.osgi.service.http.NamespaceException;
 import aQute.bnd.http.HttpClient;
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIRuntime;
+import aQute.openapi.provider.SecurityProviderManager;
 
 public class OpenAPIServerTestRule implements TestRule {
-	public URI				uri;
-	public Server			server	= new Server(0);
+	public URI						uri;
+	public Server					server	= new Server(0);
 	public ServletContextHandler	handler;
-	public OpenAPIRuntime	runtime	= new OpenAPIRuntime() {
-										@Override
-										public java.io.Closeable registerServlet(String alias, Servlet servlet)
-												throws ServletException, NamespaceException {
-											handler.addServlet(new ServletHolder(servlet), (alias + "/*"));
-											return () -> {
-																			};
-										};
-									};
-	public HttpClient		http	= new HttpClient();
+	public OpenAPIRuntime			runtime	= new OpenAPIRuntime() {
+												@Override
+												public java.io.Closeable registerServlet(String alias, Servlet servlet)
+														throws ServletException, NamespaceException {
+													handler.addServlet(new ServletHolder(servlet), (alias + "/*"));
+													return () -> {
+																							};
+												};
+											};
+	public SecurityProviderManager	securityProviderManager		= new SecurityProviderManager();
+	public HttpClient				http	= new HttpClient();
 
 	@Override
 	public Statement apply(Statement statement, Description description) {
@@ -43,9 +44,11 @@ public class OpenAPIServerTestRule implements TestRule {
 			public void evaluate() throws Throwable {
 				try {
 					handler = new ServletContextHandler(
-			                ServletContextHandler.SESSIONS);
+							ServletContextHandler.SESSIONS);
 					handler.setContextPath("/");
-			        server.setHandler(handler);
+					handler.addServlet(new ServletHolder(securityProviderManager),
+							SecurityProviderManager.PATTERN);
+					server.setHandler(handler);
 					server.start();
 
 					while (!(server.isStarted() || server.isRunning()))

@@ -17,7 +17,6 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.osgi.service.http.NamespaceException;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
@@ -29,8 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import aQute.json.codec.JSONCodec;
 import aQute.openapi.provider.OpenAPIRuntime.Configuration;
-import osgi.enroute.authorization.api.Authority;
-import osgi.enroute.authorization.api.AuthorityAdmin;
+import aQute.openapi.user.api.OpenAPISecurity;
 
 @Designate(ocd = Configuration.class, factory = false)
 @Component(service = OpenAPIRuntime.class, immediate = true, configurationPid = "aQute.openapi.runtime")
@@ -45,10 +43,8 @@ public class OpenAPIRuntime {
 	final ThreadLocal<OpenAPIContext>	contexts			= new ThreadLocal<>();
 	int									delayOn404Timeout	= 30;
 
-	@Reference(policyOption = ReferencePolicyOption.GREEDY)
-	AuthorityAdmin						authorityAdmin;
-	@Reference(policyOption = ReferencePolicyOption.GREEDY)
-	Authority							authority;
+	@Reference
+	OpenAPISecurity						security;
 
 	@ObjectClassDefinition
 	public @interface Configuration {
@@ -73,6 +69,10 @@ public class OpenAPIRuntime {
 			dispatcher.remove(this);
 		}
 
+		@Override
+		public String toString() {
+			return base.toString();
+		}
 	}
 
 	Dispatcher getDispatcher(String prefix) {
