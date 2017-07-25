@@ -1,0 +1,18 @@
+
+-buildpath: \
+	osgi.enroute.base.api,\
+	biz.aQute.bndlib;packages=*,\
+	org.apache.felix.gogo.runtime,\
+	biz.aQute.openapi.api;version=latest
+
+Conditional-Package: aQute.lib*
+Export-Package: \
+	aQute.openapi.security.useradmin.util,\
+	osgi.enroute.authorization.api,\
+	aQute.openapi.security.environment.api
+Private-Package: \
+	aQute.openapi.security.useradmin.gogo,\
+	aQute.openapi.security.useradmin.provider
+Import-Package: \
+	org.apache.felix.service.command;resolution:=optional,\
+	*

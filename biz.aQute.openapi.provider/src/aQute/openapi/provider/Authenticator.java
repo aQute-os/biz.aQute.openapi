@@ -3,6 +3,7 @@ package aQute.openapi.provider;
 import java.util.ArrayList;
 import java.util.List;
 
+import aQute.openapi.provider.OpenAPIBase.DoNotTouchResponse;
 import aQute.openapi.security.api.Authentication;
 
 /**
@@ -83,7 +84,7 @@ class Authenticator {
 
 		if (state == ST_NEEDS_CREDENTIALS) {
 			needsCredentials.requestCredentials();
-			return;
+			throw new DoNotTouchResponse();
 		}
 		throw new SecurityException(); // provider should throw a response
 	}

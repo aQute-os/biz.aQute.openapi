@@ -16,14 +16,17 @@ import biz.aQute.openapi.basicauth.provider.BasicAuthenticationProvider.Hash;
 	@AttributeDefinition(description = "The realm to use when challenging the requester")
 	String realm() default "default";
 
-	@AttributeDefinition(description = "The key used in UserAdmin User properties for the basic auth id. If the key is empty the UserAdmin user name is used. The key must be a valid unescaped key in a filter.")
+	@AttributeDefinition(description = "The key used in the security environment User properties for the basic auth id. If the key is empty the the security environment user name is used. The key must be a valid unescaped key in a filter.")
 	String idkey() default "email";
 
-	@AttributeDefinition(description = "The key used in UserAdmin User credentials for the basic auth (hashed) password.  The key must be a valid unescaped key in a filter.")
-	String pwkey() default "password";
+	@AttributeDefinition(description = "The key used in the security environment User credentials for the basic auth (hashed) password.  The key must be a valid unescaped key in a filter.")
+	String pwkey() default "password.digest";
+
+	@AttributeDefinition(description = "The key used in the security environment User credentials for the basic auth (hashed) password.  The key must be a valid unescaped key in a filter.")
+	String saltkey() default "password.salt";
 
 	@AttributeDefinition(description = "The security definition name used in the OpenAPI source.  The name must be a valid unescaped key in a filter.")
-	String name() default "basicauth";
+	String openapi_name();
 
 	@AttributeDefinition(description = "Hashing algorithm to use for the stored passwords. Use PLAIN only for debug never for production.")
 	Hash hash() default Hash.SHA_256;

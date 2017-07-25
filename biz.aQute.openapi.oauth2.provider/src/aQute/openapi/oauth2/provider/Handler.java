@@ -8,32 +8,30 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 
 import aQute.json.codec.JSONCodec;
-import aQute.openapi.user.api.OpenAPISecurity;
+import aQute.openapi.security.environment.api.OpenAPISecurityEnvironment;
 import aQute.www.http.util.HttpRequest;
 
 public abstract class Handler {
 	protected final static JSONCodec	json	= new JSONCodec();
 
-	String								issuer;
 	URI									authorizationEndpoint;
 	URI									tokenEndpoint;
 	String								clientSecret;
 	String								clientId;
-	String								idKey;
+	String								nameKey;
 	String								scopes;
 	OAuth2ProviderEnum					type;
 	final Logger						logger;
 
 	Handler(Logger logger, OAuth2Configuration config, ProviderDefinition def) throws URISyntaxException {
 		this.logger = logger;
-		issuer = config.issuer().isEmpty() ? def.issuer : config.issuer();
 		authorizationEndpoint = config.authorizationEndpoint().isEmpty() ? def.authorization_endpoint
 				: new URI(config.authorizationEndpoint());
 		tokenEndpoint = config.tokenEndpoint().isEmpty() ? def.token_endpoint
 				: new URI(config.tokenEndpoint());
 		clientSecret = config._clientSecret();
 		clientId = config.clientId();
-		idKey = config.identityKey();
+		nameKey = config.nameKey();
 		scopes = Stream.of(config.scopes()).collect(Collectors.joining(" "));
 	}
 
@@ -81,7 +79,7 @@ public abstract class Handler {
 		String	user;
 	}
 
-	public abstract AuthenticateResult authenticate(AccessTokenResponse accessToken, OpenAPISecurity security)
+	public abstract AuthenticateResult authenticate(AccessTokenResponse accessToken, OpenAPISecurityEnvironment security)
 			throws Exception;
 
 }

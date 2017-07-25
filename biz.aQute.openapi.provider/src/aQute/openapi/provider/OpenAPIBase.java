@@ -52,6 +52,10 @@ public abstract class OpenAPIBase {
 		GET, PUT, DELETE, POST, PATCH, HEAD, OPTIONS;
 	}
 
+	public static class DoNotTouchResponse extends RuntimeException {
+		private static final long serialVersionUID = 1L;
+	}
+
 	public static class Response extends RuntimeException {
 		private static final long	serialVersionUID	= 1L;
 		final Map<String,String>	headers				= new HashMap<>();;

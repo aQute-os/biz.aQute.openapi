@@ -232,4 +232,4 @@ AllEnumVariations body_ = context.body(AllEnumVariations.class);
 }
 
 
-// aQute OpenAPI generator version 0
+// aQute OpenAPI generator version 1.0.0.201707241457

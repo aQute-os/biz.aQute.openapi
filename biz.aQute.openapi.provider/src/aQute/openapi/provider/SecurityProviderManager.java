@@ -1,5 +1,8 @@
 package aQute.openapi.provider;
 
+import static aQute.openapi.security.api.OpenAPIAuthenticator.NAME;
+import static aQute.openapi.security.api.OpenAPIAuthenticator.TYPE;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -21,10 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import aQute.json.codec.JSONCodec;
-import aQute.openapi.security.api.OpenAPISecurityProvider;
+import aQute.openapi.security.api.OpenAPIAuthenticator;
 import aQute.openapi.security.api.OpenAPISecurityProviderInfo;
 
-@Component(service = Servlet.class, property = HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "="
+@Component(service = {
+		Servlet.class, SecurityProviderManager.class
+}, property = HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "="
 		+ SecurityProviderManager.PATTERN, configurationPid = SecurityProviderManager.PID)
 public class SecurityProviderManager extends HttpServlet {
 	public static final String					PID					= "aQute.openapi.security.manager";
@@ -33,7 +38,7 @@ public class SecurityProviderManager extends HttpServlet {
 			.getLogger(SecurityProviderManager.class);
 	final static JSONCodec						json				= new JSONCodec();
 	private static final long					serialVersionUID	= 1L;
-	final Map<String,OpenAPISecurityProvider>	providers			= new ConcurrentHashMap<String,OpenAPISecurityProvider>();
+	final Map<String,OpenAPIAuthenticator>	providers			= new ConcurrentHashMap<String,OpenAPIAuthenticator>();
 
 	@Override
 	public void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -47,7 +52,7 @@ public class SecurityProviderManager extends HttpServlet {
 					return;
 				}
 				List<OpenAPISecurityProviderInfo> result = new ArrayList<>();
-				for (OpenAPISecurityProvider provider : providers.values()) {
+				for (OpenAPIAuthenticator provider : providers.values()) {
 					OpenAPISecurityProviderInfo info = provider.getInfo(request);
 					if (info != null)
 						result.add(info);
@@ -67,7 +72,7 @@ public class SecurityProviderManager extends HttpServlet {
 				String providerType = parts[2];
 				String command = parts[3];
 
-				OpenAPISecurityProvider securityProvider = getSecurityProvider(providerId, providerType);
+				OpenAPIAuthenticator securityProvider = getSecurityProvider(providerId, providerType);
 				if (securityProvider == null) {
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
 					return;
@@ -96,19 +101,19 @@ public class SecurityProviderManager extends HttpServlet {
 		}
 	}
 
-	private OpenAPISecurityProvider getSecurityProvider(String providerId, String providerType) {
+	private OpenAPIAuthenticator getSecurityProvider(String providerId, String providerType) {
 		String key = getKey(providerId, providerType);
 		return providers.get(key);
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-	void addSecurityProvider(Map<String,Object> properties, OpenAPISecurityProvider provider) {
-		String key = getKey(properties.get("name"), properties.get("type"));
+	void addSecurityProvider(Map<String,Object> properties, OpenAPIAuthenticator provider) {
+		String key = getKey(properties.get(NAME), properties.get(TYPE));
 		providers.put(key, provider);
 	}
 
-	void removeSecurityProvider(Map<String,Object> properties, OpenAPISecurityProvider provider) {
-		String key = getKey(properties.get("name"), properties.get("type"));
+	void removeSecurityProvider(Map<String,Object> properties, OpenAPIAuthenticator provider) {
+		String key = getKey(properties.get(NAME), properties.get(TYPE));
 		providers.remove(key);
 	}
 

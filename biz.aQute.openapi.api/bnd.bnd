@@ -8,6 +8,6 @@ Require-Capability: \
 	osgi.enroute.base.api, \
 	biz.aQute.bndlib;packages=*
 Export-Package: \
-	aQute.openapi.user.api,\
+	aQute.openapi.security.environment.api,\
 	aQute.openapi.security.api,\
 	aQute.openapi.util

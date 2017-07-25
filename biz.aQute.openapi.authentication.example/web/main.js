@@ -30,7 +30,6 @@
 			$rootScope.$apply();
 			$scope.getInfo()
 		})
-		$scope.message = "-"
 
 		$scope.getInfo = function() {
 			$http.get("/.openapi/security")

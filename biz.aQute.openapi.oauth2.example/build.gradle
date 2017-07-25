@@ -1,0 +1,21 @@
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+    dependencies {
+        classpath group: 'biz.aQute', name: 'biz.aQute.openapi.gradle.plugin',
+                  version: '1.0.0-SNAPSHOT'
+    }
+}
+
+apply plugin: 'biz.aQute.openapi'
+
+openapi {
+	input			= file( 'openapi.json' )
+	output			= file( 'gen-src')
+
+	configuration.tags				= "*"
+	configuration.typePrefix		= "OAuth2"
+	configuration.baseName			= "OpenAPIBase"
+	configuration.packagePrefix		= "aQute.openapi.oauth2.example";
+}

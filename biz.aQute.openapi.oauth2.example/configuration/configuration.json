@@ -1,0 +1,17 @@
+[	{
+   	  "comment":							"Factory configuration for OpenId Connect (to Google)",
+      "service.factoryPid":					"biz.aQute.openapi.oauth2",
+      "service.pid":						"openid-oauth",
+      "provider":               			"OPENID_CONNECT",
+      "openapi.name":						"google",
+      "issuer":								"https://accounts.google.com",
+	  "origin":								"http://localhost:8080",
+	  "authorizationEndpoint":				"https://accounts.google.com/o/oauth2/auth",
+	  "tokenEndpoint":						"https://accounts.google.com/o/oauth2/token",
+	  "finalEndpoint":						"http://localhost:8080/biz.aQute.openapi.oauth2.example/close.html",
+	  "clientId":							"@{env;GOOGLE_CLIENT_ID}",
+	  ".clientSecret":						"@{env;GOOGLE_SECRET}",
+	  "identityKey":						"email",
+	  "scopes":								["openid","email"]
+	}
+]

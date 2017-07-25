@@ -1,0 +1,34 @@
+<section ng-cloak>
+	<div class=container>
+		<br>
+		<div class="row">
+			<div>{{loggedin}}</div>
+
+			<div>
+				<div class="input-group">
+					<span class="input-group-btn">
+						<button class="btn btn-secondary" type="button"
+							ng-click=authenticated(action)>Authenticated</button>
+					</span> <input type="text" class="form-control" placeholder="Action"
+						ng-model=action> <span class="input-group-btn">
+						<button class="btn btn-secondary" type="button"
+							ng-click=unauthenticated(action)>Unauthenticated</button>
+					</span>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div class=row>
+			<div ng-hide=loggedin>
+				<a target="login" href="/.openapi/security/google/oauth2/logout">Logout
+					from Google</a>
+			</div>
+			<div ng-show=loggedin>
+				<a target="login" href="/.openapi/security/google/oauth2/login">Login
+					to Google</a>
+			</div>
+
+		</div>
+		<br>
+	</div>
+</section>

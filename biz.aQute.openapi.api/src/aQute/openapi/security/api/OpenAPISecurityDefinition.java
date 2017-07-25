@@ -76,7 +76,7 @@ public class OpenAPISecurityDefinition {
 
 	public static OpenAPISecurityDefinition accessCode(String id, String base, String authorizationUrl, String tokenUrl,
 			String... scopes) {
-		OpenAPISecurityDefinition def = new OpenAPISecurityDefinition(id, base, "authorizationCode");
+		OpenAPISecurityDefinition def = new OpenAPISecurityDefinition(id, "oauth2", base );
 		OAuth2Flow flow = new OAuth2Flow();
 
 		def.authorizationCode = flow;

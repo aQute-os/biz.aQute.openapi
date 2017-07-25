@@ -8,9 +8,9 @@ import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import aQute.openapi.security.api.OpenAPISecurityProvider;
+import aQute.openapi.security.api.OpenAPIAuthenticator;
 
-public class SecurityProviderTracker extends ServiceTracker<OpenAPISecurityProvider,OpenAPISecurityProvider> {
+public class SecurityProviderTracker extends ServiceTracker<OpenAPIAuthenticator,OpenAPIAuthenticator> {
 	static Logger logger = LoggerFactory.getLogger(SecurityProviderTracker.class);
 
 	public SecurityProviderTracker(BundleContext context, String id, String type) {
@@ -19,8 +19,8 @@ public class SecurityProviderTracker extends ServiceTracker<OpenAPISecurityProvi
 
 	private static Filter filter(String id, String type) {
 		try {
-			String filterString = String.format("(&(objectClass=%s)(name=%s)(type=%s))",
-					OpenAPISecurityProvider.class.getName(), id, type);
+			String filterString = String.format("(&(objectClass=%s)%s)", OpenAPIAuthenticator.class.getName(),
+					OpenAPIAuthenticator.filter(id, type));
 			return FrameworkUtil.createFilter(filterString);
 		} catch (InvalidSyntaxException e) {
 			throw new RuntimeException(e);

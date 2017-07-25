@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.osgi.service.http.NamespaceException;
 
 import aQute.openapi.provider.OpenAPIRuntime.Tracker;
-import aQute.openapi.security.api.OpenAPISecurityProvider;
+import aQute.openapi.security.api.OpenAPIAuthenticator;
 
 public class Dispatcher extends HttpServlet {
 	private static final int					SECURITY_PROVIDER_TIMEOUT	= 5000;
@@ -102,6 +102,8 @@ public class Dispatcher extends HttpServlet {
 			}
 			Object result = e.getResult();
 			context.report(e);
+		} catch (OpenAPIBase.DoNotTouchResponse e) {
+			// do not touch response
 		} catch (SecurityException se) {
 			OpenAPIRuntime.logger.warn("Forbidden {} {}", se, request.getPathInfo());
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -125,7 +127,7 @@ public class Dispatcher extends HttpServlet {
 		registration.close();
 	}
 
-	public OpenAPISecurityProvider getSecurityProvider(String id, String type) throws InterruptedException {
+	public OpenAPIAuthenticator getSecurityProvider(String id, String type) throws InterruptedException {
 		String key = id + "-" + type;
 		SecurityProviderTracker t;
 
@@ -137,7 +139,7 @@ public class Dispatcher extends HttpServlet {
 				t.open();
 			}
 		}
-		OpenAPISecurityProvider provider = t.waitForService(SECURITY_PROVIDER_TIMEOUT);
+		OpenAPIAuthenticator provider = t.waitForService(SECURITY_PROVIDER_TIMEOUT);
 		return provider;
 	}
 }

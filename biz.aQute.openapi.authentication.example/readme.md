@@ -1,8 +1,3 @@
-# biz.aQute.openapi.authentication.example Application
+# The Authentication Example
 
-${Bundle-Description}
-
-## Example
-
-## References
-
+This example shows how to interact with the OpenAPI suite Security providers in a dynamic way. It also explains how  

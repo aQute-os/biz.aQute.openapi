@@ -11,11 +11,11 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
-import aQute.openapi.user.api.OpenAPISecurity;
+import aQute.openapi.security.environment.api.OpenAPISecurityEnvironment;
 
 @Designate(ocd = SecurityProviderImpl.Config.class, factory = true)
 @Component(name = "biz.aQute.openapi.security.dummy")
-public class SecurityProviderImpl implements OpenAPISecurity {
+public class SecurityProviderImpl implements OpenAPISecurityEnvironment {
 	static class User {
 		final Map<String, String>	properties	= new HashMap<>();
 		final Map<String, byte[]>	credentials	= new HashMap<>();

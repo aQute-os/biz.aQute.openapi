@@ -459,4 +459,4 @@ String deviceId_ = context.toString(context.path("deviceId"));
 }
 
 
-// aQute OpenAPI generator version 0
+// aQute OpenAPI generator version 1.0.0.201707241457

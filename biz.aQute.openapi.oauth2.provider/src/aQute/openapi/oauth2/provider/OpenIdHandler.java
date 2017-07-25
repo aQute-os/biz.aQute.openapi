@@ -8,7 +8,7 @@ import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.slf4j.Logger;
 
-import aQute.openapi.user.api.OpenAPISecurity;
+import aQute.openapi.security.environment.api.OpenAPISecurityEnvironment;
 
 public class OpenIdHandler extends Handler {
 
@@ -17,7 +17,7 @@ public class OpenIdHandler extends Handler {
 	}
 
 	@Override
-	public AuthenticateResult authenticate(AccessTokenResponse accessToken, OpenAPISecurity security) throws Exception {
+	public AuthenticateResult authenticate(AccessTokenResponse accessToken, OpenAPISecurityEnvironment security) throws Exception {
 		AuthenticateResult result = new AuthenticateResult();
 		try {
 			JwtConsumer jwtConsumer = new JwtConsumerBuilder()
@@ -29,18 +29,18 @@ public class OpenIdHandler extends Handler {
 			String email = claims.getClaimValue("email", String.class);
 
 			if (email != null) {
-				Optional<String> user = security.getUser(idKey, email.toLowerCase());
+				Optional<String> user = security.getUser(nameKey, email.toLowerCase());
 				if (user.isPresent()) {
 					result.user = user.get();
 					return result;
 				} else {
 					result.error = ErrorEnum.x_no_such_user.toString();
-					result.error_description = idKey + "=" + email;
+					result.error_description = nameKey + "=" + email;
 					return result;
 				}
 			} else {
 				result.error = ErrorEnum.x_id_received.toString();
-				result.error_description = idKey + "=" + email;
+				result.error_description = nameKey + "=" + email;
 				return result;
 			}
 		} catch (Exception e) {

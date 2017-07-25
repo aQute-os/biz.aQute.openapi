@@ -19,3 +19,4 @@ base.version:           1.0.0
 -buildrepo: Install
 
 Bundle-Version:         ${base.version}.${tstamp}
+Bundle-Vendor			aQute SARL

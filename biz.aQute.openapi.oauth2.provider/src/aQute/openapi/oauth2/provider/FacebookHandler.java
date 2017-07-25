@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 
 import org.slf4j.Logger;
 
-import aQute.openapi.user.api.OpenAPISecurity;
+import aQute.openapi.security.environment.api.OpenAPISecurityEnvironment;
 /**
  * See https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow#checktoken
  *
@@ -31,7 +31,7 @@ public class FacebookHandler extends Handler {
 	}
 
 	@Override
-	public AuthenticateResult authenticate(AccessTokenResponse accessToken, OpenAPISecurity security) throws Exception {
+	public AuthenticateResult authenticate(AccessTokenResponse accessToken, OpenAPISecurityEnvironment security) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

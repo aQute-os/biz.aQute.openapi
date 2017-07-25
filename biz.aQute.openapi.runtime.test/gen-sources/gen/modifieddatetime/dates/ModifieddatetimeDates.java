@@ -110,4 +110,4 @@ Dates token_ = context.body(Dates.class);
 }
 
 
-// aQute OpenAPI generator version 0
+// aQute OpenAPI generator version 1.0.0.201707241457

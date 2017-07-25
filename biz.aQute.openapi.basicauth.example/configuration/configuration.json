@@ -1,0 +1,15 @@
+[
+	{
+   	  "comment":							"Factory configuration for Basic Authentication",
+      "service.factoryPid":					"biz.aQute.openapi.basicauth",
+      "service.pid":						"1",
+      "openapi.name":						"basic",
+	  "requireEncrypted":					false,
+	  "realm":                              "Basic",
+	  "idkey":                              "email",
+	  "pwkey":							    "password",
+	  "hash":                               "SHA_256",
+	  "salt":								32,
+	  "reportingEndpoint":                  "http://localhost:8080/biz.aQute.openapi.basicauth.example/close.html"
+	}
+]

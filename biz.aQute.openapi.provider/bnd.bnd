@@ -6,7 +6,7 @@ Export-Package: \
 	aQute.openapi.provider,\
 	aQute.openapi.util,\
 	aQute.openapi.security.api,\
-	aQute.openapi.user.api,\
+	aQute.openapi.security.environment.api,\
 	aQute.json.codec,\
 	aQute.json.naming
 

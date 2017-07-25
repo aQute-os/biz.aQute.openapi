@@ -99,4 +99,4 @@ private void nakedEnum_post_(OpenAPIContext context) throws Exception{
 }
 
 
-// aQute OpenAPI generator version 0
+// aQute OpenAPI generator version 1.0.0.201707241457

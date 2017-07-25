@@ -11,7 +11,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import aQute.openapi.user.api.OpenAPISecurity;
+import aQute.openapi.security.api.OpenAPIAuthenticator;
+import aQute.openapi.security.environment.api.OpenAPISecurityEnvironment;
 import biz.aQute.openapi.basicauth.provider.BasicAuthenticationProvider;
 import osgi.enroute.debug.api.Debug;
 
@@ -20,8 +21,10 @@ import osgi.enroute.debug.api.Debug;
 }, service = BasicAuthGogo.class)
 public class BasicAuthGogo {
 
+	private static final String BASIC = "basic";
+
 	@Reference
-	OpenAPISecurity	security;
+	OpenAPISecurityEnvironment	security;
 
 	BundleContext	context;
 
@@ -31,7 +34,7 @@ public class BasicAuthGogo {
 	}
 
 	public String passwd(
-			@Parameter(absentValue = "basic", names = { "-p", "--provider" }) String providerName,
+			@Parameter(absentValue = BASIC, names = { "-p", "--provider" }) String providerName,
 			@Parameter(absentValue = "", names = { "-i", "--id" }) String userId,
 			String identifier,
 			String password) throws InvalidSyntaxException, NoSuchAlgorithmException {
@@ -39,7 +42,7 @@ public class BasicAuthGogo {
 		return provider.setPassword(userId, identifier, password);
 	}
 
-	public String passwd(@Parameter(absentValue = "basic", names = { "-p", "--provider" }) String providerName,
+	public String passwd(@Parameter(absentValue = BASIC, names = { "-p", "--provider" }) String providerName,
 			String user) throws InvalidSyntaxException {
 		BasicAuthenticationProvider provider = getProvider(providerName);
 		return provider.unsetPassword(user);
@@ -47,7 +50,7 @@ public class BasicAuthGogo {
 
 	BasicAuthenticationProvider getProvider(String name) throws InvalidSyntaxException {
 		Collection<ServiceReference<BasicAuthenticationProvider>> refs = context
-				.getServiceReferences(BasicAuthenticationProvider.class, "(&(name=" + name + ")(type=basic))");
+				.getServiceReferences(BasicAuthenticationProvider.class, OpenAPIAuthenticator.filter(name, BASIC));
 		if (refs.isEmpty())
 			throw new IllegalArgumentException("No such provider " + name);
 

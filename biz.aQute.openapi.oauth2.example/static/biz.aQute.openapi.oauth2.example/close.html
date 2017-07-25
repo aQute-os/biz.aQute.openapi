@@ -1,0 +1,14 @@
+<script>
+	console.log(window.domain)
+
+	var domain = window.location.protocol + "//" + window.location.hostname
+	if ( window.location.port )
+		domain += ":" + window.location.port
+
+	window.opener.postMessage( window.location.toString(), domain )
+
+
+	window.close();
+</script>
+
+

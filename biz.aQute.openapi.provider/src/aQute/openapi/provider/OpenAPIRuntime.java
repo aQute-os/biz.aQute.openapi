@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import aQute.json.codec.JSONCodec;
 import aQute.openapi.provider.OpenAPIRuntime.Configuration;
-import aQute.openapi.user.api.OpenAPISecurity;
+import aQute.openapi.security.environment.api.OpenAPISecurityEnvironment;
 
 @Designate(ocd = Configuration.class, factory = false)
 @Component(service = OpenAPIRuntime.class, immediate = true, configurationPid = "aQute.openapi.runtime")
@@ -44,7 +44,7 @@ public class OpenAPIRuntime {
 	int									delayOn404Timeout	= 30;
 
 	@Reference
-	OpenAPISecurity						security;
+	OpenAPISecurityEnvironment						security;
 
 	@ObjectClassDefinition
 	public @interface Configuration {

@@ -571,6 +571,10 @@ public class JavaGenerator extends BaseSourceGenerator {
 					/*
 					 * "implicit", "password", "application" or "accessCode".
 					 */
+					if (so.flow == null) {
+						gen.error("OAUth2 provider has no flow specified: %s", so.name);
+						so.flow = "accessCode";
+					}
 					switch (so.flow) {
 
 						case "implicit" :

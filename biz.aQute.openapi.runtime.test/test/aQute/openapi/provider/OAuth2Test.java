@@ -16,10 +16,10 @@ import org.junit.Test;
 import org.osgi.framework.ServiceRegistration;
 
 import aQute.lib.converter.Converter;
-import aQute.openapi.oauth2.provider.OAuth2Authentication;
+import aQute.openapi.oauth2.provider.OAuth2AuthenticationProvider;
 import aQute.openapi.oauth2.provider.OAuth2Configuration;
 import aQute.openapi.provider.OpenAPIRuntime.Configuration;
-import aQute.openapi.security.api.OpenAPISecurityProvider;
+import aQute.openapi.security.api.OpenAPIAuthenticator;
 import aQute.openapi.util.WWWUtils;
 import aQute.www.http.util.HttpRequest;
 import gen.oauth2.Oauth2Base;
@@ -57,7 +57,7 @@ public class OAuth2Test {
 		properties.put("name", "oauth2");
 		properties.put("type", "oauth2");
 
-		OAuth2Authentication oauth2 = new OAuth2Authentication();
+		OAuth2AuthenticationProvider oauth2 = new OAuth2AuthenticationProvider();
 		properties.put("authorizationEndpoint", "http://foo.com/authz");
 		properties.put("tokenEndpoint", "http://foo.com/token");
 		properties.put("finalEndpoint", "http://foo.com/final");
@@ -66,8 +66,8 @@ public class OAuth2Test {
 		oauth2.activate(Converter.cnv(OAuth2Configuration.class, properties));
 		runtime.securityProviderManager.addSecurityProvider(properties, oauth2);
 
-		ServiceRegistration<OpenAPISecurityProvider> oauth2reg = fw.context
-				.registerService(OpenAPISecurityProvider.class, oauth2, properties);
+		ServiceRegistration<OpenAPIAuthenticator> oauth2reg = fw.context
+				.registerService(OpenAPIAuthenticator.class, oauth2, properties);
 
 		URI resolve = runtime.uri.resolve("/.openapi/security/oauth2/oauth2/login");
 

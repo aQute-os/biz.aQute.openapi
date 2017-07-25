@@ -33,8 +33,8 @@ import aQute.lib.strings.Strings;
 import aQute.openapi.provider.OpenAPIBase.Method;
 import aQute.openapi.security.api.Authentication;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
-import aQute.openapi.security.api.OpenAPISecurityProvider;
-import aQute.openapi.user.api.OpenAPISecurity;
+import aQute.openapi.security.api.OpenAPIAuthenticator;
+import aQute.openapi.security.environment.api.OpenAPISecurityEnvironment;
 
 public class OpenAPIContext {
 	final static Logger				logger			= LoggerFactory.getLogger(OpenAPIRuntime.class);
@@ -357,7 +357,7 @@ public class OpenAPIContext {
 			this.authenticator = new Authenticator();
 
 		Authentication auth = null;
-		OpenAPISecurityProvider securityProvider = dispatcher.getSecurityProvider(def.id, def.type);
+		OpenAPIAuthenticator securityProvider = dispatcher.getSecurityProvider(def.id, def.type);
 		if (securityProvider != null) {
 			auth = securityProvider.authenticate(request, response, def);
 		} else {
@@ -374,7 +374,7 @@ public class OpenAPIContext {
 	}
 
 	public boolean hasPermission(String action, String... arguments) throws Exception {
-		OpenAPISecurity security = runtime.security;
+		OpenAPISecurityEnvironment security = runtime.security;
 		return security.hasPermission(action, arguments);
 	}
 
@@ -392,7 +392,7 @@ public class OpenAPIContext {
 		if (authenticator == null)
 			return callable.call();
 
-		OpenAPISecurity security = runtime.security;
+		OpenAPISecurityEnvironment security = runtime.security;
 		return security.dispatch(authenticator.user, callable);
 	}
 

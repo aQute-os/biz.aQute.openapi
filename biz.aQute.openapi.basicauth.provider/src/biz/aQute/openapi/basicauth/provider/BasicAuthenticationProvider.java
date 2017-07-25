@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 
 import aQute.openapi.security.api.Authentication;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
-import aQute.openapi.security.api.OpenAPISecurityProvider;
+import aQute.openapi.security.api.OpenAPIAuthenticator;
 import aQute.openapi.security.api.OpenAPISecurityProviderInfo;
-import aQute.openapi.user.api.OpenAPISecurity;
+import aQute.openapi.security.environment.api.OpenAPISecurityEnvironment;
 import aQute.openapi.util.WWWUtils;
 
 /**
@@ -31,8 +31,8 @@ import aQute.openapi.util.WWWUtils;
  */
 @Designate(ocd = BasicAuthConfiguration.class, factory = true)
 @Component(service = { BasicAuthenticationProvider.class,
-		OpenAPISecurityProvider.class }, configurationPid = BasicAuthenticationProvider.PID, property = "type=basic", configurationPolicy = ConfigurationPolicy.REQUIRE)
-public class BasicAuthenticationProvider implements OpenAPISecurityProvider {
+		OpenAPIAuthenticator.class }, configurationPid = BasicAuthenticationProvider.PID, property = OpenAPIAuthenticator.TYPE+"=basic", configurationPolicy = ConfigurationPolicy.REQUIRE)
+public class BasicAuthenticationProvider implements OpenAPIAuthenticator {
 
 	static final String			PID		= "biz.aQute.openapi.basicauth";
 	final static Logger			logger	= LoggerFactory.getLogger(PID);
@@ -47,20 +47,22 @@ public class BasicAuthenticationProvider implements OpenAPISecurityProvider {
 	private String					pwkey;
 	private String					saltkey;
 	private String					name;
+	private String					sessionKey;
 
 	@Reference
-	OpenAPISecurity					security;
+	OpenAPISecurityEnvironment					security;
 
 	@Activate
 	void activate(BasicAuthConfiguration config) {
 		this.config = config;
 		this.idkey = config.idkey();
 		this.pwkey = config.pwkey();
-		this.saltkey = pwkey + ".salt";
-		this.name = config.name();
+		this.saltkey = config.saltkey();
+		this.name = config.openapi_name();
 		if (config.hash() == Hash.PLAIN) {
 			logger.warn("Using plain passwords is not recommended");
 		}
+		this.sessionKey = PID + "." + name;
 	}
 
 	@Override
@@ -68,8 +70,8 @@ public class BasicAuthenticationProvider implements OpenAPISecurityProvider {
 			OpenAPISecurityDefinition dto) {
 
 		Optional<String[]> pair = WWWUtils.parseAuthorizaton(request.getHeader("Authorization"));
-		String userId= pair.map( p -> p[0]).orElse(null);
-		String password = pair.map( p -> p[1]).orElse(null);
+		String userId = pair.map(p -> p[0]).orElse(null);
+		String password = pair.map(p -> p[1]).orElse(null);
 
 		return new Authentication() {
 			String user;
@@ -81,6 +83,9 @@ public class BasicAuthenticationProvider implements OpenAPISecurityProvider {
 
 			@Override
 			public boolean needsCredentials() throws Exception {
+				if (config.requireEncrypted() && !WWWUtils.isEncrypted(request)) {
+					return false;
+				}
 				return userId == null || !isAuthenticated();
 			}
 
@@ -204,7 +209,7 @@ public class BasicAuthenticationProvider implements OpenAPISecurityProvider {
 
 	@Override
 	public String toString() {
-		return "OpenAPI.BasicAuth[" + config.name() + "]";
+		return "OpenAPI.BasicAuth[" + config.openapi_name() + "]";
 	}
 
 	@Override
@@ -213,10 +218,7 @@ public class BasicAuthenticationProvider implements OpenAPISecurityProvider {
 		info.name = name;
 		info.type = "basic";
 		info.idKey = idkey;
-
-		Authentication auth = authenticate(request, null, null);
-		if ( auth.isAuthenticated())
-			info.currentUser = auth.getUser();
+		info.currentUser = (String) request.getSession().getAttribute(sessionKey);
 		return info;
 	}
 
@@ -225,11 +227,21 @@ public class BasicAuthenticationProvider implements OpenAPISecurityProvider {
 		Authentication authenticate = authenticate(request, response, null);
 		if (!authenticate.isAuthenticated()) {
 			authenticate.requestCredentials();
+		} else {
+			request.getSession().setAttribute(sessionKey, authenticate.getUser());
 		}
 		String s = config.reportingEndpoint();
 		if (s.isEmpty())
 			return null;
 
+		return new URI(s + "?error=ok");
+	}
+	@Override
+	public URI logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		request.getSession().removeAttribute(sessionKey);
+		String s = config.reportingEndpoint();
+		if (s.isEmpty())
+			return null;
 		return new URI(s + "?error=ok");
 	}
 }

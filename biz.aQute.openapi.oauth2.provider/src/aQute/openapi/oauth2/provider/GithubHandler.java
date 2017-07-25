@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 
 import org.slf4j.Logger;
 
-import aQute.openapi.user.api.OpenAPISecurity;
+import aQute.openapi.security.environment.api.OpenAPISecurityEnvironment;
 import aQute.www.http.util.HttpRequest;
 
 /**
@@ -44,7 +44,7 @@ public class GithubHandler extends Handler {
 	}
 
 	@Override
-	public AuthenticateResult authenticate(AccessTokenResponse accessToken, OpenAPISecurity security) throws Exception {
+	public AuthenticateResult authenticate(AccessTokenResponse accessToken, OpenAPISecurityEnvironment security) throws Exception {
 		String uri = HttpRequest.append("https://api.github.com/user", "access_token",
 				accessToken.access_token);
 		AuthenticateResult result = new AuthenticateResult();
@@ -55,7 +55,7 @@ public class GithubHandler extends Handler {
 			GithubEmail data = json.dec().from(body)
 					.get(GithubEmail.class);
 
-			result.user = security.getUser(idKey, data.email.toLowerCase()).orElse(null);
+			result.user = security.getUser(nameKey, data.email.toLowerCase()).orElse(null);
 			if ( result.user == null) {
 				result.error = ErrorEnum.x_no_such_user.toString();
 				result.error_description="For email " + data.email;
