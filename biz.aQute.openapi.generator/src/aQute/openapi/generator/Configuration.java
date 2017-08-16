@@ -22,4 +22,5 @@ public class Configuration extends DTO {
 	public String[]		conversions;
 	public String		openapiFile		= "openapi.json";
 	public boolean		uisupport		= false;
+	public boolean		versionSources	= true;
 }

@@ -114,5 +114,3 @@ private void non200statusexception_get_(OpenAPIContext context) throws Exception
 
 }
 
-
-// aQute OpenAPI generator version 1.0.0.201707241457

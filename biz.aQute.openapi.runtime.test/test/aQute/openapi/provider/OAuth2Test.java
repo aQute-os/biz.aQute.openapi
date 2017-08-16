@@ -54,8 +54,8 @@ public class OAuth2Test {
 		runtime.add(new X());
 
 		Hashtable<String, Object> properties = new Hashtable<>();
-		properties.put("name", "oauth2");
-		properties.put("type", "oauth2");
+		properties.put("openapi.name", "oauth2");
+		properties.put("openapi.type", "oauth2");
 
 		OAuth2AuthenticationProvider oauth2 = new OAuth2AuthenticationProvider();
 		properties.put("authorizationEndpoint", "http://foo.com/authz");

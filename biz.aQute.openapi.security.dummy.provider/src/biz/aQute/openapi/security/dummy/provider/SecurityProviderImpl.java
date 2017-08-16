@@ -70,9 +70,9 @@ public class SecurityProviderImpl implements OpenAPISecurityEnvironment {
 
 	@Override
 	public Optional<String> getUser(String key, String required) {
-		for ( User user : users.values()) {
+		for (User user : users.values()) {
 			String actual = user.properties.get(key);
-			if ( required.equals(actual))
+			if (required.equals(actual))
 				return Optional.of(user.name);
 		}
 		return Optional.empty();
@@ -81,9 +81,10 @@ public class SecurityProviderImpl implements OpenAPISecurityEnvironment {
 	final ThreadLocal<String> user = new ThreadLocal<>();
 
 	@Override
-	public <T> T dispatch(String authenticatedUser, Callable<T> request) throws Exception {
+	public <T> T dispatch(String authenticatedUser, String base, String operation, Callable<T> request)
+			throws Exception {
 		String old = user.get();
-		user.set( authenticatedUser);
+		user.set(authenticatedUser);
 		try {
 			return request.call();
 		} finally {

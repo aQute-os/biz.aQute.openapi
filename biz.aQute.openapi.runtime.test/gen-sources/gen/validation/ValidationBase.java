@@ -46,5 +46,3 @@ public static final String BASE_PATH = "/api/v1";
 
 }
 
-
-// aQute OpenAPI generator version 1.0.0.201707241457

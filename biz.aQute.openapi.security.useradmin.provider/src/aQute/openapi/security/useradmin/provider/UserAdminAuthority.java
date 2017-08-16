@@ -137,7 +137,7 @@ public class UserAdminAuthority implements Authority, AuthorityAdmin, OpenAPISec
 	}
 
 	@Override
-	public <T> T dispatch(String authenticatedUser, Callable<T> request) throws Exception {
+	public <T> T dispatch(String authenticatedUser, String base, String operation, Callable<T> request) throws Exception {
 		return call(authenticatedUser, request);
 	}
 

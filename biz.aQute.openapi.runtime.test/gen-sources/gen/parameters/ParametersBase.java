@@ -181,5 +181,3 @@ String query_ = context.toString(context.parameter("query"));
 
 }
 
-
-// aQute OpenAPI generator version 1.0.0.201707241457
