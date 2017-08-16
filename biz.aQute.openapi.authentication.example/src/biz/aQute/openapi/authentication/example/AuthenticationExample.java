@@ -8,9 +8,9 @@ import aQute.openapi.provider.OpenAPIBase;
 
 @ProvideAuthenticationBase
 @Component(service = OpenAPIBase.class)
-public class OAuth2Tester extends AuthenticationBase {
+public class AuthenticationExample extends AuthenticationBase {
 
-	public OAuth2Tester() {
+	public AuthenticationExample() {
 		System.out.println("OpenAPI Authentication Tester");
 	}
 

@@ -4,7 +4,6 @@ import org.osgi.service.component.annotations.Component;
 
 import osgi.enroute.configurer.api.RequireConfigurerExtender;
 import osgi.enroute.google.angular.capabilities.RequireAngularWebResource;
-import osgi.enroute.rest.api.REST;
 import osgi.enroute.twitter.bootstrap.capabilities.RequireBootstrapWebResource;
 import osgi.enroute.webserver.capabilities.RequireWebServerExtender;
 
@@ -13,10 +12,6 @@ import osgi.enroute.webserver.capabilities.RequireWebServerExtender;
 @RequireWebServerExtender
 @RequireConfigurerExtender
 @Component(name="biz.aQute.openapi.authentication.example")
-public class Authentication implements REST {
-
-	public String getUpper(String string) {
-		return string.toUpperCase();
-	}
+public class AuthenticationApplication {
 
 }

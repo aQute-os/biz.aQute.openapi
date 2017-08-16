@@ -81,7 +81,7 @@ public interface OpenAPISecurityEnvironment {
 	 * @return the return value of the request
 	 * @throws Exception
 	 */
-	<T> T dispatch(String authenticatedUser, Callable<T> request) throws Exception;
+	<T> T dispatch(String authenticatedUser, String base, String operation, Callable<T> request) throws Exception;
 
 	/**
 	 * Get the user currently associated with the thread.
