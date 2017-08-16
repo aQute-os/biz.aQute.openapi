@@ -756,7 +756,7 @@ public abstract class SourceType {
 
 		@Override
 		public String conversion(String name) {
-			return target.conversion(name + ".get()");
+			return "optional(context." + target.conversion(name) + ")";
 		}
 
 		public void addTypes(SourceFile sourceFile) {

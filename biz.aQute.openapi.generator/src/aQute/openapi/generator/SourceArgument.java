@@ -1,6 +1,7 @@
 package aQute.openapi.generator;
 
 import aQute.openapi.generator.SourceType.ArrayType;
+import aQute.openapi.generator.SourceType.OptionalType;
 import aQute.openapi.v2.api.ParameterObject;
 
 public class SourceArgument {
@@ -13,11 +14,17 @@ public class SourceArgument {
 		this.par = par;
 		this.name = method.toParameterName(par.name);
 
-		type = par.schema != null ? method.getParent().getGen().getSourceType(par.schema)
+		SourceType type = par.schema != null ? method.getParent().getGen().getSourceType(par.schema)
 				: method.getParent().getGen().getSourceType(par);
-		if (getType() == null) {
+		if (type == null) {
 			throw new IllegalArgumentException("No type for " + par.schema);
 		}
+
+		if (!par.required) {
+			type = new OptionalType(type);
+		}
+
+		this.type = type;
 	}
 
 	private String convert(String access) {

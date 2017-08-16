@@ -1,0 +1,22 @@
+{
+	"swagger": "2.0",
+	"basePath": "/optional",
+	"paths": {
+		"/validation": {
+			"get": {
+				"operationId": "optionalValidation",
+				"parameters": [
+					{
+						"name": "componentId",
+						"in": "query",
+						"description": "Gets or sets the component identifier.",
+						"required": false,
+						"type": "string",
+						"maxLength": 40,
+						"minLength": 0
+					}
+				]
+			}
+		}
+	}
+}

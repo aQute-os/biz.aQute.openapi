@@ -115,7 +115,8 @@ public class JavaGenerator extends BaseSourceGenerator {
 	}
 
 	public void doGeneratorVersion() {
-		format("\n// aQute OpenAPI generator version %s\n", OpenAPIGenerator.getGeneratorVersion());
+		if (gen.getConfig().versionSources)
+			format("\n// aQute OpenAPI generator version %s\n", OpenAPIGenerator.getGeneratorVersion());
 	}
 
 	public void doRequireProvideProlog(String packageName) {
@@ -225,9 +226,8 @@ public class JavaGenerator extends BaseSourceGenerator {
 	protected void doConverterMethod() {
 
 		String methodName = method.getName() + "_" + method.getMethod() + "_";
-		doMethod(Modifier.PRIVATE, "void", methodName).parameter("OpenAPIContext", "context")
-				.throws_("Exception")
-				.body(() -> {
+		doMethod(Modifier.PRIVATE, "void", methodName).parameter("OpenAPIContext", "context").throws_("Exception").body(
+				() -> {
 					OperationObject operation = method.getOperation();
 					format("    context.setOperation(%s);\n", escapeString(operation.operationId));
 
@@ -297,10 +297,11 @@ public class JavaGenerator extends BaseSourceGenerator {
 	}
 
 	protected void doLocalVariable(SourceArgument a, String name) {
-		if (!a.getPar().required) {
-			format("Optional<%s> %s = context.optional(%s);\n", a.getType().wrapper().reference(), name, a.access());
-		} else
-			format("%s %s_ = %s;\n", a.getType().wrapper().reference(), a.getName(), a.access());
+		// if (!a.getPar().required) {
+		// format("Optional<%s> %s = context.optional(%s);\n",
+		// a.getType().wrapper().reference(), name, a.access());
+		// } else
+		format("%s %s_ = %s;\n", a.getType().wrapper().reference(), a.getName(), a.access());
 	}
 
 	protected void doMethodSecurity() {
@@ -852,12 +853,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 		MethodBuilder mb = doMethod(Modifier.ABSTRACT + Modifier.PROTECTED, m.getReturnType().asReturnType(),
 				m.getName());
 		for (SourceArgument argument : m.getSourceArguments()) {
-			if (!argument.getPar().required) {
-				mb.parameter(String.format("Optional<%s>", argument.getType().wrapper().reference()),
-						argument.getName());
-			} else {
-				mb.parameter(argument.getType().reference(), argument.getName());
-			}
+			mb.parameter(argument.getType().reference(), argument.getName());
 		}
 		mb.throws_("Exception");
 

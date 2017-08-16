@@ -32,8 +32,8 @@ import aQute.lib.io.IO;
 import aQute.lib.strings.Strings;
 import aQute.openapi.provider.OpenAPIBase.Method;
 import aQute.openapi.security.api.Authentication;
-import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import aQute.openapi.security.api.OpenAPIAuthenticator;
+import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import aQute.openapi.security.environment.api.OpenAPISecurityEnvironment;
 
 public class OpenAPIContext {
@@ -393,7 +393,7 @@ public class OpenAPIContext {
 			return callable.call();
 
 		OpenAPISecurityEnvironment security = runtime.security;
-		return security.dispatch(authenticator.user, callable);
+		return security.dispatch(authenticator.user, null, null, callable);
 	}
 
 	public boolean isEncrypted() {
