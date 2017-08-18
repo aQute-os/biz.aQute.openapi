@@ -1,21 +1,70 @@
 {
 	"swagger": "2.0",
-	"basePath": "/optional",
+	"basePath": "/optional/{path}",
 	"paths": {
 		"/validation": {
 			"get": {
 				"operationId": "optionalValidation",
 				"parameters": [
 					{
-						"name": "componentId",
+						"name": "inoptional",
 						"in": "query",
-						"description": "Gets or sets the component identifier.",
+						"required": false,
+						"type": "string",
+						"maxLength": 40,
+						"minLength": 0
+					},
+					{
+						"name": "inbody",
+						"in": "body",
+						"required": false,
+						"schema": {
+							"$ref": "#/definitions/Body"
+						}
+					},
+					{
+						"name": "inheader",
+						"in": "header",
+						"required": false,
+						"type": "string",
+						"maxLength": 40,
+						"minLength": 0
+					},
+					{
+						"name": "inpath",
+						"in": "path",
+						"required": false,
+						"type": "string",
+						"maxLength": 40,
+						"minLength": 0
+					},
+					{
+						"name": "formData",
+						"in": "formData",
 						"required": false,
 						"type": "string",
 						"maxLength": 40,
 						"minLength": 0
 					}
 				]
+			}
+		}
+	},
+
+	"definitions":
+	{
+		"Body":
+		{
+			"type": "object",
+			"properties":
+			{
+				"payload":
+				{
+					"type": "string",
+					"maxLength": 40,
+					"minLength": 0
+				}
+
 			}
 		}
 	}

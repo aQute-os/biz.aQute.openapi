@@ -27,8 +27,8 @@ public class SourceArgument {
 		this.type = type;
 	}
 
-	private String convert(String access) {
-		String s = getType().conversion(access, getPar().collectionFormat);
+	private String convert(SourceType type, String access) {
+		String s = type.conversion(access, getPar().collectionFormat);
 		if (s == null)
 			return access;
 		else if (s.startsWith("^")) {
@@ -38,57 +38,68 @@ public class SourceArgument {
 	}
 
 	public String access() {
+		return access(type);
+	}
+
+	public String access(SourceType type) {
+
+		if (type instanceof OptionalType) {
+			type = ((OptionalType) type).getTarget();
+			return "context.optional(" + access(type) + ")";
+		}
+
 		switch (getPar().in) {
 			case body :
-				if (getType().isArray()) {
-					ArrayType arrayType = (ArrayType) getType();
+
+				if (type.isArray()) {
+					ArrayType arrayType = (ArrayType) type;
 					return String.format("context.listBody(%s.class)", arrayType.getComponentType().reference());
 				} else
-					return String.format("context.body(%s.class)", getType().reference());
+					return String.format("context.body(%s.class)", type.reference());
 
 			case formData :
 				if ("file".equals(getPar().type))
 					return String.format("context.part(\"%s\")", getPar().name);
 				else {
-					return doArray();
+					return doParameter(type);
 				}
 
 			case header :
-				return convert(String.format("context.header(\"%s\")", getPar().name));
+				return convert(type, String.format("context.header(\"%s\")", getPar().name));
 
 			case path :
-				return convert(String.format("context.path(\"%s\")", getPar().name));
+				return convert(type, String.format("context.path(\"%s\")", getPar().name));
 
 			case query :
-				return doArray();
+				return doParameter(type);
 
 			default :
 				throw new UnsupportedOperationException("No such in type: " + getPar().in);
 		}
 	}
 
-	private String doArray() {
+	private String doParameter(SourceType type) {
 		if (getType().isArray()) {
 			switch (getPar().collectionFormat) {
 				case csv :
-					return convert(String.format("context.csv(context.parameter(\"%s\"))", getPar().name));
+					return convert(type, String.format("context.csv(context.parameter(\"%s\"))", getPar().name));
 
 				case pipes :
-					return convert(String.format("context.pipes(context.parameter(\"%s\"))", getPar().name));
+					return convert(type, String.format("context.pipes(context.parameter(\"%s\"))", getPar().name));
 
 				case ssv :
-					return convert(String.format("context.ssv(context.parameter(\"%s\"))", getPar().name));
+					return convert(type, String.format("context.ssv(context.parameter(\"%s\"))", getPar().name));
 
 				case tsv :
-					return convert(String.format("context.tsv(context.parameter(\"%s\"))", getPar().name));
+					return convert(type, String.format("context.tsv(context.parameter(\"%s\"))", getPar().name));
 
 				default :
 				case multi :
 				case none :
-					return convert(String.format("context.parameters(\"%s\")", getPar().name));
+					return convert(type, String.format("context.parameters(\"%s\")", getPar().name));
 			}
 		} else
-			return convert(String.format("context.parameter(\"%s\")", getPar().name));
+			return convert(type, String.format("context.parameter(\"%s\")", getPar().name));
 	}
 
 	@Override

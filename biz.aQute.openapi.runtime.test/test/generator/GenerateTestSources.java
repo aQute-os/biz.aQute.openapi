@@ -9,6 +9,10 @@ import aQute.openapi.generator.OpenAPIGenerator;
 
 public class GenerateTestSources {
 
+	public static void dummy() throws Exception {
+		GenerateTestSources.generate("dummy", "dummy.json", new Configuration());
+	}
+
 	public static void optional() throws Exception {
 		GenerateTestSources.generate("optional", "optional.json", new Configuration());
 	}
@@ -125,6 +129,7 @@ public class GenerateTestSources {
 	}
 
 	public static void main(String args[]) throws Exception {
+		//dummy();
 		optional();
 		temperature();
 		non200status();
