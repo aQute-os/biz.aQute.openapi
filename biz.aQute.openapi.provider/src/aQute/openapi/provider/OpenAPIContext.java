@@ -417,4 +417,8 @@ public class OpenAPIContext {
 	public HttpServletResponse getResponse() {
 		return response;
 	}
+
+	public String getOperation() {
+		return operation;
+	}
 }

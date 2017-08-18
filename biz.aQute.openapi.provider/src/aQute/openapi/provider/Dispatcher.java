@@ -54,10 +54,10 @@ public class Dispatcher extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		OpenAPIContext context = new OpenAPIContext(runtime, this, request, response);
+		String path = request.getPathInfo();
 		try {
 			runtime.contexts.set(context);
 			try {
-				String path = request.getPathInfo();
 				if (path.endsWith("/"))
 					path = path.substring(1, path.length() - 1);
 				else
@@ -109,8 +109,9 @@ public class Dispatcher extends HttpServlet {
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		} catch (Exception e) {
 			OpenAPIRuntime.logger.warn("Server Error {} {}", e, request.getPathInfo());
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			context.report(e);
+			if (runtime.security.handleException(e, context.getOperation(), request, response))
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 

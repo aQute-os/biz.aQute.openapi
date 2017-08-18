@@ -3,6 +3,9 @@ package aQute.openapi.security.environment.api;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Abstracts an application's user oriented security model. The idea is that
  * authenticators will find a defined user by, for example, its email. They then
@@ -92,12 +95,43 @@ public interface OpenAPISecurityEnvironment {
 	Optional<String> getUser(String userId);
 
 	/**
-	 * Answer if the user associated with this thread has the following permission
-	 * @param action the action to perform
-	 * @param arguments the arguments of the action
+	 * Answer if the user associated with this thread has the following
+	 * permission
+	 * 
+	 * @param action
+	 *            the action to perform
+	 * @param arguments
+	 *            the arguments of the action
 	 * @return true if the permission is granted, false otherwise
 	 */
-	default boolean hasPermission(String action, String ... arguments) {
+	default boolean hasPermission(String action, String... arguments) {
+		return false;
+	}
+
+	/**
+	 * Handle any exceptions throw by the user code. If this returns true, the
+	 * the method handled the exception and the runtime should not further touch
+	 * the exception nor the servlet response. If it returns false, the normal
+	 * exception processing is used.
+	 * 
+	 * This method is not called for the ResponseExceptions since they are 
+	 * not real exceptions but only used for their alternative flow.
+	 * 
+	 * @param exception
+	 *            Any exception by user code
+	 * @param operation
+	 *            The operation id
+	 * @param request
+	 *            The servlet request
+	 * @param response
+	 *            The servlet response. The output can of course already be
+	 *            (partially) committed.
+	 * @return true if the exception is handled, false if the runtime must
+	 *         handle it.
+	 */
+
+	default boolean handleException(Exception exception, String operation, HttpServletRequest request,
+			HttpServletResponse response) {
 		return false;
 	}
 }
