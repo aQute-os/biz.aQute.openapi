@@ -29,15 +29,15 @@ public static final String BASE_PATH = "/v1";
  * 
  * POST /parameter/{path} = postParameter
  * 
- * @param form1 –  (formData)
+ * @param form1 –  (formData) collectionFormat=%scsv
  * 
- * @param form2 –  (formData)
+ * @param form2 –  (formData) collectionFormat=%scsv
  * 
- * @param path –  (path)
+ * @param path –  (path) collectionFormat=%scsv
  * 
- * @param header –  (header)
+ * @param header –  (header) collectionFormat=%scsv
  * 
- * @param query –  (query)
+ * @param query –  (query) collectionFormat=%scsv
  * 
    * @returns 200 / null
  * 200
@@ -50,13 +50,13 @@ protected abstract Response postParameter(String form1, int form2, String path, 
  * 
  * PUT /parameter/{path} = putParameter
  * 
- * @param body –  (body)
+ * @param body –  (body) collectionFormat=%scsv
  * 
- * @param path –  (path)
+ * @param path –  (path) collectionFormat=%scsv
  * 
- * @param header –  (header)
+ * @param header –  (header) collectionFormat=%scsv
  * 
- * @param query –  (query)
+ * @param query –  (query) collectionFormat=%scsv
  * 
    * @returns 200 / null
  * 200
@@ -143,8 +143,8 @@ public static class Body extends OpenAPIBase.DTO {
 private void postParameter_post_(OpenAPIContext context) throws Exception{
 
     context.setOperation("postParameter");
-String form1_ = context.toString(context.parameter("form1"));
-Integer form2_ = context.toInt(context.parameter("form2"));
+String form1_ = context.toString(context.formData("form1"));
+Integer form2_ = context.toInt(context.formData("form2"));
 String path_ = context.toString(context.path("path"));
 String header_ = context.toString(context.header("header"));
 String query_ = context.toString(context.parameter("query"));

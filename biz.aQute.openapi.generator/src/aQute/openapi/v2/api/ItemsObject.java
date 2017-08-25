@@ -30,7 +30,7 @@ public class ItemsObject extends BaseOpenAPIObject {
 	 * values foo bar. tsv - tab separated values foo\tbar. pipes - pipe
 	 * separated values foo|bar. Default value is csv.
 	 */
-	public CollectionFormat	collectionFormat;
+	public CollectionFormat	collectionFormat	= CollectionFormat.csv;
 
 	/**
 	 * Declares the value of the item that the server will use if none is

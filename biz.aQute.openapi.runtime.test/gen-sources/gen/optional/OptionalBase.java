@@ -27,15 +27,15 @@ public static final String BASE_PATH = "/optional/{path}";
  * 
  * GET /validation = optionalValidation
  * 
- * @param inoptional –  (query)
+ * @param inoptional –  (query) collectionFormat=%scsv
  * 
- * @param inbody –  (body)
+ * @param inbody –  (body) collectionFormat=%scsv
  * 
- * @param inheader –  (header)
+ * @param inheader –  (header) collectionFormat=%scsv
  * 
- * @param inpath –  (path)
+ * @param inpath –  (path) collectionFormat=%scsv
  * 
- * @param formData –  (formData)
+ * @param formData –  (formData) collectionFormat=%scsv
  * 
  */
 
@@ -107,7 +107,7 @@ Optional<String> inoptional_ = context.optional(context.toString(context.paramet
 Optional<Body> inbody_ = context.optional(context.body(Body.class));
 Optional<String> inheader_ = context.optional(context.toString(context.header("inheader")));
 Optional<String> inpath_ = context.optional(context.toString(context.path("inpath")));
-Optional<String> formData_ = context.optional(context.toString(context.parameter("formData")));
+Optional<String> formData_ = context.optional(context.toString(context.formData("formData")));
 
 
     //  VALIDATORS 

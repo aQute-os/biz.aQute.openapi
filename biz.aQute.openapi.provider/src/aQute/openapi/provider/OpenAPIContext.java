@@ -35,6 +35,7 @@ import aQute.openapi.security.api.Authentication;
 import aQute.openapi.security.api.OpenAPIAuthenticator;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
 import aQute.openapi.security.environment.api.OpenAPISecurityEnvironment;
+import aQute.openapi.util.WWWUtils;
 
 public class OpenAPIContext {
 	final static Logger				logger			= LoggerFactory.getLogger(OpenAPIRuntime.class);
@@ -420,5 +421,53 @@ public class OpenAPIContext {
 
 	public String getOperation() {
 		return operation;
+	}
+
+	public String formData(String name) {
+
+		assert request.getContentType().equals(WWWUtils.APPLICATION_X_WWW_FORM_URLENCODED);
+
+		String[] parameterValues = request.getParameterValues(name);
+
+		if (parameterValues == null)
+			return null;
+
+		if (parameterValues.length == 0)
+			return null;
+
+		if (parameterValues.length == 1)
+			return parameterValues[0];
+
+		StringBuilder sb = new StringBuilder();
+		String del = "";
+
+		for (String s : parameterValues) {
+			sb.append(del);
+			escapeCommas(sb, s);
+			del = ",";
+		}
+		return sb.toString();
+	}
+
+	public String[] formDataArray(String name) {
+
+		assert request.getContentType().equals(WWWUtils.APPLICATION_X_WWW_FORM_URLENCODED);
+
+		String[] parameterValues = request.getParameterValues(name);
+
+		if (parameterValues == null)
+			return null;
+
+		return parameterValues;
+
+	}
+
+	protected void escapeCommas(StringBuilder sb, String s) {
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			if (c == ',')
+				sb.append('\\');
+			sb.append(c);
+		}
 	}
 }

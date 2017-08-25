@@ -28,6 +28,8 @@ import aQute.lib.env.Env;
 import aQute.lib.hex.Hex;
 import aQute.libg.glob.Glob;
 import aQute.openapi.java.generator.JavaGenerator;
+import aQute.openapi.util.WWWUtils;
+import aQute.openapi.v2.api.In;
 import aQute.openapi.v2.api.ItemsObject;
 import aQute.openapi.v2.api.MethodEnum;
 import aQute.openapi.v2.api.OperationObject;
@@ -105,6 +107,19 @@ public class OpenAPIGenerator extends Env {
 		operation.method = method;
 		if (operation.security == null)
 			operation.security = swagger.security;
+		
+		if ( operation.parameters != null) {
+			for ( ParameterObject parameter : operation.parameters) {
+				if ( parameter.in == In.formData) {
+					// TODO multipart
+					if (operation.consumes == null
+							|| !operation.consumes.contains(WWWUtils.APPLICATION_X_WWW_FORM_URLENCODED)) {
+						error("%s : formData can only occur in \"application/x-www-form-urlencoded\" typed content, consumes is %s",
+								operation.operationId, operation.consumes);
+					}
+				}
+			}
+		}
 	}
 
 	private String mapTag(String tag) {

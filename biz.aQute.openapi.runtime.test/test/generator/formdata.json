@@ -1,0 +1,102 @@
+{
+    "swagger": "2.0",
+    "basePath": "/formdata",
+    "info": {},
+    "paths": {
+        "/test": {
+            "post": {
+                "operationId": "form",
+                "consumes": [ "application/x-www-form-urlencoded" ],
+                "parameters": [
+                		{
+						"in": "formData",
+	          			"name": "s_1",
+	          			"type": "string",
+	          			"collectionFormat":"none",
+	          			"required": true
+          			},
+                		{
+						"in": "formData",
+	          			"name": "s_12",
+	          			"required": true,
+	          			"collectionFormat":"none",
+	          			"type": "string"
+          			},
+                		{
+						"in": "formData",
+	          			"name": "a_1",
+	          			"required": true,
+	          			"type": "array",
+	          			"collectionFormat":"none",
+	                    "items": {
+	                    		"type": "string"
+	                    }
+          			},
+                		{
+						"in": "formData",
+	          			"name": "a_12",
+	          			"required": true,
+	          			"type": "array",
+	          			"collectionFormat":"none",
+	                    "items": {
+	                    		"type": "string"
+	                    }
+          			},
+                		{
+						"in": "formData",
+	          			"name": "s_1c2_csv",
+	          			"required": true,
+	          			"type": "array",
+	          			"collectionFormat":"csv",
+	                    "items": {
+	                    		"type": "string"
+	                    }
+          			}
+                ],
+                "responses": {
+          			"200": {
+    		        			"schema": {
+    	    		    				"type": "array",
+    	        					"items": {
+	            						"type": "string"
+            					}
+            				}
+          			}
+          		}
+            }
+        },
+        "/oauth2": {
+            "post": {
+                "operationId": "oauth2",
+                "consumes": [ "application/x-www-form-urlencoded" ],
+                "parameters": [
+                		{
+						"in": "formData",
+	          			"name": "grant_type",
+	          			"type": "string",
+	          			"required": true
+          			},
+                		{
+						"in": "formData",
+	          			"name": "username",
+	          			"required": true,
+	          			"type": "string"
+          			},
+                		{
+						"in": "formData",
+	          			"name": "password",
+	          			"required": true,
+	          			"type": "string"
+          			}
+                ],
+                "responses": {
+          			"200": {
+    		        			"schema": {
+    	    		    				"type": "string"
+            				}
+          			}
+          		}
+            }
+        }
+    }
+}

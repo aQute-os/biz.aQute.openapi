@@ -61,7 +61,7 @@ public class SourceArgument {
 				if ("file".equals(getPar().type))
 					return String.format("context.part(\"%s\")", getPar().name);
 				else {
-					return doParameter(type);
+					return doParameter(type, "formData", "formDataArray");
 				}
 
 			case header :
@@ -71,35 +71,39 @@ public class SourceArgument {
 				return convert(type, String.format("context.path(\"%s\")", getPar().name));
 
 			case query :
-				return doParameter(type);
+				return doParameter(type, "parameter", "parameters");
 
 			default :
 				throw new UnsupportedOperationException("No such in type: " + getPar().in);
 		}
 	}
 
-	private String doParameter(SourceType type) {
+	private String doParameter(SourceType type, String singleAccessFunction, String arrayAccessFunction) {
 		if (getType().isArray()) {
 			switch (getPar().collectionFormat) {
 				case csv :
-					return convert(type, String.format("context.csv(context.parameter(\"%s\"))", getPar().name));
+					return convert(type,
+							String.format("context.csv(context.%s(\"%s\"))", singleAccessFunction, getPar().name));
 
 				case pipes :
-					return convert(type, String.format("context.pipes(context.parameter(\"%s\"))", getPar().name));
+					return convert(type,
+							String.format("context.pipes(context.%s(\"%s\"))", singleAccessFunction, getPar().name));
 
 				case ssv :
-					return convert(type, String.format("context.ssv(context.parameter(\"%s\"))", getPar().name));
+					return convert(type,
+							String.format("context.ssv(context.%s(\"%s\"))", singleAccessFunction, getPar().name));
 
 				case tsv :
-					return convert(type, String.format("context.tsv(context.parameter(\"%s\"))", getPar().name));
+					return convert(type,
+							String.format("context.tsv(context.%s(\"%s\"))", singleAccessFunction, getPar().name));
 
 				default :
 				case multi :
 				case none :
-					return convert(type, String.format("context.parameters(\"%s\")", getPar().name));
+					return convert(type, String.format("context.%s(\"%s\")", arrayAccessFunction, getPar().name));
 			}
 		} else
-			return convert(type, String.format("context.parameter(\"%s\")", getPar().name));
+			return convert(type, String.format("context.%s(\"%s\")", singleAccessFunction, getPar().name));
 	}
 
 	@Override

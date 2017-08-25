@@ -27,7 +27,7 @@ public static final String BASE_PATH = "/enums";
  * 
  * POST /enum = enum
  * 
- * @param body – Pet object that needs to be added to the store (body)
+ * @param body – Pet object that needs to be added to the store (body) collectionFormat=%scsv
  * 
  */
 

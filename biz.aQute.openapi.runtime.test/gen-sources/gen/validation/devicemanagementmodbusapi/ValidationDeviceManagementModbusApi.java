@@ -37,7 +37,7 @@ public static final String BASE_PATH = "/api/v1";
  * 
  * Adds the specified modbus devices to the plant.
  * 
- * @param device –  (body)
+ * @param device –  (body) collectionFormat=%scsv
  * 
    * @returns 200 / registered device data
    * @returns 400 / Bad Request
@@ -58,7 +58,7 @@ protected abstract ModbusDeviceDataResponse addModbusDeviceToPlant(ModbusDeviceD
  * 
  * Adds the specified modbus devices to the plant.
  * 
- * @param device –  (body)
+ * @param device –  (body) collectionFormat=%scsv
  * 
    * @returns 200 / registered device data
    * @returns 400 / Bad Request
@@ -111,7 +111,7 @@ protected abstract MappingFileList getModbusMappingFiles() throws Exception;
  * 
  * Remove the specified modbus devices from the plant.
  * 
- * @param deviceId – Identifier for the device. (path)
+ * @param deviceId – Identifier for the device. (path) collectionFormat=%scsv
  * 
    * @returns 200 / Ok
    * @returns 404 / Not found

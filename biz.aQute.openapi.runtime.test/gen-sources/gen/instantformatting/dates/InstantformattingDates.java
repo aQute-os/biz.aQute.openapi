@@ -29,7 +29,7 @@ public static final String BASE_PATH = "/v1";
  * 
  * Validate dates
  * 
- * @param token –  (body)
+ * @param token –  (body) collectionFormat=%scsv
  * 
    * @returns 200 / null
  * 200

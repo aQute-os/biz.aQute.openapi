@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import aQute.lib.converter.Converter;
 
 public class WWWUtils {
+	
+	public final static String APPLICATION_X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
+	
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
 	static ABNF	unreserved	= new ABNF("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.~-");
 //	static ABNF	sub_delims	= new ABNF("!$&'()*+,;=");
