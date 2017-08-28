@@ -38,21 +38,23 @@ import aQute.openapi.security.environment.api.OpenAPISecurityEnvironment;
 import aQute.openapi.util.WWWUtils;
 
 public class OpenAPIContext {
-	final static Logger				logger			= LoggerFactory.getLogger(OpenAPIRuntime.class);
+	final static Logger				logger				= LoggerFactory.getLogger(OpenAPIRuntime.class);
 
-	private static final String[]	EMPTY			= new String[0];
+	private static final String[]	EMPTY				= new String[0];
 
 	final HttpServletRequest		request;
 	final HttpServletResponse		response;
 	final OpenAPIRuntime			runtime;
-	final Map<String,String>		pathParameters	= new HashMap<>();
-	final static Logger				log				= LoggerFactory.getLogger(OpenAPIContext.class);
+	final Map<String,String>		pathParameters		= new HashMap<>();
+	final static Logger				log					= LoggerFactory.getLogger(OpenAPIContext.class);
+
+	private static final String[]	EMPTY_STRING_ARRAY	= new String[0];
 	final Dispatcher				dispatcher;
 	final int						beginStatus;
 	private Method					method;
 	private String					operation;
-	private List<String>			stack			= new ArrayList<>();
-	private List<String>			errors			= null;
+	private List<String>			stack				= new ArrayList<>();
+	private List<String>			errors				= null;
 	private OpenAPIBase				target;
 	Authenticator					authenticator;
 
@@ -381,8 +383,7 @@ public class OpenAPIContext {
 
 	public void checkPermission(String name, String... resource) throws Exception {
 		if (!hasPermission(name, resource))
-			throw new SecurityException(
-					"Unauthorized " + name + ":" + of(resource).collect(joining(":")));
+			throw new SecurityException("Unauthorized " + name + ":" + of(resource).collect(joining(":")));
 	}
 
 	public String path() {
@@ -469,5 +470,37 @@ public class OpenAPIContext {
 				sb.append('\\');
 			sb.append(c);
 		}
+	}
+
+	public String[] csv(String[] parameters) {
+		return split(parameters, ",");
+	}
+
+	private String[] split(String[] parameters, String split) {
+
+		if (parameters == null)
+			return null;
+
+		List<String> result = new ArrayList<>();
+
+		for (String s : parameters) {
+			String parts[] = s.split(split);
+			for (String p : parts) {
+				result.add(p);
+			}
+		}
+		return result.toArray(EMPTY_STRING_ARRAY);
+	}
+
+	public String[] pipes(String[] parameters) {
+		return split(parameters, "|");
+	}
+
+	public String[] tsv(String[] parameters) {
+		return split(parameters, "\t");
+	}
+
+	public String[] ssv(String[] parameters) {
+		return split(parameters, " ");
 	}
 }

@@ -49,7 +49,6 @@ public abstract class SourceType {
 
 	public void assertNotArray(ItemsObject schema) {
 		assert schema.uniqueItems == false;
-		assert schema.collectionFormat == null;
 		assert schema.items == null;
 		assert schema.maxItems < 0;
 		assert schema.minItems < 0;

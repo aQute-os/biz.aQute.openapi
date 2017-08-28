@@ -41,7 +41,95 @@
 						"in": "query",
 						"required": true,
 						"type":"string"
+					}				],
+
+				"responses":
+				{
+					"200":
+					{
+						"schema":
+						{
+							"$ref": "#/definitions/Response"
+						}
 					}
+				}
+			},
+			"get":
+			{
+				"operationId": "arrayConversion",
+				"parameters":
+				[
+					{
+						"name": "array",
+						"in": "query",
+						"required": true,
+						"type":"array",
+						"items": {
+							"type":"string"
+						}
+					},
+					{
+						"name": "arrayNone",
+						"in": "query",
+						"required": true,
+						"type":"array",
+						"collectionFormat":"none",
+						"items": {
+							"type":"string"
+						}
+					},
+					{
+						"name": "arrayPipes",
+						"in": "query",
+						"required": true,
+						"type":"array",
+						"collectionFormat":"pipes",
+						"items": {
+							"type":"string"
+						}
+					},
+					{
+						"name": "arrayTsv",
+						"in": "query",
+						"required": true,
+						"type":"array",
+						"collectionFormat":"tsv",
+						"items": {
+							"type":"string"
+						}
+					},
+					{
+						"name": "arrayMulti",
+						"in": "query",
+						"required": true,
+						"type":"array",
+						"collectionFormat":"multi",
+						"items": {
+							"type":"string"
+						}
+					},
+					{
+						"name": "arrayCsv",
+						"in": "query",
+						"required": true,
+						"type":"array",
+						"collectionFormat":"csv",
+						"items": {
+							"type":"string"
+						}
+					},
+					{
+						"name": "arraySsv",
+						"in": "query",
+						"required": true,
+						"type":"array",
+						"collectionFormat":"ssv",
+						"items": {
+							"type":"string"
+						}
+					}
+			
+			
 				],
 
 				"responses":

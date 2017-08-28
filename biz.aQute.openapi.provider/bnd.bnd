@@ -1,4 +1,3 @@
-
 Provide-Capability: \
 	osgi.implementation;osgi.implementation=biz.aQute.openapi
 

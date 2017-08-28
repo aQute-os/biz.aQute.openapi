@@ -1,3 +1,5 @@
+-dependson biz.aQute.openapi.gradle.plugin
+
 #
 #  biz.aQute.openapi.oauth2.example APPLICATION
 #

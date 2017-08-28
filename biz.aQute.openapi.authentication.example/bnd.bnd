@@ -18,7 +18,8 @@ EnRoute-Application: 	biz.aQute.openapi.authentication.example
 
 -buildpath: \
 	osgi.enroute.base.api;version=2.0, \
-	biz.aQute.openapi.provider
+	biz.aQute.openapi.provider, \
+	biz.aQute.openapi.gradle.plugin
 
 
 -testpath: \

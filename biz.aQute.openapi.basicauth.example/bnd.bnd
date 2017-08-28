@@ -1,3 +1,5 @@
+-dependson biz.aQute.openapi.gradle.plugin
+
 Bundle-Description: \
 	An OpenAPI example for using basic authentication and the \
 	setting up the authorization.

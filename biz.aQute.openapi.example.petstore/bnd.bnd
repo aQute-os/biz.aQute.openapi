@@ -1,4 +1,4 @@
-
+-dependson biz.aQute.openapi.gradle.plugin
 
 -buildpath: \
 	osgi.enroute.base.api,\

@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import aQute.openapi.provider.OpenAPIBase.DoNotTouchResponse;
 import aQute.openapi.security.api.Authentication;
 
 public class AuthenticatorTest extends Assert {
@@ -75,7 +76,7 @@ public class AuthenticatorTest extends Assert {
 		assertFalse(auth.credentialsRequested);
 	}
 
-	@Test
+	@Test(expected=DoNotTouchResponse.class)
 	public void testOneLevelNeedCredentials() throws Exception {
 		Authenticator a = new Authenticator();
 		DTOAuthentication auth = new DTOAuthentication(true, false, false, "Peter");
@@ -112,7 +113,7 @@ public class AuthenticatorTest extends Assert {
 		assertFalse(yes.credentialsRequested);
 	}
 
-	@Test
+	@Test(expected=DoNotTouchResponse.class)
 	public void testFailAndWithNeedsCredentialsForFirst() throws Exception {
 		Authenticator a = new Authenticator();
 		DTOAuthentication no = new DTOAuthentication(true, false, false, "Peter");
@@ -125,7 +126,7 @@ public class AuthenticatorTest extends Assert {
 		assertFalse(yes.credentialsRequested);
 	}
 
-	@Test
+	@Test(expected=DoNotTouchResponse.class)
 	public void testFailAndWithNeedsCredentialsForSecond() throws Exception {
 		Authenticator a = new Authenticator();
 		DTOAuthentication no = new DTOAuthentication(true, false, false, "Peter");
@@ -138,7 +139,7 @@ public class AuthenticatorTest extends Assert {
 		assertFalse(yes.credentialsRequested);
 	}
 
-	@Test
+	@Test(expected=DoNotTouchResponse.class)
 	public void testFailAndWithNeedsCredentialsForBoth() throws Exception {
 		Authenticator a = new Authenticator();
 		DTOAuthentication no = new DTOAuthentication(true, false, false, "Peter");

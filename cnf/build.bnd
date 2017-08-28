@@ -68,4 +68,3 @@ usr = ${env;REPOSITORY_USERNAME;}
         noupdateOnRelease=true
 
 -buildrepo: Local
-

@@ -134,6 +134,7 @@ public class GenerateTestSources {
 
 	public static void main(String args[]) throws Exception {
 		//dummy();
+		parameterSourceTest();
 		formdata();
 		optional();
 		temperature();
@@ -152,7 +153,6 @@ public class GenerateTestSources {
 		createDateTimeEncodingTest();
 		createDefaultDateTimeEncodingTest();
 		overrideInstantiationTest();
-		parameterSourceTest();
 		createDateTimeEncodingTestWithManualConversion();
 		createInstantFormattingTest();
 	}

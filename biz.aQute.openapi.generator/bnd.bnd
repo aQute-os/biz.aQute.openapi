@@ -12,6 +12,5 @@ Export-Package: \
 	aQute.openapi.generator,\
 	aQute.openapi.v2.api,\
 	aQute.openapi.java.generator
-src=src,gen-sources
 
 -testpath: \

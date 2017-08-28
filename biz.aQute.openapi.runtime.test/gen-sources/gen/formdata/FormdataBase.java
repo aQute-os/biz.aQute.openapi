@@ -117,7 +117,7 @@ String s_1_ = context.toString(context.formData("s_1"));
 String s_12_ = context.toString(context.formData("s_12"));
 List<String> a_1_ = context.toArray(String.class, context.formDataArray("a_1"));
 List<String> a_12_ = context.toArray(String.class, context.formDataArray("a_12"));
-List<String> s_1c2_csv_ = context.toArray(String.class, context.csv(context.formData("s_1c2_csv")));
+List<String> s_1c2_csv_ = context.toArray(String.class, context.csv(context.formDataArray("s_1c2_csv")));
 
 
     //  VALIDATORS 

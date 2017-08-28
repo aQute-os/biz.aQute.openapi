@@ -83,19 +83,19 @@ public class SourceArgument {
 			switch (getPar().collectionFormat) {
 				case csv :
 					return convert(type,
-							String.format("context.csv(context.%s(\"%s\"))", singleAccessFunction, getPar().name));
+							String.format("context.csv(context.%s(\"%s\"))", arrayAccessFunction, getPar().name));
 
 				case pipes :
 					return convert(type,
-							String.format("context.pipes(context.%s(\"%s\"))", singleAccessFunction, getPar().name));
+							String.format("context.pipes(context.%s(\"%s\"))", arrayAccessFunction, getPar().name));
 
 				case ssv :
 					return convert(type,
-							String.format("context.ssv(context.%s(\"%s\"))", singleAccessFunction, getPar().name));
+							String.format("context.ssv(context.%s(\"%s\"))", arrayAccessFunction, getPar().name));
 
 				case tsv :
 					return convert(type,
-							String.format("context.tsv(context.%s(\"%s\"))", singleAccessFunction, getPar().name));
+							String.format("context.tsv(context.%s(\"%s\"))", arrayAccessFunction, getPar().name));
 
 				default :
 				case multi :

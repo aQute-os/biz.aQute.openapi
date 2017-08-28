@@ -8,7 +8,8 @@
 	biz.aQute.bnd;packages=*,\
 	osgi.core;version=6.0,\
 	osgi.cmpn;version=6.0, \
-	biz.aQute.www.provider
+	biz.aQute.www.provider, \
+	org.apache.felix.gogo.runtime
 
 -testpath: \
 	org.apache.felix.framework, \

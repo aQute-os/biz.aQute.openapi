@@ -1,5 +1,7 @@
 package aQute.openapi.provider;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,6 +61,14 @@ public class ParameterSourceTest extends Assert
             }
             return response;
          }
+
+		@Override
+		protected Response arrayConversion(List<String> array, List<String> arrayNone, List<String> arrayPipes,
+				List<String> arrayTsv, List<String> arrayMulti, List<String> arrayCsv, List<String> arraySsv)
+				throws Exception {
+			// TODO Auto-generated method stub
+			return null;
+		}
 
       }
       rule.add(new X());

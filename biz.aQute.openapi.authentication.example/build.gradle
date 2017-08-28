@@ -10,6 +10,8 @@ buildscript {
 
 apply plugin: 'biz.aQute.openapi'
 
+compileJava.dependsOn(openapi)
+
 openapi {
 	input			= file( 'authentication.json' )
 	output			= file( 'gen-src')

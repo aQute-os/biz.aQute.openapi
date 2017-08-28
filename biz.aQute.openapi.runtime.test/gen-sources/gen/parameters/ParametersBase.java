@@ -14,6 +14,8 @@ import java.time.LocalDate;
  * 
  * <li>{@link #postParameter(String,int,String,String,String) POST /parameter/<b>[path]</b> =  postParameter}
  * 
+ * <li>{@link #arrayConversion(List<String>,List<String>,List<String>,List<String>,List<String>,List<String>,List<String>) GET /parameter/<b>[path]</b> =  arrayConversion}
+ * 
  * <li>{@link #putParameter(Body,String,String,String) PUT /parameter/<b>[path]</b> =  putParameter}
  * 
  * </ul>
@@ -45,6 +47,31 @@ public static final String BASE_PATH = "/v1";
  */
 
 protected abstract Response postParameter(String form1, int form2, String path, String header, String query) throws Exception;
+
+/**
+ * 
+ * GET /parameter/{path} = arrayConversion
+ * 
+ * @param array –  (query) collectionFormat=%scsv
+ * 
+ * @param arrayNone –  (query) collectionFormat=%snone
+ * 
+ * @param arrayPipes –  (query) collectionFormat=%spipes
+ * 
+ * @param arrayTsv –  (query) collectionFormat=%stsv
+ * 
+ * @param arrayMulti –  (query) collectionFormat=%smulti
+ * 
+ * @param arrayCsv –  (query) collectionFormat=%scsv
+ * 
+ * @param arraySsv –  (query) collectionFormat=%sssv
+ * 
+   * @returns 200 / null
+ * 200
+ * 
+ */
+
+protected abstract Response arrayConversion(List<String> array, List<String> arrayNone, List<String> arrayPipes, List<String> arrayTsv, List<String> arrayMulti, List<String> arrayCsv, List<String> arraySsv) throws Exception;
 
 /**
  * 
@@ -100,6 +127,7 @@ public static class Body extends OpenAPIBase.DTO {
   public ParametersBase() {
     super(BASE_PATH,gen.parameters.ParametersBase.class,
          "postParameter        POST   /parameter/{path}?query  RETURN Response",
+         "arrayConversion      GET    /parameter/{path}?array&arrayNone&arrayPipes&arrayTsv&arrayMulti&arrayCsv&arraySsv  RETURN Response",
          "putParameter         PUT    /parameter/{path}?query  PAYLOAD Body  RETURN Response");
   }
   public static java.time.Instant toDateTime(String s) {
@@ -130,6 +158,9 @@ public static class Body extends OpenAPIBase.DTO {
           }  else           if ( context.isMethod(OpenAPIBase.Method.POST)) {
             postParameter_post_(context);
             return true;
+          }  else           if ( context.isMethod(OpenAPIBase.Method.GET)) {
+            arrayConversion_get_(context);
+            return true;
           } 
         }
 
@@ -156,6 +187,28 @@ String query_ = context.toString(context.parameter("query"));
     context.end();
 
     Object result = context.call( ()-> postParameter(form1_, form2_, path_, header_, query_));
+    context.setResult(result, 200);
+
+}
+
+private void arrayConversion_get_(OpenAPIContext context) throws Exception{
+
+    context.setOperation("arrayConversion");
+List<String> array_ = context.toArray(String.class, context.csv(context.parameters("array")));
+List<String> arrayNone_ = context.toArray(String.class, context.parameters("arrayNone"));
+List<String> arrayPipes_ = context.toArray(String.class, context.pipes(context.parameters("arrayPipes")));
+List<String> arrayTsv_ = context.toArray(String.class, context.tsv(context.parameters("arrayTsv")));
+List<String> arrayMulti_ = context.toArray(String.class, context.parameters("arrayMulti"));
+List<String> arrayCsv_ = context.toArray(String.class, context.csv(context.parameters("arrayCsv")));
+List<String> arraySsv_ = context.toArray(String.class, context.ssv(context.parameters("arraySsv")));
+
+
+    //  VALIDATORS 
+
+    context.begin("arrayConversion");
+    context.end();
+
+    Object result = context.call( ()-> arrayConversion(array_, arrayNone_, arrayPipes_, arrayTsv_, arrayMulti_, arrayCsv_, arraySsv_));
     context.setResult(result, 200);
 
 }
