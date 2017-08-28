@@ -8,3 +8,20 @@ jdk:
 install: ./gradlew --version
 
 script: ./gradlew --continue
+
+script: ./gradlew --no-daemon -DGRADLE_OPTS="-Xms128m" --stacktrace build -i
+
+after_success:
+- git status
+- echo $REPOSITORY_USERNAME
+- echo $TRAVIS_PULL_REQUEST
+- echo $TRAVIS_BRANCH
+- if [ master == $TRAVIS_BRANCH -a $TRAVIS_PULL_REQUEST == false -a  ${REPOSITORY_USERNAME:=X}
+  != X ]; then ./gradlew -DGRADLE_OPTS="-Xms128m" release -i; fi
+
+cache:
+  directories:
+  - "$HOME/.gradle"
+
+env:
+  secure: "ZR4xPCA6LHaxdWm8qABCRnUuUTrUo2QCZOqg40RzeaPQFakgwLcHyFJvCKiER/HQHGYSPCUqp1YfgfYMPwOgchzSiWwwIdlRyPhHO4WwpjHEbaeMkViCSBO2ntmVTXESTk6dlw21YgeRCfFmCymRTqTa3UDgJvLXnmeObiBVyhouxRCkrpsta3G39cNc1xokMmaUZTb+aRZJlDRTQS8y7fYJMOY7iSEnYDZ5A85r6xoWGFqOaODdHN2I/Cl/4WYhpsC6cv6iPv840hiNz4I0zRWn5L/R6o2WIMxOhd+1257vVV7al816mqIQ6/aXIACtN8QoX5he4R3qYhDzDSQYWWce95vl+hxCc4Np0S5Dt6aUdJooR5lWjDvJz2BLsGuy3L0I5QT7idIdCp4h9dVKjVPjgM9cf3ZUBAozNcERfz2IsEXt1EH5DByBXIvHb2acqzVRRpoLox4aeteX2BAZCXPTJ1evSI7rIj7tQxMKyH/I+fxXy3kJViinYIcfYpZckMbBkcnodUv6XonBktJABVzCWwPyZY8qBClrP6IbJM5LKvCPjPUfW5O11F0ZvL5EtRhHYTcS/uSN+2RyvKxdbI21lKBFD9eSBYqRWxLpCX8CwR3wl3c0QiPh/yu761XHQW1eCjEZjGQmvT4Em3ALams1wBTDCgFHRPt2uWJVqZc="
