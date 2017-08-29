@@ -3,7 +3,6 @@ package aQute.openapi.example.petstore.user;
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
-
 import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -46,7 +45,7 @@ public static final String BASE_PATH = "/v2";
  * 
  * 
  * 
- * @param body – List of user object (body)
+ * @param body – List of user object (body) collectionFormat=%scsv
  * 
    * @throws Response default / successful operation
  * default
@@ -63,9 +62,9 @@ protected abstract void createUsersWithArrayInput(List<User> body) throws Except
  * 
  * 
  * 
- * @param username – The user name for login (query)
+ * @param username – The user name for login (query) collectionFormat=%scsv
  * 
- * @param password – The password for login in clear text (query)
+ * @param password – The password for login in clear text (query) collectionFormat=%scsv
  * 
    * @returns 200 / successful operation
    * @returns 400 / Invalid username/password supplied
@@ -104,7 +103,7 @@ protected abstract void logoutUser() throws Exception;
  * 
  * This can only be done by the logged in user.
  * 
- * @param username – The name that needs to be deleted (path)
+ * @param username – The name that needs to be deleted (path) collectionFormat=%scsv
  * 
    * @throws Response BadRequestResponse / Invalid username supplied
    * @throws Response 404 / User not found
@@ -124,7 +123,7 @@ protected abstract void deleteUser(String username) throws Exception, OpenAPIBas
  * 
  * 
  * 
- * @param username – The name that needs to be fetched. Use user1 for testing.  (path)
+ * @param username – The name that needs to be fetched. Use user1 for testing.  (path) collectionFormat=%scsv
  * 
    * @returns 200 / successful operation
    * @returns 400 / Invalid username supplied
@@ -147,9 +146,9 @@ protected abstract User getUserByName(String username) throws Exception, OpenAPI
  * 
  * This can only be done by the logged in user.
  * 
- * @param username – name that need to be deleted (path)
+ * @param username – name that need to be deleted (path) collectionFormat=%scsv
  * 
- * @param body – Updated user object (body)
+ * @param body – Updated user object (body) collectionFormat=%scsv
  * 
    * @throws Response BadRequestResponse / Invalid user supplied
    * @throws Response 404 / User not found
@@ -169,7 +168,7 @@ protected abstract void updateUser(String username, User body) throws Exception,
  * 
  * This can only be done by the logged in user.
  * 
- * @param body – Created user object (body)
+ * @param body – Created user object (body) collectionFormat=%scsv
  * 
    * @throws Response default / successful operation
  * default
@@ -186,7 +185,7 @@ protected abstract void createUser(User body) throws Exception;
  * 
  * 
  * 
- * @param body – List of user object (body)
+ * @param body – List of user object (body) collectionFormat=%scsv
  * 
    * @throws Response default / successful operation
  * default
@@ -241,7 +240,7 @@ public static class User extends OpenAPIBase.DTO {
   /*****************************************************************/
 
   public GeneratedUser() {
-    super(BASE_PATH,
+    super(BASE_PATH,aQute.openapi.example.petstore.GeneratedBase.class,
          "createUsersWithArrayInput POST   /user/createWithArray  PAYLOAD List<User>",
          "loginUser            GET    /user/login?username&password  RETURN String",
          "logoutUser           GET    /user/logout",
@@ -333,10 +332,9 @@ List<User> body_ = context.listBody(User.class);
     //  VALIDATORS 
 
     context.begin("createUsersWithArrayInput");
-    context.require(body_,"body");
     context.end();
 
-    createUsersWithArrayInput(body_);
+    context.call( () -> { createUsersWithArrayInput(body_); return null; });
     context.setResult(null, 200);
 
 }
@@ -351,11 +349,9 @@ String password_ = context.toString(context.parameter("password"));
     //  VALIDATORS 
 
     context.begin("loginUser");
-    context.require(username_,"username");
-    context.require(password_,"password");
     context.end();
 
-    Object result = loginUser(username_, password_);
+    Object result = context.call( ()-> loginUser(username_, password_));
     context.setResult(result, 200);
 
 }
@@ -364,7 +360,7 @@ private void logoutUser_get_(OpenAPIContext context) throws Exception{
 
     context.setOperation("logoutUser");
 
-    logoutUser();
+    context.call( () -> { logoutUser(); return null; });
     context.setResult(null, 200);
 
 }
@@ -378,10 +374,9 @@ String username_ = context.toString(context.path("username"));
     //  VALIDATORS 
 
     context.begin("deleteUser");
-    context.require(username_,"username");
     context.end();
 
-    deleteUser(username_);
+    context.call( () -> { deleteUser(username_); return null; });
     context.setResult(null, 200);
 
 }
@@ -395,10 +390,9 @@ String username_ = context.toString(context.path("username"));
     //  VALIDATORS 
 
     context.begin("getUserByName");
-    context.require(username_,"username");
     context.end();
 
-    Object result = getUserByName(username_);
+    Object result = context.call( ()-> getUserByName(username_));
     context.setResult(result, 200);
 
 }
@@ -413,11 +407,9 @@ User body_ = context.body(User.class);
     //  VALIDATORS 
 
     context.begin("updateUser");
-    context.require(username_,"username");
-    context.require(body_,"body");
     context.end();
 
-    updateUser(username_, body_);
+    context.call( () -> { updateUser(username_, body_); return null; });
     context.setResult(null, 200);
 
 }
@@ -431,10 +423,9 @@ User body_ = context.body(User.class);
     //  VALIDATORS 
 
     context.begin("createUser");
-    context.require(body_,"body");
     context.end();
 
-    createUser(body_);
+    context.call( () -> { createUser(body_); return null; });
     context.setResult(null, 200);
 
 }
@@ -448,15 +439,12 @@ List<User> body_ = context.listBody(User.class);
     //  VALIDATORS 
 
     context.begin("createUsersWithListInput");
-    context.require(body_,"body");
     context.end();
 
-    createUsersWithListInput(body_);
+    context.call( () -> { createUsersWithListInput(body_); return null; });
     context.setResult(null, 200);
 
 }
 
 }
 
-
-// aQute OpenAPI generator version 1.0.0.201704281403

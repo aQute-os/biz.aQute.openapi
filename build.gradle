@@ -1,1 +1,39 @@
-// Available to customize the build
+buildscript {
+	repositories { mavenCentral() }
+	dependencies { classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:${bnd_version}" }
+}
+
+allprojects {
+
+	if ( it.hasProperty('bnd') ) {
+	
+		def ps = bnd.project.getProperty("-openapi")
+		
+		if ( ps != null) {
+		
+			task openapi() {
+			
+				def fs = new aQute.bnd.header.Parameters( ps )
+
+				inputs.files( files( fs.keySet() ) )
+				outputs.dir(file( 'gen-src'))
+
+				doLast {
+					def jar = bnd.project.workspace.getProject("biz.aQute.openapi.cli").buildFiles[0].getAbsolutePath();
+					def cmdLine = "java -jar $jar -et generate -t gen-src bnd.bnd";
+
+					def process = cmdLine.execute( null, projectDir );
+					process.waitFor();
+					println process.text
+					
+					if ( process.exitValue() != 0 ) {
+						throw new GradleException('Failed to run openapi.cli ' + cmdLine)
+					}
+				}
+			}
+			openapi.	dependsOn(project(':biz.aQute.openapi.cli').jar)
+			compileJava.dependsOn(openapi)
+		}
+	}
+}
+

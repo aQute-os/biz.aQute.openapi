@@ -1,5 +1,6 @@
 Bundle-Description: \
 	Command line program for the Open API generator
+
 Conditional-Package: \
 	aQute.lib*, \
 	aQute.openapi.*,\
@@ -8,15 +9,19 @@ Conditional-Package: \
 
 Private-Package: \
 	aQute.openapi.cli.*,\
+	org.osgi.annotation.versioning,\
+	aQute.bnd.version,\
+	aQute.bnd.header,\
 	aQute.openapi.annotations.*,\
 	aQute.openapi.generator.*,\
 	aQute.openapi.v2.api.*,\
-	aQute.json.util.*,\
 	aQute.service.reporter.*,\
 	org.slf4j.*,\
 	aQute.bnd.annotation.headers;-split-package:=merge-first,\
 	org.osgi.util.function;-split-package:=merge-first,\
-	org.osgi.dto
+	org.osgi.dto,\
+	aQute.json.codec,\
+	aQute.json.naming
 
 Main-Class: aQute.openapi.cli.OpenAPICLI
 JPM-Command: openapi
@@ -25,4 +30,12 @@ JPM-Command: openapi
 	osgi.enroute.base.api,\
 	biz.aQute.bndlib;packages=*,\
 	biz.aQute.openapi.generator,\
-	biz.aQute.json.util
+	biz.aQute.json.util, \
+	org.apache.johnzon.core, \
+	org.apache.johnzon.jsonb, \
+	org.apache.johnzon:jsonb-api
+	
+	
+Import-Package: \
+	aQute.bnd.osgi;resolution:=optional,\
+	*

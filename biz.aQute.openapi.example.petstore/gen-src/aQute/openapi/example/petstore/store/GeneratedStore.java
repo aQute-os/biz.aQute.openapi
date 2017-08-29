@@ -3,7 +3,6 @@ package aQute.openapi.example.petstore.store;
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
-
 import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -38,7 +37,7 @@ public static final String BASE_PATH = "/v2";
  * 
  * 
  * 
- * @param body – order placed for purchasing the pet (body)
+ * @param body – order placed for purchasing the pet (body) collectionFormat=%scsv
  * 
    * @returns 200 / successful operation
    * @returns 400 / Invalid Order
@@ -58,7 +57,7 @@ protected abstract Order placeOrder(Order body) throws Exception, OpenAPIBase.Ba
  * 
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generated exceptions
  * 
- * @param orderId – ID of pet that needs to be fetched (path)
+ * @param orderId – ID of pet that needs to be fetched (path) collectionFormat=%scsv
  * 
    * @returns 200 / successful operation
    * @returns 400 / Invalid ID supplied
@@ -86,7 +85,7 @@ protected abstract Order getOrderById(long orderId) throws Exception, OpenAPIBas
  * 
  */
 
-protected abstract Anonymous_1000 getInventory() throws Exception;
+protected abstract Type1000 getInventory() throws Exception;
 
 /**
  * 
@@ -96,7 +95,7 @@ protected abstract Anonymous_1000 getInventory() throws Exception;
  * 
  * For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors
  * 
- * @param orderId – ID of the order that needs to be deleted (path)
+ * @param orderId – ID of the order that needs to be deleted (path) collectionFormat=%scsv
  * 
    * @throws Response BadRequestResponse / Invalid ID supplied
    * @throws Response 404 / Order not found
@@ -107,6 +106,17 @@ protected abstract Anonymous_1000 getInventory() throws Exception;
  */
 
 protected abstract void deleteOrder(long orderId) throws Exception, OpenAPIBase.BadRequestResponse;
+
+/**
+ * 
+ * Type1000
+ * 
+ */
+
+public static class Type1000 extends OpenAPIBase.DTO {
+
+
+}
 
 /**
  * 
@@ -123,6 +133,13 @@ public static class Order extends OpenAPIBase.DTO {
     public Optional<Boolean> complete = Optional.empty();
     public Optional<StatusEnum> status = Optional.empty();
 
+    public void validate(OpenAPIContext context, String name) {
+       context.begin(name);
+       if  (this.quantity.isPresent() ) {
+    context.validate(this.quantity.get() <= 23, this.quantity.get(), "this.quantity.get()", "this.quantity.get() <= 23");
+       }
+     context.end();
+    }
     public Order petId(Long petId){ this.petId=Optional.ofNullable(petId); return this; }
     public Optional<Long> petId(){ return this.petId; }
 
@@ -163,24 +180,13 @@ public static class Order extends OpenAPIBase.DTO {
     }
   }
 
-/**
- * 
- * Anonymous_1000
- * 
- */
-
-public static class Anonymous_1000 extends OpenAPIBase.DTO {
-
-
-}
-
   /*****************************************************************/
 
   public GeneratedStore() {
-    super(BASE_PATH,
+    super(BASE_PATH,aQute.openapi.example.petstore.GeneratedBase.class,
          "placeOrder           POST   /store/order  PAYLOAD Order  RETURN Order",
          "getOrderById         GET    /store/order/{orderId}  RETURN Order",
-         "getInventory         GET    /store/inventory  RETURN Anonymous_1000",
+         "getInventory         GET    /store/inventory  RETURN Type1000",
          "deleteOrder          DELETE /store/order/{orderId}");
   }
 
@@ -238,10 +244,12 @@ Order body_ = context.body(Order.class);
     //  VALIDATORS 
 
     context.begin("placeOrder");
-    context.require(body_,"body");
+       if  ( context.require(body_, "body_") ) {
+       body_.validate(context, "body_");
+       }
     context.end();
 
-    Object result = placeOrder(body_);
+    Object result = context.call( ()-> placeOrder(body_));
     context.setResult(result, 200);
 
 }
@@ -257,10 +265,9 @@ Long orderId_ = context.toLong(context.path("orderId"));
     context.begin("getOrderById");
     context.validate(orderId_ >= 1, orderId_, "orderId_", "orderId_ >= 1");
     context.validate(orderId_ <= 5, orderId_, "orderId_", "orderId_ <= 5");
-    context.require(orderId_,"orderId");
     context.end();
 
-    Object result = getOrderById(orderId_);
+    Object result = context.call( ()-> getOrderById(orderId_));
     context.setResult(result, 200);
 
 }
@@ -268,10 +275,9 @@ Long orderId_ = context.toLong(context.path("orderId"));
 private void getInventory_get_(OpenAPIContext context) throws Exception{
 
     context.setOperation("getInventory");
-    context.verify(aQute.openapi.example.petstore.GeneratedBase.api_key, context.header("api_key"));
+    context.verify(aQute.openapi.example.petstore.GeneratedBase.api_key).verify();
 
-
-    Object result = getInventory();
+    Object result = context.call( ()-> getInventory());
     context.setResult(result, 200);
 
 }
@@ -286,15 +292,12 @@ Long orderId_ = context.toLong(context.path("orderId"));
 
     context.begin("deleteOrder");
     context.validate(orderId_ >= 1, orderId_, "orderId_", "orderId_ >= 1");
-    context.require(orderId_,"orderId");
     context.end();
 
-    deleteOrder(orderId_);
+    context.call( () -> { deleteOrder(orderId_); return null; });
     context.setResult(null, 200);
 
 }
 
 }
 
-
-// aQute OpenAPI generator version 1.0.0.201704281403

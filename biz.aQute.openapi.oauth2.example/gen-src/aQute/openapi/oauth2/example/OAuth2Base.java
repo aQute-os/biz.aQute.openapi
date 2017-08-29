@@ -29,7 +29,7 @@ public static final String BASE_PATH = "/openapi/security/google";
  * 
  * GET /authenticated/{action} = authenticated
  * 
- * @param action –  (path)
+ * @param action –  (path) collectionFormat=%scsv
  * 
    * @returns 200 / null
  * 200
@@ -42,7 +42,7 @@ protected abstract boolean authenticated(String action) throws Exception;
  * 
  * GET /unauthenticated/{action} = unauthenticated
  * 
- * @param action –  (path)
+ * @param action –  (path) collectionFormat=%scsv
  * 
    * @returns 200 / null
  * 200
@@ -148,5 +148,3 @@ String action_ = context.toString(context.path("action"));
 
 }
 
-
-// aQute OpenAPI generator version 1.0.0.201707241329

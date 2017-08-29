@@ -14,3 +14,11 @@ Private-Package: aQute.openapi.basicauth.example
 
 # needed to tell bnd that we have generated sources
 src = src, gen-src
+
+-openapi: \
+	openapi.json; \
+		tags					= "*"; \
+		typePrefix			= "BasicAuth"; \
+		baseName				= "OpenAPIBase"; \
+		packagePrefix		= "aQute.openapi.basicauth.example"
+	

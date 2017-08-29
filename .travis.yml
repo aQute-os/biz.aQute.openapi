@@ -1,17 +1,9 @@
-
 sudo: false
-
 language: java
-
 jdk:
-  - oraclejdk8
-
-install: ./gradlew --version
-
-script: ./gradlew --continue
-
+- oraclejdk8
+install: "./gradlew --version"
 script: ./gradlew --no-daemon -DGRADLE_OPTS="-Xms128m" --stacktrace build -i
-
 after_success:
 - git status
 - echo $REPOSITORY_USERNAME
@@ -19,10 +11,9 @@ after_success:
 - echo $TRAVIS_BRANCH
 - if [ master == $TRAVIS_BRANCH -a $TRAVIS_PULL_REQUEST == false -a  ${REPOSITORY_USERNAME:=X}
   != X ]; then ./gradlew -DGRADLE_OPTS="-Xms128m" release -i; fi
-
 cache:
   directories:
   - "$HOME/.gradle"
-
 env:
-  secure: "ZR4xPCA6LHaxdWm8qABCRnUuUTrUo2QCZOqg40RzeaPQFakgwLcHyFJvCKiER/HQHGYSPCUqp1YfgfYMPwOgchzSiWwwIdlRyPhHO4WwpjHEbaeMkViCSBO2ntmVTXESTk6dlw21YgeRCfFmCymRTqTa3UDgJvLXnmeObiBVyhouxRCkrpsta3G39cNc1xokMmaUZTb+aRZJlDRTQS8y7fYJMOY7iSEnYDZ5A85r6xoWGFqOaODdHN2I/Cl/4WYhpsC6cv6iPv840hiNz4I0zRWn5L/R6o2WIMxOhd+1257vVV7al816mqIQ6/aXIACtN8QoX5he4R3qYhDzDSQYWWce95vl+hxCc4Np0S5Dt6aUdJooR5lWjDvJz2BLsGuy3L0I5QT7idIdCp4h9dVKjVPjgM9cf3ZUBAozNcERfz2IsEXt1EH5DByBXIvHb2acqzVRRpoLox4aeteX2BAZCXPTJ1evSI7rIj7tQxMKyH/I+fxXy3kJViinYIcfYpZckMbBkcnodUv6XonBktJABVzCWwPyZY8qBClrP6IbJM5LKvCPjPUfW5O11F0ZvL5EtRhHYTcS/uSN+2RyvKxdbI21lKBFD9eSBYqRWxLpCX8CwR3wl3c0QiPh/yu761XHQW1eCjEZjGQmvT4Em3ALams1wBTDCgFHRPt2uWJVqZc="
+  global:
+    secure: yAbdtQwWSzJe6pNG5LI+WFuT7XsxpTo+dLVQgc3/Kr/K3AR4zX3CbH2ETO6/VVrFuHsmZR/0ynsH+5Egt/pHyAaw/D1rTmXKkTXrDpVngVJJudAYpOfY9vqvpVg/28XsCbxz8AV7jvnf5NXP0zHqgwKuJYWr1qN5dZNzRTJri026afg7OvyEAF7pcTbQGygbnJklrBupIgibFLT0D+amwXE2BqsklwqAp4+rAlMQF/nDn9R+joHG4rAV83R4ITJ3MQgB5TiwdiKU+AIqiQuS8smSm490E6SYhcsscfBjWYDFN75OZLM6UE8oN/iAEuHJGrKBqocCX+Og1wurrrGwWG48fEfrBTavdh+3NO8nhn4bj8iaD4dUu00a3W24f3au3mxuHKN6iOG4TcdesaYH7MmWeXm1GTHI7LWpT3UoHCeYNMiHNi9vjAMBBLKWX/yE0pUOjD5tFjGVNzVmSG3GPeH/3PMn0cE3THIaKL10KxtPoUSjY2pg6fTQbuNTzBkER4jMRIOiiJsdWlKkltpr8t6q2WEmBYb8L8P0BKmDERMkrCip5V1aw3i50q+pDAEVGtNpD+u/64MplE3YZYV/5O1M207ng4lHm+NYi5NZS8vTrArEel9gCY4zkytzYkdneaYv+fsfPmfA7xUonDbyHKdBaHbLimfHX6Vz6AvUEaI=

@@ -113,8 +113,9 @@ public class OpenAPIGenerator extends Env {
 				if ( parameter.in == In.formData) {
 					// TODO multipart
 					if (operation.consumes == null
-							|| !operation.consumes.contains(WWWUtils.APPLICATION_X_WWW_FORM_URLENCODED)) {
-						error("%s : formData can only occur in \"application/x-www-form-urlencoded\" typed content, consumes is %s",
+							|| !(operation.consumes.contains(WWWUtils.APPLICATION_X_WWW_FORM_URLENCODED)
+									|| operation.consumes.contains(WWWUtils.MULTIPART_FORM_DATA))) {
+						error("%s : formData can only occur in \"application/x-www-form-urlencoded\" or \"multipart/form-data\" typed content, consumes is %s",
 								operation.operationId, operation.consumes);
 					}
 				}

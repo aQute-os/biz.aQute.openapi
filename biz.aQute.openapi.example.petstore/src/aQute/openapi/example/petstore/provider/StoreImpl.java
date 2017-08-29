@@ -26,15 +26,15 @@ public class StoreImpl extends GeneratedStore {
 	}
 
 	@Override
-	protected Anonymous_1000 getInventory() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	protected void deleteOrder(long orderId) throws Exception, BadRequestResponse {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	protected Type1000 getInventory() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -7,9 +7,13 @@ import java.util.Arrays;
 import java.util.Formatter;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import aQute.json.codec.JSONCodec;
+import aQute.json.codec.TypeReference;
 import aQute.lib.collections.ExtList;
 import aQute.lib.env.Env;
 import aQute.lib.getopt.Arguments;
@@ -23,18 +27,16 @@ import aQute.openapi.generator.Configuration;
 import aQute.openapi.generator.OpenAPIGenerator;
 import aQute.openapi.v2.api.OperationObject;
 
-/**
- * Hello world!
- */
 public class OpenAPICLI extends Env {
+	Logger	logger	= LoggerFactory.getLogger(OpenAPICLI.class);
 	boolean exceptions;
+
+	Appendable	out		= System.out;
 
 	public static void main(String[] args) {
 		OpenAPICLI cli = new OpenAPICLI();
 		cli.start(args);
 	}
-
-	private Appendable out = System.out;
 
 	public void start(String args[]) {
 		CommandLine cl = new CommandLine(this);
@@ -47,7 +49,7 @@ public class OpenAPICLI extends Env {
 			if (exceptions)
 				e.printStackTrace();
 		}
-		this.report(out);
+		this.report(System.out);
 		if (isOk()) {
 			return;
 		} else
@@ -64,17 +66,23 @@ public class OpenAPICLI extends Env {
 		@Description("Set log level")
 		String logLevel();
 
+		@Description("Base dir")
+		String base();
 	}
 
 	@Description("Options for generating source files from a OpenAPI (formerly Swagger) input definitions")
 	public void _openapi(BasicOptions options) throws Exception {
 		exceptions = options.exceptions();
+
 		if (options.logLevel() != null) {
 			System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", options.logLevel());
 		} else {
 			System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "WARN");
 		}
-		setTrace(options.trace());
+
+		if (options.base() != null) {
+			this.setBase(IO.getFile(options.base()));
+		}
 
 		CommandLine handler = options._command();
 		List<String> arguments = options._arguments();
@@ -93,6 +101,7 @@ public class OpenAPICLI extends Env {
 				if (help != null) {
 					out.append(help);
 				}
+				report(System.out);
 			}
 		} catch (Exception e) {
 			if (exceptions)
@@ -111,92 +120,85 @@ public class OpenAPICLI extends Env {
 		return;
 	}
 
-	@Description("Options for generating source files from a OpenAPI (formerly Swagger) input definitions")
+	@Description("Options for generating source files from a OpenAPI configuration")
 	@Arguments(arg = "<source>.json...")
 	interface GenerateOptions extends Options {
-		@Description("The prefix for all packages, for example `com.example.openapi`. The next directory is the tag turned into a package name, and then the type in there is also the tag.")
-		String packagePrefix();
-
-		@Description("The root directory for the packages/types relative to the working directory. For example 'target/generated-sources'")
-		String dir(String deflt);
-
-		@Description("The default directory for the input files. For example 'openapi'")
-		String from(String deflt);
-
-		@Description("The class name used for any entries not tagged")
-		String baseName();
-
-		@Description("The prefix for the generated classes")
-		String classPrefix();
-
-		@Description("A glob expression on tags followed by a replacement when matched. For example: `foo*:foo`. "
-				+ "This can be used to merge operations from list with different tags. If the value is '*' then the "
-				+ "input is matched, if the value is '!' then the input is ignored. If only the glob is specified it means the value defaults to '*'")
-		String[] mapTags();
-
-		@Description("Add imports to the source files")
-		String[] importsExtra();
-
+		String to();
 	}
 
 	@Description("Options for generating source files from a OpenAPI (formerly Swagger) input definitions")
 	public void _generate(GenerateOptions options) throws Exception {
 
-		if (options._arguments().isEmpty()) {
-
-		}
-		Configuration c = new Configuration();
-		c.packagePrefix = set(c.packagePrefix, options::packagePrefix);
-		c.baseName = set(c.baseName, options::baseName);
-		c.typePrefix = set(c.typePrefix, options::classPrefix);
-
-		String[] importsExtra = options.importsExtra();
-		doImportsExtra(c, importsExtra);
-
-		c.tags = options.mapTags();
-
-		File dir = IO.getFile(options.dir("."));
-
-		dir.mkdirs();
-		if (!dir.isDirectory()) {
-			error("Cannot create target directory %s", dir);
+		List<Configuration> configurations = new ArrayList<>();
+		List<String> arguments = options._arguments();
+		if (arguments.isEmpty()) {
+			logger.info("using default bnd.bnd");
+			arguments.add("bnd.bnd");
 		}
 
-		File from = IO.getFile(options.from("."));
-		if (!from.isDirectory()) {
-			error("No such source directory %s", from);
+		File to = options.to() == null ? getFile("gen-src") : getFile(options.to());
+		to.mkdirs();
+		if (!to.isDirectory()) {
+			error("Cannot create target directory %s", to);
 		}
 
 		if (!isOk())
 			return;
 
-		for (String fileString : options._arguments()) {
-			File file = IO.getFile(from, fileString);
-			if (!file.isFile()) {
-				error("No such input file: %s", file);
-			} else {
+		for (String path : arguments) {
 
-				trace("File %s", fileString);
-				OpenAPIGenerator gen = new OpenAPIGenerator(file, c);
-				gen.generate(dir);
+
+			File f = IO.getFile(path);
+			logger.info("using path {}", f);
+
+			if (!f.isFile()) {
+				error("Not a configuration file %s", f.getAbsoluteFile());
+				continue;
+			}
+
+			if (f.getName().endsWith(".bnd")) {
+				logger.info("bnd file {}", f);
+				Env env = new Env();
+				env.setProperties(f);
+				List<Configuration> from = Configuration.from(env);
+				configurations.addAll(from);
+			} else if (f.getName().endsWith(".json")) {
+				logger.info("json file {}", f);
+				JSONCodec codec = new JSONCodec();
+				String json = IO.collect(f).trim();
+
+				if ( json.startsWith("[")) {
+					List<Configuration> cs = codec.dec().from(json).get(
+							new TypeReference<List<Configuration>>() {});
+					configurations.addAll(cs);
+				} else {
+					Configuration c = codec.dec().from(json).get(Configuration.class);
+					configurations.add(c);
+				}
 			}
 		}
-	}
 
-	private void doImportsExtra(Configuration c, String[] importsExtra) {
-		if (importsExtra != null) {
-			for (String s : importsExtra) {
-				c.importsExtra.add(s.trim());
+		if (!isOk())
+			return;
+
+		for (Configuration c : configurations) {
+			for (String p : c.openapiFile.split(",")) {
+
+				File openAPIFile = getFile(p);
+				logger.info("openapi file {}", openAPIFile);
+
+				if (!openAPIFile.isFile()) {
+					error("Not an OpenAPI input file %s", openAPIFile.getAbsoluteFile());
+					continue;
+				}
+
+				logger.info("generating ");
+				OpenAPIGenerator gen = new OpenAPIGenerator(openAPIFile, c);
+				gen.generate(to);
+
+				getInfo(gen, p);
 			}
 		}
-	}
-
-	private <T> T set(T deflt, Callable<T> callable) throws Exception {
-		T result = callable.call();
-		if (result == null)
-			return deflt;
-
-		return result;
 	}
 
 	@Description("Print version")

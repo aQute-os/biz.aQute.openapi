@@ -119,6 +119,11 @@ public class Decoder implements Closeable {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	public <T> T get(TypeReference<T> type) throws Exception {
+		return (T) decode(type.getType());
+	}
+
 	public Object get() throws Exception {
 		try {
 			return decode(null);
@@ -223,10 +228,9 @@ public class Decoder implements Closeable {
 		return this;
 	}
 
-
 	public void log(String format, Object... args) {
 		if (isLog()) {
-			JSONCodec.log(format,args);
+			JSONCodec.log(format, args);
 		}
 	}
 }

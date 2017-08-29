@@ -31,7 +31,7 @@ Bundle-Version:         ${base.version}.${tstamp}
 -plugin.4.Central:  \
 	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
 		snapshotUrls=https://oss.sonatype.org/content/groups/osgi; \
-		releaseUrls=https://repo1.maven.org/maven2/; \
+		releaseUrls='https://repo1.maven.org/maven2/,https://repo.gradle.org/gradle/libs-releases-local/'; \
 		pom=${build}/central.xml; \
 		name=Central; \
 		location=${build}/cache/enroute-central.xml

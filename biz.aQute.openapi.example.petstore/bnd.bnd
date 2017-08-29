@@ -49,3 +49,12 @@ src=gen-src,src
 	Local,\
 	Distro,\
 	Central
+	
+	
+-openapi: \
+	petstore.json; \
+		tags				= "*"; \
+		typePrefix		= "Generated"; \
+		baseName			= "OpenAPIBase"; \
+		packagePrefix	= "aQute.openapi.example.petstore"
+	

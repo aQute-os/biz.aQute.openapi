@@ -3,7 +3,6 @@ package aQute.openapi.example.petstore;
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
-
 import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -25,14 +24,14 @@ public static final String BASE_PATH = "/v2";
 
 
 
-     public static OpenAPISecurityDefinition petstore_auth =  OpenAPISecurityDefinition.implicit("petstore_auth", BASE_PATH, "http://petstore.swagger.io/api/oauth/dialog", null, "write:pets modify pets in your account", "read:pets read your pets");
+     public static OpenAPISecurityDefinition petstore_auth =  OpenAPISecurityDefinition.implicit("petstore_auth", BASE_PATH, "http://petstore.swagger.io/api/oauth/dialog", null ,"write:pets","read:pets");
 
 
      public static OpenAPISecurityDefinition api_key =  OpenAPISecurityDefinition.apiKey("api_key", BASE_PATH, "header", "api_key");
 
 
   public GeneratedBase() {
-    super(BASE_PATH);
+    super(BASE_PATH,aQute.openapi.example.petstore.GeneratedBase.class);
   }
   public static java.time.Instant toDateTime(String s) {
     return java.time.Instant.parse(s);
@@ -55,5 +54,3 @@ public static final String BASE_PATH = "/v2";
 
 }
 
-
-// aQute OpenAPI generator version 1.0.0.201704281403

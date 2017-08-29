@@ -27,7 +27,7 @@ public class OpenAPITask extends DefaultTask {
 
 	@TaskAction
 	void action() throws Exception {
-		System.out.println("Version          " + 1.1);
+		System.out.println("Version          " + 1.2);
 
 		System.out.println("Input file       " + input);
 		System.out.println("Output file      " + output);

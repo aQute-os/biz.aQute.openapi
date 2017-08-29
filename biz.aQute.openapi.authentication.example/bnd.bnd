@@ -19,10 +19,17 @@ EnRoute-Application: 	biz.aQute.openapi.authentication.example
 -buildpath: \
 	osgi.enroute.base.api;version=2.0, \
 	biz.aQute.openapi.provider, \
-	biz.aQute.openapi.gradle.plugin
+	biz.aQute.openapi.cli
 
 
 -testpath: \
 	osgi.enroute.junit.wrapper;version=4.12
 
 src=src,gen-src
+
+-openapi	= \
+	authentication.json; \
+		tags="*"; \
+		baseName	 = "OpenAPIBase"; \
+		typePrefix="Authentication"; \
+		packagePrefix="aQute.openapi.authentication.generated"
