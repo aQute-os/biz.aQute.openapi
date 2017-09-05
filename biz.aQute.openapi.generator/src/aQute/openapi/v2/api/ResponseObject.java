@@ -3,8 +3,6 @@ package aQute.openapi.v2.api;
 import java.util.HashMap;
 import java.util.Map;
 
-import aQute.openapi.annotations.Required;
-
 /**
  * Describes a single response from an API Operation. A container for the
  * expected responses of an operation. The container maps a HTTP response code
@@ -24,7 +22,6 @@ public class ResponseObject extends BaseOpenAPIObject {
 	 * Required. A short description of the response. GFM syntax can be used for
 	 * rich text representation.
 	 */
-	@Required
 	public String					description;
 	/**
 	 * A definition of the response structure. It can be a primitive, an array

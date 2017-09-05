@@ -1,7 +1,10 @@
 {
     "swagger": "2.0",
     "basePath": "/enums",
-    "info": {},
+    "info": {
+    		"title": "Enums",
+    		"version": "1.0"
+    },
     "paths": {
         "/enum": {
             "post": {
@@ -16,7 +19,11 @@
                             "$ref": "#/definitions/AllEnumVariations"
                         }
                     }
-                ]
+                ],
+                 "responses": {
+          			"200": {
+     	     		}
+          		}
             }
         }
     },

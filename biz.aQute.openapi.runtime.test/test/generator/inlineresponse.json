@@ -1,0 +1,32 @@
+{
+	"swagger": "2.0",
+	"info":
+	{
+		"version": "v1",
+		"title": "inline"
+	},
+	"basePath": "/v1",
+	"paths":
+	{
+		"/inline":
+		{
+			"get":
+			{
+				"operationId": "inline",
+                 "responses": {
+          			"200": {
+          				"schema": {
+          					"type":"object",
+          					"properties": {
+								"p":
+								{
+									"type": "string"
+								}          					
+          					}
+          				}
+     	     		}
+          		}
+			}
+		}
+	}
+}

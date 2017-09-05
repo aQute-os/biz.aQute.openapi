@@ -37,6 +37,9 @@ public static final String BASE_PATH = "/optional/{path}";
  * 
  * @param formData –  (formData) collectionFormat=%scsv
  * 
+   * @returns 200 / null
+ * 200
+ * 
  */
 
 protected abstract void optionalValidation(Optional<String> inoptional, Optional<Body> inbody, Optional<String> inheader, Optional<String> inpath, Optional<String> formData) throws Exception;

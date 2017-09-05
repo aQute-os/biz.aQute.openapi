@@ -1,7 +1,10 @@
 {
     "swagger": "2.0",
+	"info": {
+    		"title": "NakedEnum",
+    		"version": "1.0"
+    },
     "basePath": "/enums",
-    "info": {},
     "paths": {
         "/casing": {
             "post": {

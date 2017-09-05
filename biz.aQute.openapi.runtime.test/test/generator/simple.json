@@ -12,7 +12,11 @@
 		{
 			"get":
 			{
-				"operationId": "simple"
+				"operationId": "simple",
+                 "responses": {
+          			"200": {
+     	     		}
+          		}
 			}
 		}
 	}

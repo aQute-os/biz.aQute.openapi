@@ -857,13 +857,15 @@ public class JavaGenerator extends BaseSourceGenerator {
 		}
 		mb.throws_("Exception");
 
-		for (Entry<String,ResponseObject> r : operation.responses.entrySet()) {
-			if (r.getKey().equals("200"))
-				continue;
+		if (operation.responses != null) {
+			for (Entry<String,ResponseObject> r : operation.responses.entrySet()) {
+				if (r.getKey().equals("200"))
+					continue;
 
-			String exception = SourceMethod.getResponses().get(r.getKey());
-			if (exception != null) {
-				mb.throws_("OpenAPIBase." + exception);
+				String exception = SourceMethod.getResponses().get(r.getKey());
+				if (exception != null) {
+					mb.throws_("OpenAPIBase." + exception);
+				}
 			}
 		}
 		mb.noBody();
@@ -896,34 +898,36 @@ public class JavaGenerator extends BaseSourceGenerator {
 			}
 
 			boolean hadOk = false;
-			for (Entry<String,ResponseObject> r : operation.responses.entrySet()) {
-				String responseCode = r.getKey();
-				ResponseObject responseObject = r.getValue();
+			if (operation.responses != null) {
+				for (Entry<String,ResponseObject> r : operation.responses.entrySet()) {
+					String responseCode = r.getKey();
+					ResponseObject responseObject = r.getValue();
 
-				boolean isOk = responseCode.equals("200") || responseCode.equals("201") || responseCode.equals("203");
-				if (hadOk || isOk) {
-					hadOk = true;
-					comment.retrn(responseCode, responseObject.description);
-					continue;
+					boolean isOk = responseCode.equals("200") || responseCode.equals("201")
+							|| responseCode.equals("203");
+					if (hadOk || isOk) {
+						hadOk = true;
+						comment.retrn(responseCode, responseObject.description);
+						continue;
+					}
+
+					String exception = SourceMethod.getResponses().get(r.getKey());
+					if (exception != null) {
+						comment.throws_(exception, responseObject.description);
+					} else {
+						comment.throws_(responseCode, responseObject.description);
+					}
 				}
-
-				String exception = SourceMethod.getResponses().get(r.getKey());
-				if (exception != null) {
-					comment.throws_(exception, responseObject.description);
-				} else {
-					comment.throws_(responseCode, responseObject.description);
-				}
-			}
-
-			for (Entry<String,ResponseObject> r : operation.responses.entrySet()) {
-				String resultCode = r.getKey();
-				comment.para(resultCode);
-				for (Map.Entry<String,HeaderObject> e : r.getValue().headers.entrySet()) {
-					HeaderObject headerObject = e.getValue();
-					SourceType type = m.getParent().getGen().getSourceType(headerObject);
-					comment.para(e.getKey() + " - " + type.reference());
-					if (headerObject.description != null) {
-						comment.para(headerObject.description);
+				for (Entry<String,ResponseObject> r : operation.responses.entrySet()) {
+					String resultCode = r.getKey();
+					comment.para(resultCode);
+					for (Map.Entry<String,HeaderObject> e : r.getValue().headers.entrySet()) {
+						HeaderObject headerObject = e.getValue();
+						SourceType type = m.getParent().getGen().getSourceType(headerObject);
+						comment.para(e.getKey() + " - " + type.reference());
+						if (headerObject.description != null) {
+							comment.para(headerObject.description);
+						}
 					}
 				}
 			}

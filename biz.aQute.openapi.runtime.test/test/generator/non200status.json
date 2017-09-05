@@ -1,7 +1,11 @@
 {
 	"swagger": "2.0",
 	"basePath": "/non200status",
-	"paths": {
+	"info": {
+    		"title": "Optional",
+    		"version": "1.0"
+    },
+    	"paths": {
 		"/non200status": {
 			"get": {
 				"operationId": "non200status",

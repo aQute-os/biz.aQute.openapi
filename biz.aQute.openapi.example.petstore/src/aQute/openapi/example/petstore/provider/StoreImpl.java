@@ -32,9 +32,10 @@ public class StoreImpl extends GeneratedStore {
 	}
 
 	@Override
-	protected Type1000 getInventory() throws Exception {
+	protected GetInventoryResponse getInventory() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }

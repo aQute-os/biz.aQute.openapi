@@ -29,14 +29,16 @@ public class SourceFile {
 
 		SourceMethod m = getSourceMethod(path, method, operation);
 
-		for (Map.Entry<String,ResponseObject> e : operation.responses.entrySet()) {
+		if (operation.responses != null) {
+			for (Map.Entry<String,ResponseObject> e : operation.responses.entrySet()) {
 
-			ResponseObject responseObject = getResponseObject(path, m, e);
+				ResponseObject responseObject = getResponseObject(path, m, e);
 
-			addType(getGen().getSourceType(responseObject.schema));
+				addType(getGen().getSourceType(responseObject.schema));
 
-			for (HeaderObject header : responseObject.headers.values()) {
-				addType(getGen().getSourceType(header));
+				for (HeaderObject header : responseObject.headers.values()) {
+					addType(getGen().getSourceType(header));
+				}
 			}
 		}
 
@@ -62,7 +64,7 @@ public class SourceFile {
 		ResponseObject responseObject = e.getValue();
 		String responseCode = e.getKey();
 		if (responseCode.equals("200")) {
-			m.setReturnType(getGen().getSourceType(responseObject.schema));
+			m.setReturnType(getGen().getSourceType(responseObject.schema, m.operation.operationId + "Response"));
 			if (m.getReturnType() == null) {
 				getGen().warning("no return type for %s", path);
 			}

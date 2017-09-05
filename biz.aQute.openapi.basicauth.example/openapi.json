@@ -1,5 +1,9 @@
  {
 	"swagger": "2.0",
+	"info":{
+		"title": "Basic Authentication Example",
+		"version":"1.0"
+	},
 	"securityDefinitions": {
 		"basic": {
 			"type": "basic"

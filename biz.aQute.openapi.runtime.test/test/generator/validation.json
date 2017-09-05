@@ -15,7 +15,6 @@
         "tags": [
           "DeviceManagementModbusApi"
         ],
-        "summary": "Return a list of mapping file names.",
         "operationId": "GetModbusMappingFiles",
         "consumes": [],
         "produces": [
@@ -180,6 +179,7 @@
       "required": [
         "name"
       ],
+      "type":"object",
       "properties": {
         "name": {
           "description": "mapping file name (e.g. ModbusMapping.json, ...)",

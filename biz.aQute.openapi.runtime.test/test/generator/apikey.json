@@ -33,7 +33,14 @@
 		{
 			"get":
 			{
-				"operationId": "defaultSecurity"
+				"operationId": "defaultSecurity",
+                 "responses": {
+          			"200": {
+            				"schema": {
+              				"type":"string"
+        		    			}
+     	     		}
+          		}
 			}
 		},
 		"/overrideNoSecurity":
@@ -41,7 +48,14 @@
 			"get":
 			{
 				"operationId": "overrideNoSecurity",
-				"security": []
+				"security": [],
+                 "responses": {
+          			"200": {
+            				"schema": {
+              				"type":"string"
+        		    			}
+     	     		}
+          		}
 			}
 		},
 		"/orSecurity":
@@ -55,7 +69,14 @@
 					}, {
 						"oauth":["a"]
 					}
-				]
+				],
+                 "responses": {
+          			"200": {
+            				"schema": {
+              				"type":"string"
+        		    			}
+     	     		}
+          		}
 			}
 		},
 		"/andSecurity":
@@ -68,7 +89,14 @@
 						"api_key":[],
 						"oauth":["a"]
 					}
-				]
+				],
+                 "responses": {
+          			"200": {
+            				"schema": {
+              				"type":"string"
+        		    			}
+     	     		}
+          		}
 			}
 		},
 		"/orAndSecurity":
@@ -85,7 +113,14 @@
 						"api_key":[],
 						"oauth":["a"]
 					}
-				]
+				],
+                 "responses": {
+          			"200": {
+            				"schema": {
+              				"type":"string"
+        		    			}
+     	     		}
+          		}
 			}
 		}
 	},

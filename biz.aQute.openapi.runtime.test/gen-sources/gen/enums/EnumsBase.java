@@ -29,6 +29,9 @@ public static final String BASE_PATH = "/enums";
  * 
  * @param body – Pet object that needs to be added to the store (body) collectionFormat=%scsv
  * 
+   * @returns 200 / null
+ * 200
+ * 
  */
 
 protected abstract void enum$(AllEnumVariations body) throws Exception;

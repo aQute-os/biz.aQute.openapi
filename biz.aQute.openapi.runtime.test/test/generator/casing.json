@@ -1,11 +1,18 @@
 {
     "swagger": "2.0",
     "basePath": "/enums",
-    "info": {},
+	"info": {
+    		"title": "Casing",
+    		"version": "1.0"
+    },
     "paths": {
         "/casing": {
             "post": {
-                "operationId": "Case"
+                "operationId": "Case",
+                 "responses": {
+          			"200": {
+     	     		}
+          		}
             }
         }
     },

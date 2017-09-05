@@ -85,7 +85,7 @@ protected abstract Order getOrderById(long orderId) throws Exception, OpenAPIBas
  * 
  */
 
-protected abstract Type1000 getInventory() throws Exception;
+protected abstract GetInventoryResponse getInventory() throws Exception;
 
 /**
  * 
@@ -106,17 +106,6 @@ protected abstract Type1000 getInventory() throws Exception;
  */
 
 protected abstract void deleteOrder(long orderId) throws Exception, OpenAPIBase.BadRequestResponse;
-
-/**
- * 
- * Type1000
- * 
- */
-
-public static class Type1000 extends OpenAPIBase.DTO {
-
-
-}
 
 /**
  * 
@@ -180,13 +169,24 @@ public static class Order extends OpenAPIBase.DTO {
     }
   }
 
+/**
+ * 
+ * GetInventoryResponse
+ * 
+ */
+
+public static class GetInventoryResponse extends OpenAPIBase.DTO {
+
+
+}
+
   /*****************************************************************/
 
   public GeneratedStore() {
     super(BASE_PATH,aQute.openapi.example.petstore.GeneratedBase.class,
          "placeOrder           POST   /store/order  PAYLOAD Order  RETURN Order",
          "getOrderById         GET    /store/order/{orderId}  RETURN Order",
-         "getInventory         GET    /store/inventory  RETURN Type1000",
+         "getInventory         GET    /store/inventory  RETURN GetInventoryResponse",
          "deleteOrder          DELETE /store/order/{orderId}");
   }
 

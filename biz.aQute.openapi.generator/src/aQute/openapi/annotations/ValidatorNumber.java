@@ -18,6 +18,6 @@ public @interface ValidatorNumber {
 
 	boolean exclusiveMinimum() default false;
 
-	double multipleOf() default 1;
+	long multipleOf() default 1;
 
 }

@@ -14,7 +14,7 @@ import java.time.LocalDate;
  * 
  * <li>{@link #authenticated() GET /authenticated =  authenticated}
  * 
- * <li>{@link #unauthenticated() GET unauthenticated =  unauthenticated}
+ * <li>{@link #unauthenticated() GET /unauthenticated =  unauthenticated}
  * 
  * </ul>
  * 
@@ -29,13 +29,19 @@ public static final String BASE_PATH = "/oauth2";
  * 
  * GET /authenticated = authenticated
  * 
+   * @returns 200 / null
+ * 200
+ * 
  */
 
 protected abstract void authenticated() throws Exception;
 
 /**
  * 
- * GET unauthenticated = unauthenticated
+ * GET /unauthenticated = unauthenticated
+ * 
+   * @returns 200 / null
+ * 200
  * 
  */
 
@@ -51,7 +57,7 @@ protected abstract void unauthenticated() throws Exception;
   public Oauth2Base() {
     super(BASE_PATH,gen.oauth2.Oauth2Base.class,
          "authenticated        GET    /authenticated",
-         "unauthenticated      GET    unauthenticated");
+         "unauthenticated      GET    /unauthenticated");
   }
   public static java.time.Instant toDateTime(String s) {
     return java.time.Instant.parse(s);
@@ -78,7 +84,7 @@ protected abstract void unauthenticated() throws Exception;
       }
 
       // end authenticated
-    }  else     if( index < segments.length && "nauthenticated".equals(segments[index])) {
+    }  else     if( index < segments.length && "unauthenticated".equals(segments[index])) {
       index++;
       if ( segments.length == index) {
         if ( context.isMethod(OpenAPIBase.Method.GET)) {
@@ -87,7 +93,7 @@ protected abstract void unauthenticated() throws Exception;
         } 
       }
 
-      // end nauthenticated
+      // end unauthenticated
     } 
 
     return false;

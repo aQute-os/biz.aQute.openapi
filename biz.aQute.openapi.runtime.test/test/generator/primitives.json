@@ -2,9 +2,10 @@
 	"swagger": "2.0",
 	"basePath": "/primitives",
 	"info": {
-
-	},
-	"paths": {
+    		"title": "Optional",
+    		"version": "1.0"
+    },
+    	"paths": {
 		"/primitives": {
 			"post": {
 				"operationId": "Primitives",

@@ -1,7 +1,10 @@
 {
     "swagger": "2.0",
     "basePath": "/formdata",
-    "info": {},
+    "info": {
+    		"title": "FormData",
+    		"version": "1.0"
+    },
     "paths": {
         "/test": {
             "post": {

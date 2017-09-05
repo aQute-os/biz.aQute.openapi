@@ -37,6 +37,7 @@ import aQute.openapi.v2.api.ParameterObject;
 import aQute.openapi.v2.api.PathItemObject;
 import aQute.openapi.v2.api.SwaggerObject;
 import aQute.openapi.v2.api.TagObject;
+import aQute.openapi.validator.Validator;
 
 public class OpenAPIGenerator extends Env {
 	private static final String	BASE_SOURCE	= "Base";
@@ -68,6 +69,11 @@ public class OpenAPIGenerator extends Env {
 
 		getOrCreateSourceFile(BASE_SOURCE);
 		fixup(getSwagger());
+
+		Validator v = new Validator(this);
+		v.verify(getSwagger());
+		getInfo(v);
+
 		for (Map.Entry<String,PathItemObject> entry : getSwagger().paths.entrySet()) {
 			pathItem(entry.getKey(), entry.getValue());
 		}
@@ -108,6 +114,10 @@ public class OpenAPIGenerator extends Env {
 		if (operation.security == null)
 			operation.security = swagger.security;
 		
+		if (config.tagsMustBeSet && (operation.tags == null || operation.tags.length == 0)) {
+			warning("%s – No tags set", operation.operationId);
+		}
+
 		if ( operation.parameters != null) {
 			for ( ParameterObject parameter : operation.parameters) {
 				if ( parameter.in == In.formData) {
@@ -306,6 +316,10 @@ public class OpenAPIGenerator extends Env {
 
 	public SourceType getSourceType(ItemsObject schema) {
 		return SourceType.getSourceType(this, schema, null);
+	}
+
+	public SourceType getSourceType(ItemsObject schema, String contextName) {
+		return SourceType.getSourceType(this, schema, contextName);
 	}
 
 	public Object			dtoType;

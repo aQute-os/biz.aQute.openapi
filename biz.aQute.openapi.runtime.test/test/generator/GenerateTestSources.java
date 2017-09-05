@@ -9,6 +9,9 @@ import aQute.openapi.generator.OpenAPIGenerator;
 
 public class GenerateTestSources {
 
+	public static void inline() throws Exception {
+		GenerateTestSources.generate("inlineresponse", "inlineresponse.json", new Configuration());
+	}
 	public static void formdata() throws Exception {
 		GenerateTestSources.generate("formdata", "formdata.json", new Configuration());
 	}
@@ -127,6 +130,7 @@ public class GenerateTestSources {
 			IO.copy(in, tmp);
 			OpenAPIGenerator g = new OpenAPIGenerator(tmp, c);
 			g.generate(output);
+			g.check();
 		} finally {
 			IO.delete(tmp);
 		}
@@ -134,6 +138,7 @@ public class GenerateTestSources {
 
 	public static void main(String args[]) throws Exception {
 		//dummy();
+		inline();
 		parameterSourceTest();
 		formdata();
 		optional();

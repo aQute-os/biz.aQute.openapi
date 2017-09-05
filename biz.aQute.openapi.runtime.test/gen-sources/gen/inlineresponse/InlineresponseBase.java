@@ -1,4 +1,4 @@
-package gen.simple;
+package gen.inlineresponse;
 
 import aQute.openapi.provider.OpenAPIBase;
 import aQute.openapi.provider.OpenAPIContext;
@@ -12,33 +12,48 @@ import java.time.LocalDate;
  * 
  * <ul>
  * 
- * <li>{@link #simple() GET /simple =  simple}
+ * <li>{@link #inline() GET /inline =  inline}
  * 
  * </ul>
  * 
  */
 
-@RequireSimpleBase
-public abstract class SimpleBase extends OpenAPIBase {
+@RequireInlineresponseBase
+public abstract class InlineresponseBase extends OpenAPIBase {
 
 public static final String BASE_PATH = "/v1";
 
 /**
  * 
- * GET /simple = simple
+ * GET /inline = inline
  * 
    * @returns 200 / null
  * 200
  * 
  */
 
-protected abstract void simple() throws Exception;
+protected abstract InlineResponse inline() throws Exception;
+
+/**
+ * 
+ * InlineResponse
+ * 
+ */
+
+public static class InlineResponse extends OpenAPIBase.DTO {
+
+    public Optional<String> p = Optional.empty();
+
+    public InlineResponse p(String p){ this.p=Optional.ofNullable(p); return this; }
+    public Optional<String> p(){ return this.p; }
+
+}
 
   /*****************************************************************/
 
-  public SimpleBase() {
-    super(BASE_PATH,gen.simple.SimpleBase.class,
-         "simple               GET    /simple");
+  public InlineresponseBase() {
+    super(BASE_PATH,gen.inlineresponse.InlineresponseBase.class,
+         "inline               GET    /inline  RETURN InlineResponse");
   }
   public static java.time.Instant toDateTime(String s) {
     return java.time.Instant.parse(s);
@@ -55,27 +70,27 @@ protected abstract void simple() throws Exception;
 
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
 
-    if( index < segments.length && "simple".equals(segments[index])) {
+    if( index < segments.length && "inline".equals(segments[index])) {
       index++;
       if ( segments.length == index) {
         if ( context.isMethod(OpenAPIBase.Method.GET)) {
-          simple_get_(context);
+          inline_get_(context);
           return true;
         } 
       }
 
-      // end simple
+      // end inline
     } 
 
     return false;
   }
 
-private void simple_get_(OpenAPIContext context) throws Exception{
+private void inline_get_(OpenAPIContext context) throws Exception{
 
-    context.setOperation("simple");
+    context.setOperation("inline");
 
-    context.call( () -> { simple(); return null; });
-    context.setResult(null, 200);
+    Object result = context.call( ()-> inline());
+    context.setResult(result, 200);
 
 }
 

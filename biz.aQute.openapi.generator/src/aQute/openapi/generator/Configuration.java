@@ -15,22 +15,23 @@ public class Configuration extends DTO {
 
 	public static final String	OPENAPI			= "-openapi";
 
-	public String		typePrefix		= "Generated";
-	public String		baseName		= "OpenAPIBase";
-	public String		packagePrefix	= "org.example.openapi";
-	public List<String>	importsExtra	= new ArrayList<>();
-	public String		license;
-	public String		dtoType			= "OpenAPIBase.DTO";
-	public String[]		tags;
-	public boolean		privateFields	= false;
-	public boolean		beans			= false;
-	public String		dateFormat;
-	public String		dateTimeFormat;
-	public String		dateTimeClass;
-	public String[]		conversions;
-	public String		openapiFile		= "openapi.json";
-	public boolean		uisupport		= false;
-	public boolean		versionSources	= true;
+	public String				typePrefix		= "Generated";
+	public String				baseName		= "OpenAPIBase";
+	public String				packagePrefix	= "org.example.openapi";
+	public List<String>			importsExtra	= new ArrayList<>();
+	public String				license;
+	public String				dtoType			= "OpenAPIBase.DTO";
+	public String[]				tags;
+	public boolean				privateFields	= false;
+	public boolean				beans			= false;
+	public String				dateFormat;
+	public String				dateTimeFormat;
+	public String				dateTimeClass;
+	public String[]				conversions;
+	public String				openapiFile		= "openapi.json";
+	public boolean				uisupport		= false;
+	public boolean				versionSources	= true;
+	public boolean				tagsMustBeSet	= false;
 
 	public static List<Configuration> from(Env env) {
 		List<Configuration> result = new ArrayList<>();
@@ -71,8 +72,9 @@ public class Configuration extends DTO {
 				c.conversions = split(attrs.get("conversions"));
 			}
 
-			c.uisupport = truthy(attrs.get("privateFields"));
-			c.versionSources = truthy(attrs.get("dateTimeClass"));
+			c.tagsMustBeSet = truthy(attrs.get("tagsMustBeSet"));
+			c.uisupport = truthy(attrs.get("uisupport"));
+			c.versionSources = truthy(attrs.get("versionSources"));
 
 			result.add(c);
 		}

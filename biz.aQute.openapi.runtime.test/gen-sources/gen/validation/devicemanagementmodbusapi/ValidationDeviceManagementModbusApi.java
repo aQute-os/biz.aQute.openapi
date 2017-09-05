@@ -93,8 +93,6 @@ protected abstract ModbusDeviceDataResponseList getModbusDevices() throws Except
  * 
  * GET /devicemanagement/modbus/mappingFiles = GetModbusMappingFiles
  * 
- * Return a list of mapping file names.
- * 
    * @returns 200 / list of mapping file names
    * @returns 500 / Internal Server Error
  * 200

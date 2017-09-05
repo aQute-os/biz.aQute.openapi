@@ -1,7 +1,10 @@
 {
     "swagger": "2.0",
     "basePath": "/nestedobject",
-    "info": {},
+	"info": {
+    		"title": "NestedObject",
+    		"version": "1.0"
+    },
     "paths": {
         "/nested": {
             "post": {

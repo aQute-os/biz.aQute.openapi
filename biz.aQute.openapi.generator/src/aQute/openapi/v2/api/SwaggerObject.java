@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import aQute.openapi.annotations.Required;
+import aQute.openapi.annotations.ValidatorString;
 
 /**
  * Swagger Object This is the root document object for the API specification.It
@@ -21,6 +22,7 @@ public class SwaggerObject extends BaseOpenAPIObject {
 	 * The value MUST be "2.0".
 	 */
 	@Required
+	@ValidatorString(pattern = "2\\.0")
 	public String							swagger		= "2.0.0";
 
 	/**

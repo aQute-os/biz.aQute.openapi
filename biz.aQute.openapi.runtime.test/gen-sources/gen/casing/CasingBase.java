@@ -27,6 +27,9 @@ public static final String BASE_PATH = "/enums";
  * 
  * POST /casing = Case
  * 
+   * @returns 200 / null
+ * 200
+ * 
  */
 
 protected abstract void case$() throws Exception;

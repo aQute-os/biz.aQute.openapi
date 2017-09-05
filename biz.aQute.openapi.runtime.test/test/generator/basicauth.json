@@ -1,6 +1,10 @@
 {
 	"swagger": "2.0",
-	"securityDefinitions": {
+	"info": {
+    		"title": "Optional",
+    		"version": "1.0"
+    },
+    	"securityDefinitions": {
 		"basicauth": {
 		    "type": "basic"
 		}
@@ -12,13 +16,21 @@
 	"paths": {
 		"/authenticated": {
 			"get": {
-				"operationId": "authenticated"
+				"operationId": "authenticated",
+                 "responses": {
+          			"200": {
+     	     		}
+          		}
 			}
 		},
 		"unauthenticated": {
 			"get": {
 				"operationId": "unauthenticated",
-				"security": []
+				"security": [],
+                 "responses": {
+          			"200": {
+     	     		}
+          		}
 			}
 		}
 	}

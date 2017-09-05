@@ -35,41 +35,56 @@ public static final String BASE_PATH = "/v1";
  * 
  * GET /overrideNoSecurity = overrideNoSecurity
  * 
+   * @returns 200 / null
+ * 200
+ * 
  */
 
-protected abstract void overrideNoSecurity() throws Exception;
+protected abstract String overrideNoSecurity() throws Exception;
 
 /**
  * 
  * GET /orAndSecurity = orAndSecurity
  * 
+   * @returns 200 / null
+ * 200
+ * 
  */
 
-protected abstract void orAndSecurity() throws Exception;
+protected abstract String orAndSecurity() throws Exception;
 
 /**
  * 
  * GET /andSecurity = andSecurity
  * 
+   * @returns 200 / null
+ * 200
+ * 
  */
 
-protected abstract void andSecurity() throws Exception;
+protected abstract String andSecurity() throws Exception;
 
 /**
  * 
  * GET /defaultSecurity = defaultSecurity
  * 
+   * @returns 200 / null
+ * 200
+ * 
  */
 
-protected abstract void defaultSecurity() throws Exception;
+protected abstract String defaultSecurity() throws Exception;
 
 /**
  * 
  * GET /orSecurity = orSecurity
  * 
+   * @returns 200 / null
+ * 200
+ * 
  */
 
-protected abstract void orSecurity() throws Exception;
+protected abstract String orSecurity() throws Exception;
 
   /*****************************************************************/
 
@@ -83,11 +98,11 @@ protected abstract void orSecurity() throws Exception;
 
   public ApikeyBase() {
     super(BASE_PATH,gen.apikey.ApikeyBase.class,
-         "overrideNoSecurity   GET    /overrideNoSecurity",
-         "orAndSecurity        GET    /orAndSecurity",
-         "andSecurity          GET    /andSecurity",
-         "defaultSecurity      GET    /defaultSecurity",
-         "orSecurity           GET    /orSecurity");
+         "overrideNoSecurity   GET    /overrideNoSecurity  RETURN String",
+         "orAndSecurity        GET    /orAndSecurity  RETURN String",
+         "andSecurity          GET    /andSecurity  RETURN String",
+         "defaultSecurity      GET    /defaultSecurity  RETURN String",
+         "orSecurity           GET    /orSecurity  RETURN String");
   }
   public static java.time.Instant toDateTime(String s) {
     return java.time.Instant.parse(s);
@@ -163,8 +178,8 @@ private void overrideNoSecurity_get_(OpenAPIContext context) throws Exception{
 
     context.setOperation("overrideNoSecurity");
 
-    context.call( () -> { overrideNoSecurity(); return null; });
-    context.setResult(null, 200);
+    Object result = context.call( ()-> overrideNoSecurity());
+    context.setResult(result, 200);
 
 }
 
@@ -173,8 +188,8 @@ private void orAndSecurity_get_(OpenAPIContext context) throws Exception{
     context.setOperation("orAndSecurity");
     context.verify(gen.apikey.ApikeyBase.api_key).verify(gen.apikey.ApikeyBase.oauth,"a").or().verify(gen.apikey.ApikeyBase.api_key).verify(gen.apikey.ApikeyBase.oauth,"a").verify();
 
-    context.call( () -> { orAndSecurity(); return null; });
-    context.setResult(null, 200);
+    Object result = context.call( ()-> orAndSecurity());
+    context.setResult(result, 200);
 
 }
 
@@ -183,8 +198,8 @@ private void andSecurity_get_(OpenAPIContext context) throws Exception{
     context.setOperation("andSecurity");
     context.verify(gen.apikey.ApikeyBase.api_key).verify(gen.apikey.ApikeyBase.oauth,"a").verify();
 
-    context.call( () -> { andSecurity(); return null; });
-    context.setResult(null, 200);
+    Object result = context.call( ()-> andSecurity());
+    context.setResult(result, 200);
 
 }
 
@@ -193,8 +208,8 @@ private void defaultSecurity_get_(OpenAPIContext context) throws Exception{
     context.setOperation("defaultSecurity");
     context.verify(gen.apikey.ApikeyBase.api_key).verify();
 
-    context.call( () -> { defaultSecurity(); return null; });
-    context.setResult(null, 200);
+    Object result = context.call( ()-> defaultSecurity());
+    context.setResult(result, 200);
 
 }
 
@@ -203,8 +218,8 @@ private void orSecurity_get_(OpenAPIContext context) throws Exception{
     context.setOperation("orSecurity");
     context.verify(gen.apikey.ApikeyBase.api_key).or().verify(gen.apikey.ApikeyBase.oauth,"a").verify();
 
-    context.call( () -> { orSecurity(); return null; });
-    context.setResult(null, 200);
+    Object result = context.call( ()-> orSecurity());
+    context.setResult(result, 200);
 
 }
 

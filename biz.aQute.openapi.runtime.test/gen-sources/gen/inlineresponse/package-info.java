@@ -1,4 +1,4 @@
-@Version("1.0")
-package gen.non200status;
+@Version("1")
+package gen.inlineresponse;
 
 import org.osgi.annotation.versioning.Version;

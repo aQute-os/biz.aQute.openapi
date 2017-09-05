@@ -29,6 +29,9 @@ public static final String BASE_PATH = "/basic";
  * 
  * GET /authenticated = authenticated
  * 
+   * @returns 200 / null
+ * 200
+ * 
  */
 
 protected abstract void authenticated() throws Exception;
@@ -36,6 +39,9 @@ protected abstract void authenticated() throws Exception;
 /**
  * 
  * GET unauthenticated = unauthenticated
+ * 
+   * @returns 200 / null
+ * 200
  * 
  */
 

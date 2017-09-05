@@ -1,9 +1,14 @@
 {
 	"swagger": "2.0",
 	"basePath": "/optional/{path}",
-	"paths": {
+	"info": {
+    		"title": "Optional",
+    		"version": "1.0"
+    },
+    	"paths": {
 		"/validation": {
 			"get": {
+				"consumes": ["application/x-www-form-urlencoded"],
 				"operationId": "optionalValidation",
 				"parameters": [
 					{
@@ -46,7 +51,11 @@
 						"maxLength": 40,
 						"minLength": 0
 					}
-				]
+				],
+                 "responses": {
+          			"200": {
+     	     		}
+          		}
 			}
 		}
 	},
