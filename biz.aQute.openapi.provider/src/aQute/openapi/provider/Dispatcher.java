@@ -110,8 +110,9 @@ public class Dispatcher extends HttpServlet {
 		} catch (Exception e) {
 			OpenAPIRuntime.logger.warn("Server Error {} {}", e, request.getPathInfo());
 			context.report(e);
-			if (runtime.security.handleException(e, context.getOperation(), request, response))
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			if (runtime.security == null
+					|| !runtime.security.handleException(e, context.getOperation(), request, response))
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
