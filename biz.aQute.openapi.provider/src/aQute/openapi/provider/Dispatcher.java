@@ -2,6 +2,9 @@ package aQute.openapi.provider;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -54,7 +57,9 @@ public class Dispatcher extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		OpenAPIContext context = new OpenAPIContext(runtime, this, request, response);
-		String path = request.getPathInfo();
+		String encoderName = StandardCharsets.UTF_8.name();
+		String path = getUnencodedPathInfo(request, encoderName);
+
 		try {
 			runtime.contexts.set(context);
 			try {
@@ -64,6 +69,10 @@ public class Dispatcher extends HttpServlet {
 					path = path.substring(1);
 
 				String segments[] = path.split("/");
+				for (int i = 0; i < segments.length; i++) {
+					segments[i] = URLDecoder.decode(segments[i], encoderName);
+				}
+
 				int counter = runtime.delayOn404Timeout;
 				do {
 					for (Tracker target : targets) {
@@ -114,6 +123,18 @@ public class Dispatcher extends HttpServlet {
 					|| !runtime.security.handleException(e, context.getOperation(), request, response))
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	private String getUnencodedPathInfo(HttpServletRequest request, String encoderName)
+			throws UnsupportedEncodingException {
+		String path = request.getRequestURI()
+				.substring(request.getContextPath().length() + request.getServletPath().length());
+
+		int pos = path.indexOf(';');
+		if (pos != -1) {
+			path = path.substring(0, pos);
+		}
+		return path;
 	}
 
 	@Override
