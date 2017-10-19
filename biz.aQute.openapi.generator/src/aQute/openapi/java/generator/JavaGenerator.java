@@ -274,6 +274,13 @@ public class JavaGenerator extends BaseSourceGenerator {
 		else
 			format("); return null; });\n");
 
+		boolean singleMimeType = method.getReturnType() instanceof SourceType.BinaryType
+				&& method.getProduces().size() == 1;
+		if (singleMimeType) {
+			String mimeType = method.getProduces().iterator().next();
+			format("    result = context.wrap(%s, (byte[]) result);\n", escapeString(mimeType));
+		}
+
 	}
 
 	private void doValidators(OperationObject operation) {

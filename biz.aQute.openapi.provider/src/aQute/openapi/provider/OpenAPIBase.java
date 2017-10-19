@@ -48,6 +48,16 @@ public abstract class OpenAPIBase {
 
 	}
 
+	public static class MimeWrapper {
+		public MimeWrapper(String mimeType, byte[] data) {
+			this.mimeType = mimeType;
+			this.data = data;
+		}
+
+		public final String	mimeType;
+		public final byte[]	data;
+	}
+
 	public enum Method {
 		GET, PUT, DELETE, POST, PATCH, HEAD, OPTIONS;
 	}
@@ -476,5 +486,4 @@ public abstract class OpenAPIBase {
 		}
 		return type.cast(o);
 	}
-
 }

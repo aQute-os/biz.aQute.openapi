@@ -58,7 +58,7 @@ public class OperationObject extends BaseOpenAPIObject {
 	 * produces definition at the Swagger Object. An empty value MAY be used to
 	 * clear the global definition. Value MUST be as described under Mime Types.
 	 */
-	public Set<String>						produces	= new HashSet<>();
+	public List<String>						produces;
 
 	/**
 	 * A list of parameters that are applicable for this operation. If a

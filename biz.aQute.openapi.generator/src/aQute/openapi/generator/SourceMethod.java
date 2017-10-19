@@ -3,6 +3,7 @@ package aQute.openapi.generator;
 import java.util.Collection;
 import java.util.Formatter;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import aQute.json.naming.NameCodec;
@@ -149,7 +150,13 @@ public class SourceMethod {
 	}
 
 	public void setReturnType(SourceType returnType) {
-		this.returnType = returnType;
+		boolean mimeReturn = returnType instanceof SourceType.BinaryType && operation != null
+				&& operation.produces != null && operation.produces.size() > 1;
+		if (mimeReturn) {
+			this.returnType = SourceType.MIMEWRAPPER;
+		} else {
+			this.returnType = returnType;
+		}
 	}
 
 	public static Map<String,String> getResponses() {
@@ -162,5 +169,9 @@ public class SourceMethod {
 
 	public String getPath() {
 		return path;
+	}
+
+	public List<String> getProduces() {
+		return operation.produces;
 	}
 }

@@ -1,5 +1,6 @@
 package aQute.openapi.v2.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class SwaggerObject extends BaseOpenAPIObject {
 	 * can be overridden on specific API calls. Value MUST be as described under
 	 * Mime Types.
 	 */
-	public List<String>						produces;
+	public List<String>						produces	= new ArrayList<>();
 
 	/**
 	 * Required. The available paths and operations for the API.

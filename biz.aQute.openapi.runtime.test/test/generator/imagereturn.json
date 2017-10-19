@@ -1,0 +1,61 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v1",
+    "title": "imagereturn"
+  },
+  "basePath": "/v1",
+  "paths": {
+    "/image_multiple_mime": {
+      "get": {
+        "produces": [
+          "image/png", "image/jpeg"
+        ],
+        "operationId": "image_multiple_mime",
+        "responses": {
+          "200": {
+              "description":"",
+                "schema": {
+                    "type": "string",
+                    "format":"binary"    
+                }
+          }
+        }
+      }
+   },
+  "/image_one_mime": {
+      "get": {
+        "produces": [
+          "image/png"
+        ],
+        "operationId": "image_one_mime",
+        "responses": {
+          "200": {
+              "description":"",
+                "schema": {
+                    "type": "string",
+                    "format":"binary"    
+                }
+          }
+        }
+      }
+  },
+  "/image_json": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "image_json",
+        "responses": {
+          "200": {
+              "description":"",
+                "schema": {
+                    "type": "string",
+                    "format":"binary"    
+                }
+          }
+        }
+      }
+    }
+  }    
+}

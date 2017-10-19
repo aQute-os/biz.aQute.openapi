@@ -3,6 +3,7 @@ package aQute.openapi.provider;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Stream.of;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,6 +32,7 @@ import aQute.lib.converter.Converter;
 import aQute.lib.io.IO;
 import aQute.lib.strings.Strings;
 import aQute.openapi.provider.OpenAPIBase.Method;
+import aQute.openapi.provider.OpenAPIBase.MimeWrapper;
 import aQute.openapi.security.api.Authentication;
 import aQute.openapi.security.api.OpenAPIAuthenticator;
 import aQute.openapi.security.api.OpenAPISecurityDefinition;
@@ -89,13 +91,20 @@ public class OpenAPIContext {
 		doHeaders();
 
 		if (result != null) {
-			String mime = target.codec_().getContentType();
-			response.setContentType(mime);
-			OutputStream out = getOutputStream();
-			try {
-				target.codec_().encode(result, out);
-			} catch (Exception e) {
-				log.error("failed to serialize output for " + operation);
+			if (result instanceof MimeWrapper) {
+				MimeWrapper w = (MimeWrapper) result;
+				response.setContentType(w.mimeType);
+				OutputStream out = getOutputStream();
+				out.write(w.data);
+			} else {
+				String mime = target.codec_().getContentType();
+				response.setContentType(mime);
+				OutputStream out = getOutputStream();
+				try {
+					target.codec_().encode(result, out);
+				} catch (Exception e) {
+					log.error("failed to serialize output for " + operation);
+				}
 			}
 		}
 	}
@@ -502,5 +511,17 @@ public class OpenAPIContext {
 
 	public String[] ssv(String[] parameters) {
 		return split(parameters, " ");
+	}
+
+	public OpenAPIBase.MimeWrapper wrap(String mimeType, byte[] data) {
+		return new OpenAPIBase.MimeWrapper(mimeType, data);
+	}
+
+	public OpenAPIBase.MimeWrapper wrap(String mimeType, InputStream in) throws IOException {
+		return wrap(mimeType, IO.read(in));
+	}
+
+	public OpenAPIBase.MimeWrapper wrap(String mimeType, File in) throws IOException {
+		return wrap(mimeType, IO.read(in));
 	}
 }

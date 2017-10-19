@@ -19,6 +19,7 @@ public abstract class SourceType {
 	final static AtomicInteger								counter	= new AtomicInteger(1000);
 
 	static final SourceType									VOID	= new VoidType();
+	public static final SourceType							MIMEWRAPPER	= new MimeWrapperType();
 
 	final int												id;
 	final OpenAPIGenerator									gen;
@@ -219,6 +220,17 @@ public abstract class SourceType {
 		}
 	}
 
+	public static class MimeWrapperType extends SimpleType {
+		protected MimeWrapperType() {
+			super(null, "MimeWrapper", null);
+		}
+
+		@Override
+		public String conversion(String access) {
+			return null;
+		}
+	}
+
 	static class Base64Encoded extends SourceType {
 
 		protected Base64Encoded(OpenAPIGenerator gen) {
@@ -276,7 +288,7 @@ public abstract class SourceType {
 		}
 	}
 
-	static class BinaryType extends SimpleType {
+	public static class BinaryType extends SimpleType {
 
 		public BinaryType(OpenAPIGenerator gen, ItemsObject schema) {
 			super(gen, "binary", schema);
@@ -434,6 +446,7 @@ public abstract class SourceType {
 
 		}
 	}
+
 
 	public static class StringEnumType extends SimpleType {
 

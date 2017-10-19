@@ -118,6 +118,9 @@ public class OpenAPIGenerator extends Env {
 			warning("%s – No tags set", operation.operationId);
 		}
 
+		if (operation.produces == null) {
+			operation.produces = swagger.produces;
+		}
 		if ( operation.parameters != null) {
 			for ( ParameterObject parameter : operation.parameters) {
 				if ( parameter.in == In.formData) {
