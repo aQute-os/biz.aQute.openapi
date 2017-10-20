@@ -56,6 +56,67 @@
           }
         }
       }
-    }
-  }    
+    },
+  "/product/icon/{productTagId}/{iconType}/{size}": {
+	  "get": {
+	    "tags": [
+	      "Product"
+	    ],
+	    "summary": "Gets the product icon.",
+	    "operationId": "GetProductIcon",
+	    "consumes": [],
+	    "produces": [
+	      "image/png",
+	      "image/svg"
+	    ],
+	    "parameters": [
+	      {
+	        "name": "productTagId",
+	        "in": "path",
+	        "description": "The product tag identifier.",
+	        "required": true,
+	        "type": "string"
+	      },
+	      {
+	        "name": "iconType",
+	        "in": "path",
+	        "description": "Type of the icon.(neutral,alarm,warning,comerror,notactive,ok)",
+	        "required": true,
+	        "type": "string",
+	        "enum": [
+	          "Neutral"
+	        ]
+	      },
+	      {
+	        "name": "size",
+	        "in": "path",
+	        "description": "The size.(24, 150)",
+	        "required": true,
+	        "type": "integer",
+	        "format": "int32"
+	      },
+	      {
+	        "name": "fileFormat",
+	        "in": "query",
+	        "description": "The file format.(png,svg)",
+	        "required": false,
+	        "type": "string",
+	        "enum": [
+	          "Png",
+	          "Svg"
+	        ]
+	      }
+	    ],
+	    "responses": {
+	      "200": {
+	        "description": "icon image file of specified file format"
+	      },
+	      "404": {
+	        "description": "Resource not found or no authorization"
+	      }
+	    }
+	  }
+	} 
+    
+  }
 }

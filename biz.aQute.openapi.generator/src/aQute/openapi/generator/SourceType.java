@@ -502,7 +502,10 @@ public abstract class SourceType {
 
 		@Override
 		public String reference() {
-			return "List<" + getComponentType().wrapper().reference() + ">";
+			String t = "CYCLE";
+			if (this != getComponentType().wrapper())
+				t = getComponentType().wrapper().toString();
+			return "List<" + t + ">";
 		}
 
 		@Override

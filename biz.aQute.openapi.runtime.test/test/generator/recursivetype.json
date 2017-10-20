@@ -1,0 +1,49 @@
+{
+	"swagger": "2.0",
+	"basePath": "/recursive",
+	"info": 
+	{
+		"title": "NestedObject",
+		"version": "1.0"
+	},
+
+	"paths": 
+	{
+		"/recursive": 
+		{
+			"post": 
+			{
+				"operationId": "nested",
+				"responses": 
+				{
+					"200": 
+					{
+						"schema": 
+						{
+							"$ref": "#/definitions/Item"
+						}
+					}
+				}
+			}
+		}
+	},
+
+	"definitions": 
+	{
+		"Item": 
+		{
+			"type": "object",
+			"properties": 
+			{
+				"values": 
+				{
+					"type": "array",
+					"items": 
+					{
+						"$ref": "#/definitions/Item"
+					}
+				}
+			}
+		}
+	}
+}

@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -23,36 +24,6 @@ import aQute.openapi.annotations.ValidatorString;
 
 public class Validator extends Env {
 
-	static class Link {
-		Link	prev;
-		String	path;
-		Object	object;
-
-		Link(Link prev, String path, Object object) {
-			this.prev = prev;
-			this.path = path;
-			this.object = object;
-
-			if (prev != null) {
-				Link p = prev.find(object);
-				if (p != null) {
-					throw new RuntimeException("Cycle detected from " + p.path + " to " + path);
-				}
-			}
-		}
-
-		Link find(Object object2) {
-
-			if (prev == null)
-				return null;
-
-			if (object != object2)
-				return null;
-
-			return this;
-		}
-	}
-
 	public Validator(Env parent) {
 		super(parent);
 	}
@@ -61,8 +32,8 @@ public class Validator extends Env {
 
 	public void verify(Object object) {
 		try {
-
-			verify(null, object, "#", new Link(null, "#", object));
+			Map<Object,Object> duplicates = new IdentityHashMap<>();
+			verify(null, object, "#", duplicates);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -70,9 +41,11 @@ public class Validator extends Env {
 		}
 	}
 
-	public void verify(AnnotatedElement element, Object object, String path, Link link) throws Exception {
+	public void verify(AnnotatedElement element, Object object, String path, Map<Object,Object> link) throws Exception {
 
-		Link nxtLink = new Link(link, path, object);
+		Object old = link.put(object, object);
+		if (old != null)
+			return;
 
 		if (object instanceof Collection)
 			verifyCollection(element, (Collection< ? >) object, path, link);
@@ -98,7 +71,8 @@ public class Validator extends Env {
 		return cnt > 0;
 	}
 
-	private void verifyMap(AnnotatedElement element, Map< ? , ? > v, String path, Link link) throws Exception {
+	private void verifyMap(AnnotatedElement element, Map< ? , ? > v, String path, Map<Object,Object> link)
+			throws Exception {
 
 		for (Entry< ? , ? > e : v.entrySet()) {
 
@@ -118,7 +92,7 @@ public class Validator extends Env {
 
 	}
 
-	void verifyDTO(AnnotatedElement element, Object o, String path, Link link) throws Exception {
+	void verifyDTO(AnnotatedElement element, Object o, String path, Map<Object,Object> link) throws Exception {
 
 		ValidatorObject vo = element != null ? element.getAnnotation(ValidatorObject.class) : null;
 
@@ -233,7 +207,8 @@ public class Validator extends Env {
 		}
 	}
 
-	private void verifyCollection(AnnotatedElement f, Collection< ? > v, String path, Link link) throws Exception {
+	private void verifyCollection(AnnotatedElement f, Collection< ? > v, String path, Map<Object,Object> link)
+			throws Exception {
 		ValidatorArray va = f.getAnnotation(ValidatorArray.class);
 
 		if (va != null) {
@@ -270,7 +245,7 @@ public class Validator extends Env {
 		}
 	}
 
-	private void verifyArray(AnnotatedElement f, Object v, String path, Link link)
+	private void verifyArray(AnnotatedElement f, Object v, String path, Map<Object,Object> link)
 			throws ArrayIndexOutOfBoundsException, IllegalArgumentException, Exception {
 		ValidatorArray va = f.getAnnotation(ValidatorArray.class);
 
