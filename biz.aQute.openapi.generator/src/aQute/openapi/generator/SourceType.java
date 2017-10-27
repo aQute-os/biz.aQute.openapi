@@ -1,5 +1,6 @@
 package aQute.openapi.generator;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -581,6 +582,11 @@ public abstract class SourceType {
 		@Override
 		public String reference() {
 			return "OpenAPIBase.Part";
+		}
+
+		@Override
+		public String asReturnType() {
+			return File.class.getName();
 		}
 
 		@Override

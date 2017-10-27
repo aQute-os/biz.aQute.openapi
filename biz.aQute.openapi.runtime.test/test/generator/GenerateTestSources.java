@@ -9,6 +9,9 @@ import aQute.openapi.generator.OpenAPIGenerator;
 
 public class GenerateTestSources {
 
+	public static void responsetypes() throws Exception {
+		GenerateTestSources.generate("responsetypes", "responsetypes.json", new Configuration());
+	}
 	public static void recursivetype() throws Exception {
 		GenerateTestSources.generate("recursivetype", "recursivetype.json", new Configuration());
 	}
@@ -144,6 +147,7 @@ public class GenerateTestSources {
 
 	public static void main(String args[]) throws Exception {
 		//dummy();
+		responsetypes();
 		recursivetype();
 		imagereturn();
 		inline();

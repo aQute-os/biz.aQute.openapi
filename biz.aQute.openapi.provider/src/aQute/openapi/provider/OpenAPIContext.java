@@ -91,7 +91,9 @@ public class OpenAPIContext {
 		doHeaders();
 
 		if (result != null) {
-			if (result instanceof MimeWrapper) {
+			if (result instanceof File) {
+				IO.copy((File) result, getOutputStream());
+			} else if (result instanceof MimeWrapper) {
 				MimeWrapper w = (MimeWrapper) result;
 				response.setContentType(w.mimeType);
 				OutputStream out = getOutputStream();

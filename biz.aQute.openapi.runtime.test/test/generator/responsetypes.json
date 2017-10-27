@@ -1,0 +1,22 @@
+{
+	"swagger": "2.0",
+	"basePath": "/primitives",
+	"info": {
+    		"title": "ResponseTypes",
+    		"version": "1.0"
+    },
+    	"paths": {
+		"/file": {
+			"get": {
+				"operationId": "File",
+				"responses": {
+					"200": {
+						"schema": {
+							"type": "file"
+						}
+					}
+				}
+			}
+		}
+	}
+}
