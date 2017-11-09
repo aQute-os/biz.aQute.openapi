@@ -16,8 +16,7 @@
           "200": {
               "description":"",
                 "schema": {
-                    "type": "string",
-                    "format":"binary"    
+                    "type": "file"
                 }
           }
         }

@@ -150,13 +150,27 @@ public class SourceMethod {
 	}
 
 	public void setReturnType(SourceType returnType) {
-		boolean mimeReturn = returnType instanceof SourceType.BinaryType && operation != null
-				&& operation.produces != null && operation.produces.size() > 1;
+		boolean mimeReturn = operation != null && !isJSONMime(operation.produces);
 		if (mimeReturn) {
 			this.returnType = SourceType.MIMEWRAPPER;
 		} else {
 			this.returnType = returnType;
 		}
+	}
+
+	private boolean isJSONMime(List<String> mimes) {
+		if (mimes == null)
+			return true;
+
+		for (String produce : mimes) {
+			if (!isJSONMime(produce))
+				return false;
+		}
+		return true;
+	}
+
+	private boolean isJSONMime(String mime) {
+		return "application/json".equalsIgnoreCase(mime);
 	}
 
 	public static Map<String,String> getResponses() {

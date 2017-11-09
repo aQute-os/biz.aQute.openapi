@@ -45,13 +45,13 @@ public static final String BASE_PATH = "/v1";
  * 
  */
 
-protected abstract void getProductIcon(String productTagId, String iconType, int size, Optional<String> fileFormat) throws Exception;
+protected abstract MimeWrapper getProductIcon(String productTagId, String iconType, int size, Optional<String> fileFormat) throws Exception;
 
   /*****************************************************************/
 
   public ImagereturnProduct() {
     super(BASE_PATH,gen.imagereturn.ImagereturnBase.class,
-         "GetProductIcon       GET    /product/icon/{productTagId}/{iconType}/{size}?fileFormat");
+         "GetProductIcon       GET    /product/icon/{productTagId}/{iconType}/{size}?fileFormat  RETURN MimeWrapper");
   }
 
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
@@ -106,8 +106,8 @@ Optional<String> fileFormat_ = context.optional(context.toString(context.paramet
     context.begin("GetProductIcon");
     context.end();
 
-    context.call( () -> { getProductIcon(productTagId_, iconType_, size_, fileFormat_); return null; });
-    context.setResult(null, 200);
+    Object result = context.call( ()-> getProductIcon(productTagId_, iconType_, size_, fileFormat_));
+    context.setResult(result, 200);
 
 }
 

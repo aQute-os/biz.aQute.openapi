@@ -50,7 +50,7 @@ public static final String BASE_PATH = "/api/v1";
  * 
  */
 
-protected abstract ModbusDeviceDataResponse addModbusDeviceToPlant(ModbusDeviceData device) throws Exception, OpenAPIBase.BadRequestResponse;
+protected abstract MimeWrapper addModbusDeviceToPlant(ModbusDeviceData device) throws Exception, OpenAPIBase.BadRequestResponse;
 
 /**
  * 
@@ -71,7 +71,7 @@ protected abstract ModbusDeviceDataResponse addModbusDeviceToPlant(ModbusDeviceD
  * 
  */
 
-protected abstract ModbusDeviceDataResponse editModbusDeviceToPlant(ModbusDeviceData device) throws Exception, OpenAPIBase.BadRequestResponse;
+protected abstract MimeWrapper editModbusDeviceToPlant(ModbusDeviceData device) throws Exception, OpenAPIBase.BadRequestResponse;
 
 /**
  * 
@@ -87,7 +87,7 @@ protected abstract ModbusDeviceDataResponse editModbusDeviceToPlant(ModbusDevice
  * 
  */
 
-protected abstract ModbusDeviceDataResponseList getModbusDevices() throws Exception;
+protected abstract MimeWrapper getModbusDevices() throws Exception;
 
 /**
  * 
@@ -101,7 +101,7 @@ protected abstract ModbusDeviceDataResponseList getModbusDevices() throws Except
  * 
  */
 
-protected abstract MappingFileList getModbusMappingFiles() throws Exception;
+protected abstract MimeWrapper getModbusMappingFiles() throws Exception;
 
 /**
  * 
@@ -321,10 +321,10 @@ public static class MappingFileList extends OpenAPIBase.DTO {
 
   public ValidationDeviceManagementModbusApi() {
     super(BASE_PATH,gen.validation.ValidationBase.class,
-         "AddModbusDeviceToPlant POST   /devicemanagement/modbus/devices  PAYLOAD ModbusDeviceData  RETURN ModbusDeviceDataResponse",
-         "EditModbusDeviceToPlant PUT    /devicemanagement/modbus/devices  PAYLOAD ModbusDeviceData  RETURN ModbusDeviceDataResponse",
-         "GetModbusDevices     GET    /devicemanagement/modbus/devices  RETURN ModbusDeviceDataResponseList",
-         "GetModbusMappingFiles GET    /devicemanagement/modbus/mappingFiles  RETURN MappingFileList",
+         "AddModbusDeviceToPlant POST   /devicemanagement/modbus/devices  PAYLOAD ModbusDeviceData  RETURN MimeWrapper",
+         "EditModbusDeviceToPlant PUT    /devicemanagement/modbus/devices  PAYLOAD ModbusDeviceData  RETURN MimeWrapper",
+         "GetModbusDevices     GET    /devicemanagement/modbus/devices  RETURN MimeWrapper",
+         "GetModbusMappingFiles GET    /devicemanagement/modbus/mappingFiles  RETURN MimeWrapper",
          "RemoveModbusDevice   DELETE /devicemanagement/modbus/devices/{deviceId}");
   }
 

@@ -58,7 +58,7 @@ protected abstract MimeWrapper image_multiple_mime() throws Exception;
  * 
  */
 
-protected abstract byte[] image_one_mime() throws Exception;
+protected abstract MimeWrapper image_one_mime() throws Exception;
 
   /*****************************************************************/
 
@@ -66,7 +66,7 @@ protected abstract byte[] image_one_mime() throws Exception;
     super(BASE_PATH,gen.imagereturn.ImagereturnBase.class,
          "image_json           GET    /image_json  RETURN byte[]",
          "image_multiple_mime  GET    /image_multiple_mime  RETURN MimeWrapper",
-         "image_one_mime       GET    /image_one_mime  RETURN byte[]");
+         "image_one_mime       GET    /image_one_mime  RETURN MimeWrapper");
   }
   public static java.time.Instant toDateTime(String s) {
     return java.time.Instant.parse(s);
@@ -142,7 +142,6 @@ private void image_one_mime_get_(OpenAPIContext context) throws Exception{
     context.setOperation("image_one_mime");
 
     Object result = context.call( ()-> image_one_mime());
-    result = context.wrap("image/png", (byte[]) result);
     context.setResult(result, 200);
 
 }

@@ -28,8 +28,8 @@ public class BinaryReturnTest extends Assert {
 			}
 
 			@Override
-			protected byte[] image_one_mime() throws Exception {
-				return new byte[0];
+			protected MimeWrapper image_one_mime() throws Exception {
+				return getOpenAPIContext().wrap("image/jpeg", new byte[0]);
 			}
 
 			@Override
