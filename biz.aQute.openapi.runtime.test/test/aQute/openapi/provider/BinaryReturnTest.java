@@ -29,7 +29,7 @@ public class BinaryReturnTest extends Assert {
 
 			@Override
 			protected MimeWrapper image_one_mime() throws Exception {
-				return getOpenAPIContext().wrap("image/jpeg", new byte[0]);
+				return getOpenAPIContext().wrap("image/png", new byte[0]);
 			}
 
 			@Override
