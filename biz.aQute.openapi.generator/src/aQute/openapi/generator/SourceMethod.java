@@ -150,7 +150,7 @@ public class SourceMethod {
 	}
 
 	public void setReturnType(SourceType returnType) {
-		boolean mimeReturn = operation != null && !isJSONMime(operation.produces);
+		boolean mimeReturn = operation != null && !isDataMime(operation.produces);
 		if (mimeReturn) {
 			this.returnType = SourceType.MIMEWRAPPER;
 		} else {
@@ -158,19 +158,19 @@ public class SourceMethod {
 		}
 	}
 
-	private boolean isJSONMime(List<String> mimes) {
+	private boolean isDataMime(List<String> mimes) {
 		if (mimes == null)
 			return true;
 
 		for (String produce : mimes) {
-			if (!isJSONMime(produce))
+			if (!isDataMime(produce))
 				return false;
 		}
 		return true;
 	}
 
-	private boolean isJSONMime(String mime) {
-		return "application/json".equalsIgnoreCase(mime);
+	private boolean isDataMime(String mime) {
+		return "application/json".equalsIgnoreCase(mime) || "application/xml".equalsIgnoreCase(mime);
 	}
 
 	public static Map<String,String> getResponses() {
