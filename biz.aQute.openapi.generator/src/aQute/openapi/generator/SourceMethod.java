@@ -170,7 +170,8 @@ public class SourceMethod {
 	}
 
 	private boolean isDataMime(String mime) {
-		return "application/json".equalsIgnoreCase(mime) || "application/xml".equalsIgnoreCase(mime);
+		return "text/json".equalsIgnoreCase(mime) || "application/json".equalsIgnoreCase(mime)
+				|| "application/xml".equalsIgnoreCase(mime);
 	}
 
 	public static Map<String,String> getResponses() {
