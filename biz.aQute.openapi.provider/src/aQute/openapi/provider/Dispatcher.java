@@ -117,7 +117,7 @@ public class Dispatcher extends HttpServlet {
 			OpenAPIRuntime.logger.warn("Forbidden {} {}", se, request.getPathInfo());
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		} catch (Exception e) {
-			OpenAPIRuntime.logger.warn("Server Error {} {}", e, request.getPathInfo());
+			OpenAPIRuntime.logger.warn("Server Error on " + request.getPathInfo(), e);
 			context.report(e);
 			if (runtime.security == null
 					|| !runtime.security.handleException(e, context.getOperation(), request, response))

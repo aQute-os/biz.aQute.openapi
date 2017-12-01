@@ -433,6 +433,7 @@ public abstract class SourceType {
 			return String.format("toString(%s)", name);
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public SourceType getEnum(String typeName) {
 			if (getSchema().__extra != null && getSchema().__extra.containsKey("enum")) {
