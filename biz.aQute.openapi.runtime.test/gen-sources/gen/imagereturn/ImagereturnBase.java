@@ -90,6 +90,8 @@ protected abstract MimeWrapper image_one_mime() throws Exception;
           image_json_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end image_json
@@ -100,6 +102,8 @@ protected abstract MimeWrapper image_one_mime() throws Exception;
           image_multiple_mime_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end image_multiple_mime
@@ -110,6 +114,8 @@ protected abstract MimeWrapper image_one_mime() throws Exception;
           image_one_mime_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end image_one_mime

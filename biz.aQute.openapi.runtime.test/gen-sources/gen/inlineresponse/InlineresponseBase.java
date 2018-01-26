@@ -77,6 +77,8 @@ public static class InlineResponse extends OpenAPIBase.DTO {
           inline_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end inline

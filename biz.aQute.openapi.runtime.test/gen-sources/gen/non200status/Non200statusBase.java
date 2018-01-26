@@ -76,6 +76,8 @@ protected abstract void non200statusexception() throws Exception;
           non200status_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end non200status
@@ -86,6 +88,8 @@ protected abstract void non200statusexception() throws Exception;
           non200statusexception_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end non200statusexception

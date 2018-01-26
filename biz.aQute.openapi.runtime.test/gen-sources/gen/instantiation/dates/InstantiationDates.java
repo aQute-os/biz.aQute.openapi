@@ -79,6 +79,8 @@ public static class Dates extends OpenAPIBase.DTO {
           putDates_put_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("PUT");
+
       }
 
       // end dates

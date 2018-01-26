@@ -8,6 +8,9 @@ import aQute.openapi.generator.Configuration;
 import aQute.openapi.generator.OpenAPIGenerator;
 
 public class GenerateTestSources {
+	public static void routes() throws Exception {
+		GenerateTestSources.generate("routes", "routes.json", new Configuration());
+	}
 
 	public static void responsetypes() throws Exception {
 		GenerateTestSources.generate("responsetypes", "responsetypes.json", new Configuration());
@@ -147,6 +150,7 @@ public class GenerateTestSources {
 
 	public static void main(String args[]) throws Exception {
 		//dummy();
+		routes();
 		responsetypes();
 		recursivetype();
 		imagereturn();

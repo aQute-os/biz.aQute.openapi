@@ -50,7 +50,7 @@ public static final String BASE_PATH = "/api/v1";
  * 
  */
 
-protected abstract MimeWrapper addModbusDeviceToPlant(ModbusDeviceData device) throws Exception, OpenAPIBase.BadRequestResponse;
+protected abstract ModbusDeviceDataResponse addModbusDeviceToPlant(ModbusDeviceData device) throws Exception, OpenAPIBase.BadRequestResponse;
 
 /**
  * 
@@ -71,7 +71,7 @@ protected abstract MimeWrapper addModbusDeviceToPlant(ModbusDeviceData device) t
  * 
  */
 
-protected abstract MimeWrapper editModbusDeviceToPlant(ModbusDeviceData device) throws Exception, OpenAPIBase.BadRequestResponse;
+protected abstract ModbusDeviceDataResponse editModbusDeviceToPlant(ModbusDeviceData device) throws Exception, OpenAPIBase.BadRequestResponse;
 
 /**
  * 
@@ -87,7 +87,7 @@ protected abstract MimeWrapper editModbusDeviceToPlant(ModbusDeviceData device) 
  * 
  */
 
-protected abstract MimeWrapper getModbusDevices() throws Exception;
+protected abstract ModbusDeviceDataResponseList getModbusDevices() throws Exception;
 
 /**
  * 
@@ -101,7 +101,7 @@ protected abstract MimeWrapper getModbusDevices() throws Exception;
  * 
  */
 
-protected abstract MimeWrapper getModbusMappingFiles() throws Exception;
+protected abstract MappingFileList getModbusMappingFiles() throws Exception;
 
 /**
  * 
@@ -321,10 +321,10 @@ public static class MappingFileList extends OpenAPIBase.DTO {
 
   public ValidationDeviceManagementModbusApi() {
     super(BASE_PATH,gen.validation.ValidationBase.class,
-         "AddModbusDeviceToPlant POST   /devicemanagement/modbus/devices  PAYLOAD ModbusDeviceData  RETURN MimeWrapper",
-         "EditModbusDeviceToPlant PUT    /devicemanagement/modbus/devices  PAYLOAD ModbusDeviceData  RETURN MimeWrapper",
-         "GetModbusDevices     GET    /devicemanagement/modbus/devices  RETURN MimeWrapper",
-         "GetModbusMappingFiles GET    /devicemanagement/modbus/mappingFiles  RETURN MimeWrapper",
+         "AddModbusDeviceToPlant POST   /devicemanagement/modbus/devices  PAYLOAD ModbusDeviceData  RETURN ModbusDeviceDataResponse",
+         "EditModbusDeviceToPlant PUT    /devicemanagement/modbus/devices  PAYLOAD ModbusDeviceData  RETURN ModbusDeviceDataResponse",
+         "GetModbusDevices     GET    /devicemanagement/modbus/devices  RETURN ModbusDeviceDataResponseList",
+         "GetModbusMappingFiles GET    /devicemanagement/modbus/mappingFiles  RETURN MappingFileList",
          "RemoveModbusDevice   DELETE /devicemanagement/modbus/devices/{deviceId}");
   }
 
@@ -349,6 +349,8 @@ public static class MappingFileList extends OpenAPIBase.DTO {
               getModbusDevices_get_(context);
               return true;
             } 
+            return getOpenAPIContext().doOptions("PUT", "POST", "GET");
+
           } else           if ( index < segments.length ) {
             context.pathParameter("deviceId",segments[index]);
             index++;
@@ -357,6 +359,8 @@ public static class MappingFileList extends OpenAPIBase.DTO {
                 removeModbusDevice_delete_(context);
                 return true;
               } 
+              return getOpenAPIContext().doOptions("DELETE");
+
             }
 
 
@@ -368,6 +372,8 @@ public static class MappingFileList extends OpenAPIBase.DTO {
               getModbusMappingFiles_get_(context);
               return true;
             } 
+            return getOpenAPIContext().doOptions("GET");
+
           }
 
           // end mappingFiles

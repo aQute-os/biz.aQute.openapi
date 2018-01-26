@@ -100,6 +100,8 @@ public static class References extends OpenAPIBase.DTO {
           references_post_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("POST");
+
       }
 
       // end primitives

@@ -42,9 +42,11 @@ public class OpenAPIRuntime {
 	final Map<String,Dispatcher>		dispatchers			= new ConcurrentHashMap<>();
 	final ThreadLocal<OpenAPIContext>	contexts			= new ThreadLocal<>();
 	int									delayOn404Timeout	= 30;
+	Configuration						configuration;
+	CORS								cors;
 
 	@Reference
-	OpenAPISecurityEnvironment						security;
+	OpenAPISecurityEnvironment			security;
 
 	@ObjectClassDefinition
 	public @interface Configuration {
@@ -53,6 +55,29 @@ public class OpenAPIRuntime {
 
 		@AttributeDefinition(description = "Delay and try again until found timeout")
 		int delayOnNotFoundInSecs() default 30;
+
+		@AttributeDefinition(description = "CORS – Allowed origin. Either a case sensitive match to the Origin header or *")
+		String[] CORSOrigins() default {
+				"*"
+		};
+
+		@AttributeDefinition(description = "CORS – Enable access control")
+		boolean CORSEnabled() default true;
+
+		@AttributeDefinition(description = "CORS – Max Cache Age")
+		int CORSMaxAge() default 86400;
+
+		@AttributeDefinition(description = "CORS – Allow headers")
+		String[] CORSAllowedHeaders() default {
+				"*"
+		};
+
+		@AttributeDefinition(description = "CORS – Expose headers")
+		String[] CORSExposeHeaders() default {};
+
+		@AttributeDefinition(description = "CORS – Credentials")
+		boolean CORSCredentials() default true;
+
 	}
 
 	class Tracker {
@@ -89,6 +114,14 @@ public class OpenAPIRuntime {
 
 	@Activate
 	public void activate(BundleContext context, Configuration configuration) {
+		this.configuration = configuration;
+
+		if (configuration.CORSEnabled()) {
+			CORS cors = new CORS(logger, configuration.CORSOrigins(), configuration.CORSExposeHeaders(),
+					configuration.CORSAllowedHeaders(), configuration.CORSCredentials(), configuration.CORSMaxAge());
+			this.cors = cors;
+		}
+
 		this.context = context;
 		tracker = new ServiceTracker<OpenAPIBase,Tracker>(context, OpenAPIBase.class, null) {
 			@Override

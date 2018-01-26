@@ -92,6 +92,8 @@ public static class Values extends OpenAPIBase.DTO {
           nested_post_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("POST");
+
       }
 
       // end nested

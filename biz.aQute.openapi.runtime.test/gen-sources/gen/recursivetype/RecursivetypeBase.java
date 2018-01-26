@@ -77,6 +77,8 @@ public static class Item extends OpenAPIBase.DTO {
           nested_post_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("POST");
+
       }
 
       // end recursive

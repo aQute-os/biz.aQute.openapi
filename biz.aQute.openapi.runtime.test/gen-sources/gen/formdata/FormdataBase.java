@@ -92,6 +92,8 @@ protected abstract String oauth2(String grant_type, String username, String pass
           form_post_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("POST");
+
       }
 
       // end test
@@ -102,6 +104,8 @@ protected abstract String oauth2(String grant_type, String username, String pass
           oauth2_post_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("POST");
+
       }
 
       // end oauth2

@@ -208,6 +208,8 @@ public static class AllEnumVariations extends OpenAPIBase.DTO {
           enum$_post_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("POST");
+
       }
 
       // end enum

@@ -62,6 +62,8 @@ protected abstract java.io.File file() throws Exception;
           file_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end file

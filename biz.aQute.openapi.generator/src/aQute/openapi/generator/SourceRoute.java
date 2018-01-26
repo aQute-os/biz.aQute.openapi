@@ -1,10 +1,14 @@
 package aQute.openapi.generator;
 
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import aQute.lib.strings.Strings;
 
 public abstract class SourceRoute {
 	final Map<String,SourceRoute>	segments	= new HashMap<>();
@@ -118,6 +122,8 @@ public abstract class SourceRoute {
 	 */
 	public void generate(OpenAPIGenerator gen, Formatter f, String indent) {
 
+		List<String> methods = new ArrayList<>();
+
 		boolean first = true;
 		for (SourceRoute r : segments.values()) {
 			if (r instanceof OperationRoute) {
@@ -127,10 +133,22 @@ public abstract class SourceRoute {
 				} else {
 					f.format(" else ", indent);
 				}
+				methods.add(((OperationRoute) r).method);
 				r.generate(gen, f, indent + "  ");
 			}
 		}
 		if (!first) {
+
+			//
+			// Print an options header
+			//
+
+			if (methods.size() > 0) {
+				f.format("\n%s    return getOpenAPIContext().doOptions(%s);\n", indent,
+						"\"" + Strings.join("\", \"", methods).toUpperCase() + "\"");
+			} else
+				f.format("%s    return true;\n", indent);
+
 			f.format("\n%s  }", indent);
 		}
 

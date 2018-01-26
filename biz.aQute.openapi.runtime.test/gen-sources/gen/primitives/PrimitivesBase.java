@@ -89,6 +89,8 @@ public static class Primitives extends OpenAPIBase.DTO {
           primitives_post_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("POST");
+
       }
 
       // end primitives

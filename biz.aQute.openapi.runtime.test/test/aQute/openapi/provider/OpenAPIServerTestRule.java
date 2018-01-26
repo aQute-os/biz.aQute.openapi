@@ -1,5 +1,6 @@
 package aQute.openapi.provider;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
@@ -20,6 +21,9 @@ import aQute.openapi.provider.OpenAPIRuntime;
 import aQute.openapi.provider.SecurityProviderManager;
 
 public class OpenAPIServerTestRule implements TestRule {
+	static {
+		System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+	}
 	public URI						uri;
 	public Server					server	= new Server(0);
 	public ServletContextHandler	handler;
@@ -71,7 +75,12 @@ public class OpenAPIServerTestRule implements TestRule {
 	}
 
 	public String put(String path, String payload) throws Exception {
-		URL uri = this.uri.resolve(path).toURL();
+		URL uri = resolve(path);
 		return http.build().put().upload(payload.replace('\'', '"')).get(String.class).go(uri).replace('"', '\'');
+	}
+
+	public URL resolve(String path) throws MalformedURLException {
+		URL uri = this.uri.resolve(path).toURL();
+		return uri;
 	}
 }

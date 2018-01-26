@@ -95,6 +95,8 @@ public static class Body extends OpenAPIBase.DTO {
           optionalValidation_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end validation

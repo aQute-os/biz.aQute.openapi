@@ -67,6 +67,8 @@ protected abstract double temperature() throws Exception;
           temperature_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end temperature

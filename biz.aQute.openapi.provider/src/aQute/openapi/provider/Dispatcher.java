@@ -102,6 +102,7 @@ public class Dispatcher extends HttpServlet {
 					}
 				} while (true);
 			} finally {
+				doCORS(request, response);
 				runtime.contexts.remove();
 			}
 		} catch (OpenAPIBase.Response e) {
@@ -111,8 +112,10 @@ public class Dispatcher extends HttpServlet {
 			}
 			Object result = e.getResult();
 			context.report(e);
+			doCORS(request, response);
 		} catch (OpenAPIBase.DoNotTouchResponse e) {
 			// do not touch response
+			doCORS(request, response);
 		} catch (SecurityException se) {
 			OpenAPIRuntime.logger.warn("Forbidden {} {}", se, request.getPathInfo());
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -122,6 +125,12 @@ public class Dispatcher extends HttpServlet {
 			if (runtime.security == null
 					|| !runtime.security.handleException(e, context.getOperation(), request, response))
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	private void doCORS(HttpServletRequest request, HttpServletResponse response) {
+		if (runtime.cors != null) {
+			runtime.cors.crossOriginRequestFixup(request, response);
 		}
 	}
 

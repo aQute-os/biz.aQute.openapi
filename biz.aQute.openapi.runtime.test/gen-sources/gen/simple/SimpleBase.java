@@ -62,6 +62,8 @@ protected abstract void simple() throws Exception;
           simple_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end simple

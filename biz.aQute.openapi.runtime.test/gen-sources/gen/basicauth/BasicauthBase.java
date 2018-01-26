@@ -81,6 +81,8 @@ protected abstract void unauthenticated() throws Exception;
           authenticated_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end authenticated
@@ -91,6 +93,8 @@ protected abstract void unauthenticated() throws Exception;
           unauthenticated_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end nauthenticated

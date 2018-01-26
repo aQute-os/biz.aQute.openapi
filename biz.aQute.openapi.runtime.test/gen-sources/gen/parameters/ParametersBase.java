@@ -162,6 +162,8 @@ public static class Body extends OpenAPIBase.DTO {
             arrayConversion_get_(context);
             return true;
           } 
+          return getOpenAPIContext().doOptions("PUT", "POST", "GET");
+
         }
 
 

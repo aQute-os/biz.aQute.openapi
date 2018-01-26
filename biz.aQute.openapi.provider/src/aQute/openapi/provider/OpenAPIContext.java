@@ -526,4 +526,12 @@ public class OpenAPIContext {
 	public OpenAPIBase.MimeWrapper wrap(String mimeType, File in) throws IOException {
 		return wrap(mimeType, IO.read(in));
 	}
+
+	public boolean doOptions(String... methods) throws IOException {
+		if (isMethod(Method.OPTIONS) && runtime.cors != null) {
+			return runtime.cors.preflight(this, methods);
+		}
+		return false;
+	}
+
 }

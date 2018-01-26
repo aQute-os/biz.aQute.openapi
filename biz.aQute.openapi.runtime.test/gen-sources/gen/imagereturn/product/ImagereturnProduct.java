@@ -78,6 +78,8 @@ protected abstract MimeWrapper getProductIcon(String productTagId, String iconTy
                   getProductIcon_get_(context);
                   return true;
                 } 
+                return getOpenAPIContext().doOptions("GET");
+
               }
 
 

@@ -62,6 +62,8 @@ protected abstract void case$() throws Exception;
           case$_post_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("POST");
+
       }
 
       // end casing

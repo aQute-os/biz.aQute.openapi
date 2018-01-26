@@ -79,6 +79,8 @@ protected abstract NakedEnum nakedEnum() throws Exception;
           nakedEnum_post_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("POST");
+
       }
 
       // end casing

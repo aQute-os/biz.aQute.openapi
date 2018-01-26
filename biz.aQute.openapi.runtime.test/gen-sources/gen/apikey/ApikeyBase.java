@@ -126,6 +126,8 @@ protected abstract String orSecurity() throws Exception;
           overrideNoSecurity_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end overrideNoSecurity
@@ -136,6 +138,8 @@ protected abstract String orSecurity() throws Exception;
           orAndSecurity_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end orAndSecurity
@@ -146,6 +150,8 @@ protected abstract String orSecurity() throws Exception;
           andSecurity_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end andSecurity
@@ -156,6 +162,8 @@ protected abstract String orSecurity() throws Exception;
           defaultSecurity_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end defaultSecurity
@@ -166,6 +174,8 @@ protected abstract String orSecurity() throws Exception;
           orSecurity_get_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("GET");
+
       }
 
       // end orSecurity
