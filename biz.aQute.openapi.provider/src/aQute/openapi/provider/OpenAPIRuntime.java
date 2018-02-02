@@ -78,6 +78,10 @@ public class OpenAPIRuntime {
 		@AttributeDefinition(description = "CORS – Credentials")
 		boolean CORSCredentials() default true;
 
+		@AttributeDefinition(description = "Cache-Control values. If no headers should be set make it empty. Default is no caching")
+		String[] cacheControl() default {
+				" no-cache", "no-store", "must-revalidate"
+		};
 	}
 
 	class Tracker {

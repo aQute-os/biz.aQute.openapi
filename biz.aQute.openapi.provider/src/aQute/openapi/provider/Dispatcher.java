@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.http.NamespaceException;
 
+import aQute.lib.strings.Strings;
 import aQute.openapi.provider.OpenAPIRuntime.Tracker;
 import aQute.openapi.security.api.OpenAPIAuthenticator;
 
@@ -30,10 +31,16 @@ public class Dispatcher extends HttpServlet {
 	final Map<String,SecurityProviderTracker>	security					= new ConcurrentHashMap<>();
 	final Closeable								registration;
 	final Object								lock						= new Object();
+	final String								cacheControl;
 
 	public Dispatcher(OpenAPIRuntime runtime, String prefix) throws ServletException, NamespaceException {
 		this.runtime = runtime;
 		this.prefix = prefix;
+
+		if (runtime.configuration.cacheControl().length > 0) {
+			cacheControl = Strings.join(runtime.configuration.cacheControl());
+		} else
+			cacheControl = null;
 
 		assert this.prefix.startsWith("/");
 
@@ -102,7 +109,7 @@ public class Dispatcher extends HttpServlet {
 					}
 				} while (true);
 			} finally {
-				doCORS(request, response);
+				doFinalHeaders(request, response);
 				runtime.contexts.remove();
 			}
 		} catch (OpenAPIBase.Response e) {
@@ -112,10 +119,10 @@ public class Dispatcher extends HttpServlet {
 			}
 			Object result = e.getResult();
 			context.report(e);
-			doCORS(request, response);
+			doFinalHeaders(request, response);
 		} catch (OpenAPIBase.DoNotTouchResponse e) {
 			// do not touch response
-			doCORS(request, response);
+			doFinalHeaders(request, response);
 		} catch (SecurityException se) {
 			OpenAPIRuntime.logger.warn("Forbidden {} {}", se, request.getPathInfo());
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -128,9 +135,12 @@ public class Dispatcher extends HttpServlet {
 		}
 	}
 
-	private void doCORS(HttpServletRequest request, HttpServletResponse response) {
+	private void doFinalHeaders(HttpServletRequest request, HttpServletResponse response) {
 		if (runtime.cors != null) {
 			runtime.cors.crossOriginRequestFixup(request, response);
+		}
+		if (cacheControl != null && response.getHeader("Cache-Control") == null) {
+			response.setHeader("Cache-Control", cacheControl);
 		}
 	}
 
