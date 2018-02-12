@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import aQute.bnd.service.url.TaggedData;
+import aQute.openapi.provider.cors.CORSImplementation;
 import gen.routes.RoutesBase;
 
 public class RoutesTest extends Assert {
@@ -53,7 +54,7 @@ public class RoutesTest extends Assert {
 	@Test
 	public void checkOptionsSimpleHeader() throws Exception {
 		rule.add(new X());
-		rule.runtime.cors = new CORS(l, new String[] {}, new String[] {}, new String[] {}, true, -1);
+		rule.runtime.cors = new CORSImplementation(l, new String[] {}, new String[] {}, new String[] {}, true, -1);
 		URL resolve = rule.resolve("/routes/a");
 		TaggedData tag = rule.http.build().verb("OPTIONS").
 				headers("Origin", "http://foo.com").
@@ -67,7 +68,7 @@ public class RoutesTest extends Assert {
 	@Test
 	public void checkOptionsNotSimpleHeaderWithAllowedHeaders() throws Exception {
 		rule.add(new X());
-		rule.runtime.cors = new CORS(l, new String[] {}, new String[] {}, new String[] {"x-foo","x-bar"}, true, 60);
+		rule.runtime.cors = new CORSImplementation(l, new String[] {}, new String[] {}, new String[] {"x-foo","x-bar"}, true, 60);
 		URL resolve = rule.resolve("/routes/a");
 		TaggedData tag = rule.http.build().verb("OPTIONS").
 				headers("Origin", "http://foo.com").
@@ -90,7 +91,7 @@ public class RoutesTest extends Assert {
 	@Test
 	public void checkOptionsNotSimpleHeader() throws Exception {
 		rule.add(new X());
-		rule.runtime.cors = new CORS(l, new String[] {}, new String[] {}, new String[] {}, true, 60);
+		rule.runtime.cors = new CORSImplementation(l, new String[] {}, new String[] {}, new String[] {}, true, 60);
 		URL resolve = rule.resolve("/routes/a");
 		TaggedData tag = rule.http.build().verb("OPTIONS").
 				headers("Origin", "http://foo.com").
@@ -112,7 +113,7 @@ public class RoutesTest extends Assert {
 	@Test
 	public void checkNoCredentials() throws Exception {
 		rule.add(new X());
-		rule.runtime.cors = new CORS(l, new String[] {}, new String[] {}, new String[] {}, false, 60);
+		rule.runtime.cors = new CORSImplementation(l, new String[] {}, new String[] {}, new String[] {}, false, 60);
 		URL resolve = rule.resolve("/routes/a");
 		TaggedData tag = rule.http.build().verb("OPTIONS").
 				headers("Origin", "http://foo.com").
@@ -133,7 +134,7 @@ public class RoutesTest extends Assert {
 	@Test
 	public void getSimple() throws Exception {
 		rule.add(new X());
-		rule.runtime.cors = new CORS(l, new String[] {}, new String[] {"x-foo"}, new String[] {}, false, 60);
+		rule.runtime.cors = new CORSImplementation(l, new String[] {}, new String[] {"x-foo"}, new String[] {}, false, 60);
 		URL resolve = rule.resolve("/routes/a");
 		TaggedData tag = rule.http.build().get().
 				headers("Origin", "http://foo.com").
@@ -151,7 +152,7 @@ public class RoutesTest extends Assert {
 	@Test
 	public void getSimpleNoCredentials() throws Exception {
 		rule.add(new X());
-		rule.runtime.cors = new CORS(l, new String[] {}, new String[] {"x-foo"}, new String[] {}, true, 60);
+		rule.runtime.cors = new CORSImplementation(l, new String[] {}, new String[] {"x-foo"}, new String[] {}, true, 60);
 		URL resolve = rule.resolve("/routes/a");
 		TaggedData tag = rule.http.build().get().
 				headers("Origin", "http://foo.com").

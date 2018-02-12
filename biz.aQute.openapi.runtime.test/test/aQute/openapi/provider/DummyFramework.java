@@ -62,7 +62,11 @@ public class DummyFramework extends Assert implements AutoCloseable {
 				e.printStackTrace();
 				Exceptions.duck(e);
 			} finally {
-				Exceptions.wrap(framework::close);
+				try {
+					framework.close();;
+				} catch (Exception e) {
+					// ignore
+				}
 			}
 			return statement;
 		}
@@ -226,9 +230,10 @@ public class DummyFramework extends Assert implements AutoCloseable {
 					jar.putResource(e.getKey(), e.getValue());
 				}
 
-				JarResource j = new JarResource(jar);
+				try (JarResource j = new JarResource(jar)) {
 
-				return context.installBundle("generated " + jar.getBsn(), j.openInputStream());
+					return context.installBundle("generated " + jar.getBsn(), j.openInputStream());
+				}
 			} finally {
 				close();
 			}

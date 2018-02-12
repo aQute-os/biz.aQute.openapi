@@ -406,7 +406,7 @@ public class OpenAPIContext {
 			return callable.call();
 
 		OpenAPISecurityEnvironment security = runtime.security;
-		return security.dispatch(authenticator.user, null, null, callable);
+		return security.dispatch(authenticator.user, target.prefix, operation, callable);
 	}
 
 	public boolean isEncrypted() {
@@ -527,9 +527,9 @@ public class OpenAPIContext {
 		return wrap(mimeType, IO.read(in));
 	}
 
-	public boolean doOptions(String... methods) throws IOException {
-		if (isMethod(Method.OPTIONS) && runtime.cors != null) {
-			return runtime.cors.preflight(this, methods);
+	public boolean doOptions(String... methods) throws Exception {
+		if (runtime.cors != null) {
+			return runtime.cors.doOptions(this.getRequest(), this.getResponse(), methods);
 		}
 		return false;
 	}

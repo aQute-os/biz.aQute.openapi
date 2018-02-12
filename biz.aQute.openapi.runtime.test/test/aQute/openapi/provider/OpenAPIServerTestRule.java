@@ -3,6 +3,8 @@ package aQute.openapi.provider;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -16,9 +18,8 @@ import org.junit.runners.model.Statement;
 import org.osgi.service.http.NamespaceException;
 
 import aQute.bnd.http.HttpClient;
-import aQute.openapi.provider.OpenAPIBase;
-import aQute.openapi.provider.OpenAPIRuntime;
-import aQute.openapi.provider.SecurityProviderManager;
+import aQute.lib.converter.Converter;
+import aQute.openapi.provider.OpenAPIRuntime.Configuration;
 
 public class OpenAPIServerTestRule implements TestRule {
 	static {
@@ -27,10 +28,13 @@ public class OpenAPIServerTestRule implements TestRule {
 	public URI						uri;
 	public Server					server	= new Server(0);
 	public ServletContextHandler	handler;
+	public Map<String,Object>		configuration = new HashMap<>();
 	public OpenAPIRuntime			runtime	= new OpenAPIRuntime() {
 												@Override
 												public java.io.Closeable registerServlet(String alias, Servlet servlet)
 														throws ServletException, NamespaceException {
+													if ( alias.equals("/"))
+														alias = "";
 													handler.addServlet(new ServletHolder(servlet), (alias + "/*"));
 													return () -> {
 																							};
@@ -83,4 +87,5 @@ public class OpenAPIServerTestRule implements TestRule {
 		URL uri = this.uri.resolve(path).toURL();
 		return uri;
 	}
+
 }

@@ -37,7 +37,7 @@ public class Dispatcher extends HttpServlet {
 		this.runtime = runtime;
 		this.prefix = prefix;
 
-		if (runtime.configuration.cacheControl().length > 0) {
+		if (runtime.configuration != null && runtime.configuration.cacheControl().length > 0) {
 			cacheControl = Strings.join(runtime.configuration.cacheControl());
 		} else
 			cacheControl = null;
@@ -66,78 +66,81 @@ public class Dispatcher extends HttpServlet {
 		OpenAPIContext context = new OpenAPIContext(runtime, this, request, response);
 		String encoderName = StandardCharsets.UTF_8.name();
 		String path = getUnencodedPathInfo(request, encoderName);
-
 		try {
-			runtime.contexts.set(context);
 			try {
-				if (path.endsWith("/"))
-					path = path.substring(1, path.length() - 1);
-				else
-					path = path.substring(1);
+				runtime.contexts.set(context);
+				try {
+					if (path.endsWith("/"))
+						path = path.substring(1, path.length() - 1);
+					else
+						path = path.substring(1);
 
-				String segments[] = path.split("/");
-				for (int i = 0; i < segments.length; i++) {
-					segments[i] = URLDecoder.decode(segments[i], encoderName);
-				}
+					String segments[] = path.split("/");
+					for (int i = 0; i < segments.length; i++) {
+						segments[i] = URLDecoder.decode(segments[i], encoderName);
+					}
 
-				int counter = runtime.delayOn404Timeout;
-				do {
-					for (Tracker target : targets) {
-						OpenAPIBase base = target.base;
-						context.setTarget(base);
-						base.before_(context);
-						try {
-							if (base.dispatch_(context, segments, 0)) {
+					int counter = runtime.delayOn404Timeout;
+					do {
+						for (Tracker target : targets) {
+							OpenAPIBase base = target.base;
+							context.setTarget(base);
+							base.before_(context);
+							try {
+								if (base.dispatch_(context, segments, 0)) {
 
-								if (response.getContentType() == null)
-									response.setContentType("application/json");
+									if (response.getContentType() == null)
+										response.setContentType("application/json");
 
-								return;
+									return;
+								}
+							} finally {
+								base.after_(context);
 							}
-						} finally {
-							base.after_(context);
 						}
-					}
 
-					if (counter-- > 0) {
-						synchronized (lock) {
-							lock.wait(1000);
+						if (counter-- > 0) {
+							synchronized (lock) {
+								lock.wait(1000);
+							}
+						} else {
+							response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+							return;
 						}
-					} else {
-						response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-						return;
-					}
-				} while (true);
-			} finally {
+					} while (true);
+				} finally {
+					doFinalHeaders(request, response);
+					runtime.contexts.remove();
+				}
+			} catch (OpenAPIBase.Response e) {
+				response.setStatus(e.resultCode);
+				for (Entry<String,String> entry : e.headers.entrySet()) {
+					response.addHeader(entry.getKey(), entry.getValue());
+				}
+				Object result = e.getResult();
+				context.report(e);
 				doFinalHeaders(request, response);
-				runtime.contexts.remove();
+			} catch (OpenAPIBase.DoNotTouchResponse e) {
+				// do not touch response
+				doFinalHeaders(request, response);
+			} catch (SecurityException se) {
+				OpenAPIRuntime.logger.warn("Forbidden {} {}", se, request.getPathInfo());
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			} catch (Exception e) {
+				OpenAPIRuntime.logger.warn("Server Error on " + request.getPathInfo(), e);
+				context.report(e);
+				if (runtime.security == null
+						|| !runtime.security.handleException(e, context.getOperation(), request, response))
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
-		} catch (OpenAPIBase.Response e) {
-			response.setStatus(e.resultCode);
-			for (Entry<String,String> entry : e.headers.entrySet()) {
-				response.addHeader(entry.getKey(), entry.getValue());
-			}
-			Object result = e.getResult();
-			context.report(e);
-			doFinalHeaders(request, response);
-		} catch (OpenAPIBase.DoNotTouchResponse e) {
-			// do not touch response
-			doFinalHeaders(request, response);
-		} catch (SecurityException se) {
-			OpenAPIRuntime.logger.warn("Forbidden {} {}", se, request.getPathInfo());
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		} catch (Exception e) {
-			OpenAPIRuntime.logger.warn("Server Error on " + request.getPathInfo(), e);
-			context.report(e);
-			if (runtime.security == null
-					|| !runtime.security.handleException(e, context.getOperation(), request, response))
-				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			OpenAPIRuntime.logger.error("Failure in post request processing", e);
 		}
 	}
 
-	private void doFinalHeaders(HttpServletRequest request, HttpServletResponse response) {
+	private void doFinalHeaders(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (runtime.cors != null) {
-			runtime.cors.crossOriginRequestFixup(request, response);
+			runtime.cors.fixup(request, response);
 		}
 		if (cacheControl != null && response.getHeader("Cache-Control") == null) {
 			response.setHeader("Cache-Control", cacheControl);

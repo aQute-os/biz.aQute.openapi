@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import aQute.json.codec.JSONCodec;
 import aQute.openapi.provider.OpenAPIRuntime.Configuration;
+import aQute.openapi.provider.resources.ResourceDomain;
 import aQute.openapi.security.environment.api.OpenAPISecurityEnvironment;
 
 @Designate(ocd = Configuration.class, factory = false)
@@ -43,10 +44,14 @@ public class OpenAPIRuntime {
 	final ThreadLocal<OpenAPIContext>	contexts			= new ThreadLocal<>();
 	int									delayOn404Timeout	= 30;
 	Configuration						configuration;
+
+	@Reference
 	CORS								cors;
 
 	@Reference
 	OpenAPISecurityEnvironment			security;
+	@Reference
+	ResourceDomain						resources;
 
 	@ObjectClassDefinition
 	public @interface Configuration {
@@ -56,32 +61,11 @@ public class OpenAPIRuntime {
 		@AttributeDefinition(description = "Delay and try again until found timeout")
 		int delayOnNotFoundInSecs() default 30;
 
-		@AttributeDefinition(description = "CORS – Allowed origin. Either a case sensitive match to the Origin header or *")
-		String[] CORSOrigins() default {
-				"*"
-		};
-
-		@AttributeDefinition(description = "CORS – Enable access control")
-		boolean CORSEnabled() default true;
-
-		@AttributeDefinition(description = "CORS – Max Cache Age")
-		int CORSMaxAge() default 86400;
-
-		@AttributeDefinition(description = "CORS – Allow headers")
-		String[] CORSAllowedHeaders() default {
-				"*"
-		};
-
-		@AttributeDefinition(description = "CORS – Expose headers")
-		String[] CORSExposeHeaders() default {};
-
-		@AttributeDefinition(description = "CORS – Credentials")
-		boolean CORSCredentials() default true;
-
 		@AttributeDefinition(description = "Cache-Control values. If no headers should be set make it empty. Default is no caching")
 		String[] cacheControl() default {
 				" no-cache", "no-store", "must-revalidate"
 		};
+
 	}
 
 	class Tracker {
@@ -117,14 +101,9 @@ public class OpenAPIRuntime {
 	}
 
 	@Activate
-	public void activate(BundleContext context, Configuration configuration) {
+	public void activate(BundleContext context, Configuration configuration)
+			throws ServletException, NamespaceException {
 		this.configuration = configuration;
-
-		if (configuration.CORSEnabled()) {
-			CORS cors = new CORS(logger, configuration.CORSOrigins(), configuration.CORSExposeHeaders(),
-					configuration.CORSAllowedHeaders(), configuration.CORSCredentials(), configuration.CORSMaxAge());
-			this.cors = cors;
-		}
 
 		this.context = context;
 		tracker = new ServiceTracker<OpenAPIBase,Tracker>(context, OpenAPIBase.class, null) {
@@ -146,6 +125,7 @@ public class OpenAPIRuntime {
 		};
 		modified(configuration);
 		tracker.open();
+
 	}
 
 	@Modified
@@ -159,7 +139,7 @@ public class OpenAPIRuntime {
 	}
 
 	@Deactivate
-	public void deactivate() {
+	public void deactivate() throws IOException {
 		this.tracker.close();
 		for (Dispatcher d : this.dispatchers.values()) {
 			try {
@@ -184,14 +164,13 @@ public class OpenAPIRuntime {
 	 * @return a closeable
 	 */
 	public Closeable registerServlet(String alias, Servlet servlet) throws ServletException, NamespaceException {
-		System.out.println("Registering servlet " + alias);
+		logger.info("Registering servlet {}", alias);
 		Hashtable<String,Object> p = new Hashtable<>();
 		p.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN, alias + "/*");
 		ServiceRegistration<Servlet> registration = context.registerService(Servlet.class, servlet, p);
 		return () -> {
-			System.out.println("Unregistering servlet " + alias);
+			logger.info("Unregistering servlet {}", alias);
 			registration.unregister();
 		};
 	}
-
 }
