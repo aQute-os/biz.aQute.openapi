@@ -260,6 +260,8 @@ public static class User extends OpenAPIBase.DTO {
           createUser_post_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("POST");
+
       } else       if( index < segments.length && "logout".equals(segments[index])) {
         index++;
         if ( segments.length == index) {
@@ -267,6 +269,8 @@ public static class User extends OpenAPIBase.DTO {
             logoutUser_get_(context);
             return true;
           } 
+          return getOpenAPIContext().doOptions("GET");
+
         }
 
         // end logout
@@ -277,6 +281,8 @@ public static class User extends OpenAPIBase.DTO {
             createUsersWithListInput_post_(context);
             return true;
           } 
+          return getOpenAPIContext().doOptions("POST");
+
         }
 
         // end createWithList
@@ -287,6 +293,8 @@ public static class User extends OpenAPIBase.DTO {
             createUsersWithArrayInput_post_(context);
             return true;
           } 
+          return getOpenAPIContext().doOptions("POST");
+
         }
 
         // end createWithArray
@@ -297,6 +305,8 @@ public static class User extends OpenAPIBase.DTO {
             loginUser_get_(context);
             return true;
           } 
+          return getOpenAPIContext().doOptions("GET");
+
         }
 
         // end login
@@ -314,6 +324,8 @@ public static class User extends OpenAPIBase.DTO {
             getUserByName_get_(context);
             return true;
           } 
+          return getOpenAPIContext().doOptions("PUT", "DELETE", "GET");
+
         }
 
 

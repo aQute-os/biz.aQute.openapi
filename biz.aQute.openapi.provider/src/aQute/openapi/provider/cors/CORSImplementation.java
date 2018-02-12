@@ -18,6 +18,10 @@ import aQute.lib.strings.Strings;
 import aQute.libg.glob.Glob;
 import aQute.openapi.provider.CORS;
 
+/**
+ * To test:
+ * https://www.test-cors.org/#?client_method=PUT&client_credentials=false&client_postdata=%7B%7D&server_url=http%3A%2F%2Flocalhost%3A8080%2Fv2%2Fuser%2Ffoo&server_enable=true&server_status=200&server_credentials=false&server_tabs=remote
+ */
 public class CORSImplementation implements CORS {
 	Set<Glob>	listOfOrigins			= new HashSet<>();
 	Set<String>	listOfExposedHeaders	= new HashSet<>();
@@ -30,7 +34,8 @@ public class CORSImplementation implements CORS {
 			boolean supportCredentials, int maxAge) {
 		this.logger = logger;
 		this.listOfOrigins = toGlobs(listOfOrigins);
-		this.listOfExposedHeaders = Stream.of(listOfExposedHeaders).collect(Collectors.toSet());
+		this.listOfExposedHeaders = listOfExposedHeaders == null ? Collections.emptySet()
+				: Stream.of(listOfExposedHeaders).collect(Collectors.toSet());
 		this.listOfHeaders = toGlobs(listOfHeaders);
 		this.supportCredentials = supportCredentials;
 		this.maxAge = maxAge;
@@ -57,7 +62,7 @@ public class CORSImplementation implements CORS {
 
 		boolean wildcard = listOfOrigins.isEmpty();
 
-		if (!wildcard || in(listOfOrigins, origin)) {
+		if (!wildcard && !in(listOfOrigins, origin)) {
 			logger.warn("{} Invalid origin {}, allowed {}", this, origin, listOfOrigins);
 			return false;
 		}
@@ -68,14 +73,22 @@ public class CORSImplementation implements CORS {
 		// Access-Control-Allow-Credentials header with the case-sensitive
 		// string "true" as value.
 
+		String allowOrigin = response.getHeader("Access-Control-Allow-Origin");
+
 		if (supportCredentials) {
-			response.addHeader("Access-Control-Allow-Credentials", "true");
+			if (allowOrigin == null)
+				response.addHeader("Access-Control-Allow-Origin", origin);
+			String allowCredentials = response.getHeader("Access-Control-Allow-Credentials");
+			if (allowCredentials == null)
+				response.addHeader("Access-Control-Allow-Credentials", "true");
+		} else {
+
+			// Otherwise, add a single Access-Control-Allow-Origin header, with
+			// either the value of the Origin header or the string "*" as value.
+
+			if (allowOrigin == null)
+				response.addHeader("Access-Control-Allow-Origin", origin);
 		}
-
-		// Otherwise, add a single Access-Control-Allow-Origin header, with
-		// either the value of the Origin header or the string "*" as value.
-
-		response.addHeader("Access-Control-Allow-Origin", origin);
 
 		// If the list of exposed headers is not empty add one or more
 		// Access-Control-Expose-Headers headers, with as values the header
@@ -124,7 +137,7 @@ public class CORSImplementation implements CORS {
 
 		boolean wildcard = listOfOrigins.isEmpty();
 
-		if (!wildcard || in(listOfOrigins, origin)) {
+		if (!wildcard && !in(listOfOrigins, origin)) {
 			logger.warn("{} Invalid origin {}, allowed {}", request, origin, listOfOrigins);
 			return false;
 		}

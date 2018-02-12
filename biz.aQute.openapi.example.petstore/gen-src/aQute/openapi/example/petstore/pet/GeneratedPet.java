@@ -343,6 +343,8 @@ public static class Pet extends OpenAPIBase.DTO {
           addPet_post_(context);
           return true;
         } 
+        return getOpenAPIContext().doOptions("PUT", "POST");
+
       } else       if( index < segments.length && "findByStatus".equals(segments[index])) {
         index++;
         if ( segments.length == index) {
@@ -350,6 +352,8 @@ public static class Pet extends OpenAPIBase.DTO {
             findPetsByStatus_get_(context);
             return true;
           } 
+          return getOpenAPIContext().doOptions("GET");
+
         }
 
         // end findByStatus
@@ -360,6 +364,8 @@ public static class Pet extends OpenAPIBase.DTO {
             findPetsByTags_get_(context);
             return true;
           } 
+          return getOpenAPIContext().doOptions("GET");
+
         }
 
         // end findByTags
@@ -377,6 +383,8 @@ public static class Pet extends OpenAPIBase.DTO {
             getPetById_get_(context);
             return true;
           } 
+          return getOpenAPIContext().doOptions("DELETE", "POST", "GET");
+
         } else         if( index < segments.length && "uploadImage".equals(segments[index])) {
           index++;
           if ( segments.length == index) {
@@ -384,6 +392,8 @@ public static class Pet extends OpenAPIBase.DTO {
               uploadFile_post_(context);
               return true;
             } 
+            return getOpenAPIContext().doOptions("POST");
+
           }
 
           // end uploadImage

@@ -202,6 +202,8 @@ public static class GetInventoryResponse extends OpenAPIBase.DTO {
             getInventory_get_(context);
             return true;
           } 
+          return getOpenAPIContext().doOptions("GET");
+
         }
 
         // end inventory
@@ -212,6 +214,8 @@ public static class GetInventoryResponse extends OpenAPIBase.DTO {
             placeOrder_post_(context);
             return true;
           } 
+          return getOpenAPIContext().doOptions("POST");
+
         } else         if ( index < segments.length ) {
           context.pathParameter("orderId",segments[index]);
           index++;
@@ -223,6 +227,8 @@ public static class GetInventoryResponse extends OpenAPIBase.DTO {
               getOrderById_get_(context);
               return true;
             } 
+            return getOpenAPIContext().doOptions("DELETE", "GET");
+
           }
 
 

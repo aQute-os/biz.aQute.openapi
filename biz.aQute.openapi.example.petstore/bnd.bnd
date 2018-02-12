@@ -9,10 +9,12 @@
 	
 -includeresource: static=static, bin
 	
--runrequires: osgi.identity;filter:='(osgi.identity=biz.aQute.openapi.example.petstore)'
+-runrequires: \
+	osgi.identity;filter:='(osgi.identity=biz.aQute.openapi.example.petstore)',\
+	osgi.identity;filter:='(osgi.identity=osgi.enroute.webconsole.xray.provider)',\
+	osgi.identity;filter:='(&(osgi.identity=biz.aQute.openapi.oauth2.provider)(version>=1.0.0))'
 
 -runrequires.debug = ${debug-bundles}
--runstorage: /var/foo
 
 src=gen-src,src
 -runbundles: \
@@ -43,7 +45,13 @@ src=gen-src,src
 	osgi.enroute.logger.simple.provider;version='[2.0.0,2.0.1)',\
 	osgi.enroute.gogo.shell.provider;version='[2.0.0,2.0.1)',\
 	org.h2;version='[1.4.193,1.4.194)',\
-	org.osgi.service.jdbc;version='[1.0.0,1.0.1)'
+	org.osgi.service.jdbc;version='[1.0.0,1.0.1)',\
+	biz.aQute.openapi.api;version=snapshot,\
+	biz.aQute.openapi.security.dummy.provider;version=snapshot,\
+	biz.aQute.json.util;version=snapshot,\
+	biz.aQute.openapi.oauth2.provider;version=snapshot,\
+	biz.aQute.www.provider;version=snapshot,\
+	org.bitbucket.b_c.jose4j;version='[0.5.8,0.5.9)'
 -runrepos: \
 	Workspace,\
 	Local,\

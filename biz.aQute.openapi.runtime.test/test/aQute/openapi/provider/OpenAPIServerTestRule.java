@@ -18,8 +18,6 @@ import org.junit.runners.model.Statement;
 import org.osgi.service.http.NamespaceException;
 
 import aQute.bnd.http.HttpClient;
-import aQute.lib.converter.Converter;
-import aQute.openapi.provider.OpenAPIRuntime.Configuration;
 
 public class OpenAPIServerTestRule implements TestRule {
 	static {

@@ -89,7 +89,7 @@ public class OpenAPISecurityDefinition {
 
 	public static OpenAPISecurityDefinition implicit(String id, String base, String authorizationUrl, String TODO,
 			String... scopes) {
-		OpenAPISecurityDefinition def = new OpenAPISecurityDefinition(id, base, "implicit");
+		OpenAPISecurityDefinition def = new OpenAPISecurityDefinition(id, "implicit", base);
 		OAuth2Flow flow = new OAuth2Flow();
 
 		def.implicit = flow;
@@ -100,7 +100,7 @@ public class OpenAPISecurityDefinition {
 	}
 
 	public static OpenAPISecurityDefinition password(String id, String base, String tokenUrl, String... scopes) {
-		OpenAPISecurityDefinition def = new OpenAPISecurityDefinition(id, base, "clientCredentials");
+		OpenAPISecurityDefinition def = new OpenAPISecurityDefinition(id, "clientCredentials", base);
 		OAuth2Flow flow = new OAuth2Flow();
 
 		def.clientCredentials = flow;
@@ -112,7 +112,7 @@ public class OpenAPISecurityDefinition {
 
 	public static OpenAPISecurityDefinition application(String id, String base, String tokenUrl,
 			String... scopes) {
-		OpenAPISecurityDefinition def = new OpenAPISecurityDefinition(id, base, "clientCredentials");
+		OpenAPISecurityDefinition def = new OpenAPISecurityDefinition(id, "clientCredentials", base);
 		OAuth2Flow flow = new OAuth2Flow();
 
 		def.clientCredentials = flow;

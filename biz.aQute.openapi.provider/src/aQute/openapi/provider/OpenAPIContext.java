@@ -116,7 +116,6 @@ public class OpenAPIContext {
 	}
 
 	private void doHeaders() {
-		response.setHeader("Access-Control-Allow-Origin", "*");
 	}
 
 	private OutputStream getOutputStream() throws IOException {

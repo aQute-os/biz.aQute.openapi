@@ -89,6 +89,8 @@ protected abstract boolean unauthenticated(String action) throws Exception;
             authenticated_get_(context);
             return true;
           } 
+          return getOpenAPIContext().doOptions("GET");
+
         }
 
 
@@ -104,6 +106,8 @@ protected abstract boolean unauthenticated(String action) throws Exception;
             unauthenticated_get_(context);
             return true;
           } 
+          return getOpenAPIContext().doOptions("GET");
+
         }
 
 
