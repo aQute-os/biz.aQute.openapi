@@ -87,8 +87,8 @@ public class Dispatcher extends HttpServlet {
 							context.setTarget(base);
 							base.before_(context);
 							try {
+								doFinalHeaders(request, response);
 								if (base.dispatch_(context, segments, 0)) {
-
 									if (response.getContentType() == null)
 										response.setContentType("application/json");
 
@@ -109,7 +109,6 @@ public class Dispatcher extends HttpServlet {
 						}
 					} while (true);
 				} finally {
-					doFinalHeaders(request, response);
 					runtime.contexts.remove();
 				}
 			} catch (OpenAPIBase.Response e) {
