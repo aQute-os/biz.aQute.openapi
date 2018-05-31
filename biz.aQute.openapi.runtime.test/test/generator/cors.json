@@ -1,0 +1,53 @@
+{
+	"swagger": "2.0",
+	"basePath": "/routes",
+	"info": {
+    		"title": "Routes",
+    		"version": "1.0"
+    },
+    	"paths": {
+		"/a": {
+			"get": {
+				"operationId": "a_get",
+				                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "foo",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+				"responses": {
+                    "200": {
+                            "schema": {
+                            "type":"string"
+                                }
+                    }
+                }
+			},
+            "post": {
+                "operationId": "a_post",
+                "responses": {
+                    "200": {
+                            "schema": {
+                            "type":"string"
+                                }
+                    }
+                }
+            },
+            "put": {
+                "operationId": "a_put"
+            }
+		},
+		"/a/b": {
+			"get": {
+				"operationId": "a_b_get"
+			},
+            "post": {
+                "operationId": "a_b_post"
+            }
+		}
+	}
+}

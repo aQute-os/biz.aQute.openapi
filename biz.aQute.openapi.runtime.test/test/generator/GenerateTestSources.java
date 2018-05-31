@@ -8,6 +8,15 @@ import aQute.openapi.generator.Configuration;
 import aQute.openapi.generator.OpenAPIGenerator;
 
 public class GenerateTestSources {
+	
+	public static void additionalProperties() throws Exception {
+		GenerateTestSources.generate("additional_properties", "additional-properties.json", new Configuration());
+				
+	}
+	public static void cors() throws Exception {
+		GenerateTestSources.generate("cors", "cors.json", new Configuration());
+	}
+
 	public static void routes() throws Exception {
 		GenerateTestSources.generate("routes", "routes.json", new Configuration());
 	}
@@ -152,7 +161,9 @@ public class GenerateTestSources {
 	}
 
 	public static void main(String args[]) throws Exception {
-		//dummy();
+		// dummy();
+		additionalProperties();
+		cors();
 		routes();
 		responsetypes();
 		recursivetype();
