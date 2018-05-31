@@ -106,7 +106,7 @@ public class ObjectVisitor {
 	}
 
 	private void visitList(Visitor visitor, List<Object> coll) {
-		List<Object> list = (List<Object>) coll;
+		List<Object> list = coll;
 		for (int i = 0; i < list.size(); i++) {
 			Object target = list.get(i);
 			Object replacement = visit0(target);

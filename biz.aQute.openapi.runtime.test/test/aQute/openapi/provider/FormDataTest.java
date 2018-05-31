@@ -71,6 +71,6 @@ public class FormDataTest {
 				.get(String.class)
 				.go(rule.uri.resolve("/formdata/oauth2"));
 
-		assertThat(result, is( "\"password:johndoe:A3ddj3w\""));
+		assertThat(result, is("\"password:johndoe:A3ddj3w\""));
 	}
 }

@@ -32,12 +32,12 @@ import aQute.openapi.security.api.OpenAPISecurityProviderInfo;
 }, property = HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "="
 		+ SecurityProviderManager.PATTERN, configurationPid = SecurityProviderManager.PID)
 public class SecurityProviderManager extends HttpServlet {
-	public static final String					PID					= "aQute.openapi.security.manager";
-	public static final String					PATTERN				= "/.openapi/security/*";
-	final static Logger							logger				= LoggerFactory
+	public static final String				PID					= "aQute.openapi.security.manager";
+	public static final String				PATTERN				= "/.openapi/security/*";
+	final static Logger						logger				= LoggerFactory
 			.getLogger(SecurityProviderManager.class);
-	final static JSONCodec						json				= new JSONCodec();
-	private static final long					serialVersionUID	= 1L;
+	final static JSONCodec					json				= new JSONCodec();
+	private static final long				serialVersionUID	= 1L;
 	final Map<String,OpenAPIAuthenticator>	providers			= new ConcurrentHashMap<String,OpenAPIAuthenticator>();
 
 	@Override

@@ -8,16 +8,15 @@ import java.util.Map;
 
 import aQute.lib.hex.Hex;
 
-
 public class ArrayHandler extends Handler {
 	Type componentType;
 
-	ArrayHandler(Class< ? > rawClass, Type componentType) {
+	ArrayHandler(Class<?> rawClass, Type componentType) {
 		this.componentType = componentType;
 	}
 
 	@Override
-	public void encode(Encoder app, Object object, Map<Object,Type> visited) throws IOException, Exception {
+	public void encode(Encoder app, Object object, Map<Object, Type> visited) throws IOException, Exception {
 
 		// Byte arrays should not be treated as arrays. We treat them
 		// as hex strings

@@ -12,11 +12,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class MapHandler extends Handler {
-	final Class< ? >	rawClass;
-	final Type			keyType;
-	final Type			valueType;
+	final Class<?>	rawClass;
+	final Type		keyType;
+	final Type		valueType;
 
-	MapHandler(Class< ? > rawClass, Type keyType, Type valueType) {
+	MapHandler(Class<?> rawClass, Type keyType, Type valueType) {
 
 		if (rawClass != Map.class) {
 			ParameterizedType type = findAncestor(rawClass, Map.class);
@@ -45,15 +45,15 @@ public class MapHandler extends Handler {
 	}
 
 	private Type resolve(Type type) {
-		if (type instanceof TypeVariable< ? >) {
-			TypeVariable< ? > tv = (TypeVariable< ? >) type;
+		if (type instanceof TypeVariable<?>) {
+			TypeVariable<?> tv = (TypeVariable<?>) type;
 			Type[] bounds = tv.getBounds();
 			return resolve(bounds[bounds.length - 1]);
 		}
 		return type;
 	}
 
-	private ParameterizedType findAncestor(Class< ? > start, Class< ? > target) {
+	private ParameterizedType findAncestor(Class<?> start, Class<?> target) {
 		if (start == null || start == Object.class)
 			return null;
 
@@ -63,7 +63,7 @@ public class MapHandler extends Handler {
 					return (ParameterizedType) t;
 			}
 		}
-		for (Class< ? > impls : start.getInterfaces()) {
+		for (Class<?> impls : start.getInterfaces()) {
 			ParameterizedType ancestor = findAncestor(impls, target);
 			if (ancestor != null)
 				return ancestor;
@@ -73,12 +73,12 @@ public class MapHandler extends Handler {
 	}
 
 	@Override
-	public void encode(Encoder app, Object object, Map<Object,Type> visited) throws IOException, Exception {
-		Map< ? , ? > map = (Map< ? , ? >) object;
+	public void encode(Encoder app, Object object, Map<Object, Type> visited) throws IOException, Exception {
+		Map<?, ?> map = (Map<?, ?>) object;
 
 		app.append("{");
 		String del = "";
-		for (Map.Entry< ? , ? > e : map.entrySet())
+		for (Map.Entry<?, ?> e : map.entrySet())
 			try {
 				app.append(del);
 				String key;
@@ -102,7 +102,7 @@ public class MapHandler extends Handler {
 		assert r.current() == '{';
 
 		@SuppressWarnings("unchecked")
-		Map<Object,Object> map = (Map<Object,Object>) r.instantiate(rawClass);
+		Map<Object, Object> map = (Map<Object, Object>) r.instantiate(rawClass);
 
 		int c = r.next();
 		while (JSONCodec.START_CHARACTERS.indexOf(c) >= 0) {
@@ -118,7 +118,7 @@ public class MapHandler extends Handler {
 
 			c = r.next();
 			Object value = r.codec.decode(valueType, r);
-			
+
 			if (value != null || !r.codec.ignorenull)
 				map.put(key, value);
 

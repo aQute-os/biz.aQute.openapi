@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-
 public class OpenAPISecurityDefinition {
 
 	public static class OAuth2Flow {
@@ -32,7 +31,7 @@ public class OpenAPISecurityDefinition {
 		 * scopes Scopes Object oauth2 Required. The available scopes for the
 		 * OAuth2 security scheme.
 		 */
-		public Map<String,String>	scopes	= new LinkedHashMap<>();
+		public Map<String, String>	scopes	= new LinkedHashMap<>();
 
 	}
 
@@ -76,7 +75,7 @@ public class OpenAPISecurityDefinition {
 
 	public static OpenAPISecurityDefinition accessCode(String id, String base, String authorizationUrl, String tokenUrl,
 			String... scopes) {
-		OpenAPISecurityDefinition def = new OpenAPISecurityDefinition(id, "oauth2", base );
+		OpenAPISecurityDefinition def = new OpenAPISecurityDefinition(id, "oauth2", base);
 		OAuth2Flow flow = new OAuth2Flow();
 
 		def.authorizationCode = flow;

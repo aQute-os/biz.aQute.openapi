@@ -10,8 +10,6 @@ import java.time.ZonedDateTime;
 import org.junit.Assert;
 import org.junit.Test;
 
-import aQute.json.codec.JSONCodec;
-
 public class DateTest extends Assert {
 
 	public static class WithDate {
@@ -43,6 +41,8 @@ public class DateTest extends Assert {
 		d.zoned = ZonedDateTime.of(1985, 4, 12, 23, 20, 50, 0, ZoneOffset.ofHours(1));
 		d.instant = Instant.ofEpochMilli(145678123124L);
 		String string = new JSONCodec().enc().put(d).toString();
-		assertEquals("{\"date\":\"2017-02-22\",\"instant\":\"1974-08-14T02:08:43.124Z\",\"offset\":\"1985-04-12T23:20:50Z\",\"time\":\"1985-04-12T23:20:50\",\"zoned\":\"1985-04-12T23:20:50+01:00\"}", string);
+		assertEquals(
+				"{\"date\":\"2017-02-22\",\"instant\":\"1974-08-14T02:08:43.124Z\",\"offset\":\"1985-04-12T23:20:50Z\",\"time\":\"1985-04-12T23:20:50\",\"zoned\":\"1985-04-12T23:20:50+01:00\"}",
+				string);
 	}
 }

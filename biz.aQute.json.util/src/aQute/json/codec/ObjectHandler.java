@@ -106,7 +106,7 @@ public class ObjectHandler extends Handler {
 					value = opt.get();
 				}
 
-				if ( value == null)
+				if (value == null)
 					continue;
 
 				if (!app.writeDefaults) {

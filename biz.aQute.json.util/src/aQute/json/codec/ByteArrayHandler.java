@@ -18,7 +18,7 @@ public class ByteArrayHandler extends Handler {
 			"((:?[\\dA-Za-z][\\dA-Za-z])*)|((:?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/)+={1,3})");
 
 	@Override
-	public void encode(Encoder app, Object object, Map<Object,Type> visited) throws IOException, Exception {
+	public void encode(Encoder app, Object object, Map<Object, Type> visited) throws IOException, Exception {
 		StringHandler.string(app, Hex.toHexString((byte[]) object));
 	}
 
@@ -44,33 +44,33 @@ public class ByteArrayHandler extends Handler {
 				sb.delete(i, i + 1);
 			else {
 				switch (c) {
-					case '0' :
-					case '1' :
-					case '2' :
-					case '3' :
-					case '4' :
-					case '5' :
-					case '6' :
-					case '7' :
-					case '8' :
-					case '9' :
-					case 'A' :
-					case 'B' :
-					case 'C' :
-					case 'D' :
-					case 'E' :
-					case 'F' :
-					case 'a' :
-					case 'b' :
-					case 'c' :
-					case 'd' :
-					case 'e' :
-					case 'f' :
-						break;
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
+				case 'A':
+				case 'B':
+				case 'C':
+				case 'D':
+				case 'E':
+				case 'F':
+				case 'a':
+				case 'b':
+				case 'c':
+				case 'd':
+				case 'e':
+				case 'f':
+					break;
 
-					default :
-						hex = false;
-						break;
+				default:
+					hex = false;
+					break;
 				}
 			}
 		}

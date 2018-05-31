@@ -41,6 +41,8 @@ import aQute.openapi.v2.api.TagObject;
 
 public class JavaGenerator extends BaseSourceGenerator {
 
+	private static final String	MAP_STRING_OBJECT	= "java.util.Map<String,Object>";
+
 	final OpenAPIGenerator	gen;
 	protected SourceFile	sourceFile;
 	private SourceMethod	method;
@@ -674,8 +676,9 @@ public class JavaGenerator extends BaseSourceGenerator {
 		doDataTypeAnnotations(t.getClassName());
 		doTypeHeader(t.getClassName(), () -> {
 
+			String access = gen.getConfig().privateFields ? "private" : "public";
+
 			for (SourceProperty property : t.getProperties()) {
-				String access = gen.getConfig().privateFields ? "private" : "public";
 				String init = "";
 				if (property.getType().isOptional())
 					init = " = Optional.empty()";
@@ -724,6 +727,19 @@ public class JavaGenerator extends BaseSourceGenerator {
 				format("    public %s %s(){ return this.%s; }\n\n", property.getType().reference(), propertyGetName,
 						property.getKey());
 			}
+
+			if (t.getSchema().additionalProperties != null) {
+				format("    %s %s %s%s;\n", access, MAP_STRING_OBJECT, "__extra", "");
+				String propertyGetName;
+				if (gen.getConfig().beans) {
+					propertyGetName = "get__Extra";
+				} else {
+					propertyGetName = "__extra";
+				}
+
+				format("    public %s %s(){ return this.%s; }\n\n", MAP_STRING_OBJECT, propertyGetName, "__extra");
+			}
+
 		});
 	}
 

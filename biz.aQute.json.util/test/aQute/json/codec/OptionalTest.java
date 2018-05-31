@@ -8,8 +8,6 @@ import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
 
-import aQute.json.codec.JSONCodec;
-
 public class OptionalTest extends Assert {
 	static JSONCodec codec = new JSONCodec();
 
@@ -84,7 +82,8 @@ public class OptionalTest extends Assert {
 
 	@Test
 	public void testOptionalDecodeArrayFoo() throws Exception {
-		OptionalArrayTypeFoo optionalType = codec.dec().from("{\"array\":[{\"bar\":\"bar\"}]}").get(OptionalArrayTypeFoo.class);
+		OptionalArrayTypeFoo optionalType = codec.dec().from("{\"array\":[{\"bar\":\"bar\"}]}")
+				.get(OptionalArrayTypeFoo.class);
 		assertNotNull(optionalType.array);
 		assertTrue(optionalType.array.get(0).isPresent());
 		assertEquals("bar", optionalType.array.get(0).get().bar);
@@ -95,7 +94,7 @@ public class OptionalTest extends Assert {
 	public void testOptionalEncodeArrayFoo() throws Exception {
 		OptionalArrayTypeFoo x = new OptionalArrayTypeFoo();
 		Foo foo = new Foo();
-		foo.bar ="bar";
+		foo.bar = "bar";
 
 		x.array = new ArrayList<>();
 		x.array.add(Optional.of(foo));
@@ -106,12 +105,13 @@ public class OptionalTest extends Assert {
 	}
 
 	static class OptionalMapTypeFoo {
-		public Map<String,Optional<Foo>> map;
+		public Map<String, Optional<Foo>> map;
 	}
 
 	@Test
 	public void testOptionalDecodeMapFoo() throws Exception {
-		OptionalMapTypeFoo optionalType = codec.dec().from("{\"map\":{\"foo\":{\"bar\":\"BAR\"}}}").get(OptionalMapTypeFoo.class);
+		OptionalMapTypeFoo optionalType = codec.dec().from("{\"map\":{\"foo\":{\"bar\":\"BAR\"}}}")
+				.get(OptionalMapTypeFoo.class);
 		assertNotNull(optionalType.map);
 		assertTrue(optionalType.map.get("foo").isPresent());
 		assertEquals("BAR", optionalType.map.get("foo").get().bar);
@@ -122,7 +122,7 @@ public class OptionalTest extends Assert {
 	public void testOptionalEncodeMapFoo() throws Exception {
 		OptionalArrayTypeFoo x = new OptionalArrayTypeFoo();
 		Foo foo = new Foo();
-		foo.bar ="bar";
+		foo.bar = "bar";
 
 		x.array = new ArrayList<>();
 		x.array.add(Optional.of(foo));

@@ -63,7 +63,8 @@ public class DummyFramework extends Assert implements AutoCloseable {
 				Exceptions.duck(e);
 			} finally {
 				try {
-					framework.close();;
+					framework.close();
+					;
 				} catch (Exception e) {
 					// ignore
 				}

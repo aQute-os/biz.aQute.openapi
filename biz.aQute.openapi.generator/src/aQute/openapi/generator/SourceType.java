@@ -16,10 +16,10 @@ import aQute.openapi.v2.api.SchemaObject;
 
 public abstract class SourceType {
 
-	final static IdentityHashMap<ItemsObject,SourceType>	types	= new IdentityHashMap<>();
-	final static AtomicInteger								counter	= new AtomicInteger(1000);
+	final static IdentityHashMap<ItemsObject,SourceType>	types		= new IdentityHashMap<>();
+	final static AtomicInteger								counter		= new AtomicInteger(1000);
 
-	static final SourceType									VOID	= new VoidType();
+	static final SourceType									VOID		= new VoidType();
 	public static final SourceType							MIMEWRAPPER	= new MimeWrapperType();
 
 	final int												id;
@@ -284,6 +284,7 @@ public abstract class SourceType {
 			return String.format("toBoolean(%s)", name);
 		}
 
+		@Override
 		public SourceType wrapper() {
 			return wrapper;
 		}
@@ -403,6 +404,7 @@ public abstract class SourceType {
 			super(gen, wrapper, schema);
 		}
 
+		@Override
 		public String toString(double v) {
 			return Double.toString(v);
 		}
@@ -448,7 +450,6 @@ public abstract class SourceType {
 
 		}
 	}
-
 
 	public static class StringEnumType extends SimpleType {
 
@@ -643,6 +644,7 @@ public abstract class SourceType {
 				SourceProperty property = new SourceProperty(gen, memberName, type);
 
 				this.properties.put(e.getKey(), property);
+
 			}
 		}
 
@@ -656,6 +658,7 @@ public abstract class SourceType {
 			return gen.toTypeName(name);
 		}
 
+		@Override
 		public void addTypes(SourceFile sourceFile) {
 			for (SourceProperty property : properties.values()) {
 				sourceFile.addType(property.getType());
@@ -781,11 +784,13 @@ public abstract class SourceType {
 			return "optional(context." + target.conversion(name) + ")";
 		}
 
+		@Override
 		public void addTypes(SourceFile sourceFile) {
 			sourceFile.addType(target);
 			target.addTypes(sourceFile);
 		}
 
+		@Override
 		public boolean isOptional() {
 			return true;
 		}
@@ -794,6 +799,7 @@ public abstract class SourceType {
 			return target;
 		}
 
+		@Override
 		public boolean hasValidator() {
 			return target.hasValidator();
 		}

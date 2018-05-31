@@ -27,7 +27,6 @@ public class ValidatorTest {
 		public int[]				requiredPrimitiveArray;
 	}
 
-
 	@Test
 	public void testRequiredFieldsWithoutValues() {
 		Validator validator = new Validator();
@@ -53,7 +52,6 @@ public class ValidatorTest {
 		@ValidatorString(pattern = "2\\.0\\.0")
 		public String string;
 	}
-
 
 	@Test
 	public void testPatternNotThere() {
@@ -89,7 +87,7 @@ public class ValidatorTest {
 		Validator validator = new Validator();
 		WithList c = new WithList();
 		Patterned p = new Patterned();
-		p.string="2.0.0";
+		p.string = "2.0.0";
 		c.p = Arrays.asList(p);
 		validator.verify(c);
 		assertTrue(validator.check());
@@ -122,7 +120,6 @@ public class ValidatorTest {
 		validator.verify(c);
 		assertTrue(validator.check());
 	}
-
 
 	@Test
 	public void testArrayPatternInCorrect() {

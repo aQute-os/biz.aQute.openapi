@@ -7,7 +7,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.Pattern;
 
 /**
  * This class encodes and decodes any string to a valid Java Identifier.
@@ -96,7 +95,7 @@ public class NameCodec {
 	 * @return the decoded name
 	 */
 	public static String decode(String name) {
-		if ( name.equals("$ref") || name.equals("$schema"))
+		if (name.equals("$ref") || name.equals("$schema"))
 			return name;
 
 		if (name.endsWith("$"))
@@ -161,7 +160,7 @@ public class NameCodec {
 	 * Make sure stays sorted
 	 */
 
-	public static final String[] RESERVED_JAVA = {
+	public static final String[]	RESERVED_JAVA	= {
 			"abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue",
 			"default", "do", "double", "else", "enum", "extends", "false", "final", "finally", "float", "for", "goto",
 			"if", "implements", "import", "instanceof", "int", "interface", "long", "native", "new", "null", "package",
@@ -169,7 +168,7 @@ public class NameCodec {
 			"synchronized", "this", "throw", "throws", "transient", "true", "try", "void", "volatile", "while"
 	};
 
-	public static final String[] RESERVED_JSON = {
+	public static final String[]	RESERVED_JSON	= {
 			"$ref"
 	};
 }

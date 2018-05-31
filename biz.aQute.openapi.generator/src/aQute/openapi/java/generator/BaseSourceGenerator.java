@@ -72,6 +72,7 @@ public class BaseSourceGenerator {
 
 		CommentBuilder param(String name, String description);
 
+		@Override
 		void close();
 
 		CommentBuilder see(URI uri);
@@ -175,6 +176,7 @@ public class BaseSourceGenerator {
 	public interface AnnotationBuilder extends Closeable {
 		AnnotationBuilder attribute(String name, String type, String deflt);
 
+		@Override
 		void close();
 	}
 
@@ -220,6 +222,7 @@ public class BaseSourceGenerator {
 
 		Annotate<T> set(Object ignore, String value);
 
+		@Override
 		void close();
 
 		Annotate<T> setQuoted(String ignore, String value);

@@ -19,14 +19,14 @@ public class Encoder implements Appendable, Closeable, Flushable {
 	final JSONCodec	codec;
 	Appendable		app;
 	MessageDigest	digest;
-	boolean			writeDefaults = true;
-	String			encoding	= "UTF-8";
+	boolean			writeDefaults	= true;
+	String			encoding		= "UTF-8";
 	boolean			deflate;
-	String			tabs		= null;
-	String			indent		= "";
-	boolean			keepOpen	= false;
-	boolean			closed		= false;
-	private boolean log;
+	String			tabs			= null;
+	String			indent			= "";
+	boolean			keepOpen		= false;
+	boolean			closed			= false;
+	private boolean	log;
 
 	Encoder(JSONCodec codec) {
 		this.codec = codec;
@@ -37,7 +37,7 @@ public class Encoder implements Appendable, Closeable, Flushable {
 		if (app == null)
 			to();
 
-		codec.encode(this, object, null, new IdentityHashMap<Object,Type>());
+		codec.encode(this, object, null, new IdentityHashMap<Object, Type>());
 		flush();
 		if (!keepOpen)
 			close();
@@ -84,6 +84,7 @@ public class Encoder implements Appendable, Closeable, Flushable {
 		return this;
 	}
 
+	@Override
 	public Appendable append(char c) throws IOException {
 		if (digest != null) {
 			digest.update((byte) (c / 256));
@@ -93,10 +94,12 @@ public class Encoder implements Appendable, Closeable, Flushable {
 		return this;
 	}
 
+	@Override
 	public Appendable append(CharSequence sq) throws IOException {
 		return append(sq, 0, sq.length());
 	}
 
+	@Override
 	public Appendable append(CharSequence sq, int start, int length) throws IOException {
 		if (digest != null) {
 			for (int i = start; i < length; i++) {
@@ -114,6 +117,7 @@ public class Encoder implements Appendable, Closeable, Flushable {
 		return app.toString();
 	}
 
+	@Override
 	public void close() throws IOException {
 		if (app != null && app instanceof Closeable) {
 			((Closeable) app).close();
@@ -121,7 +125,7 @@ public class Encoder implements Appendable, Closeable, Flushable {
 		}
 	}
 
-	void encode(Object object, Type type, Map<Object,Type> visited) throws Exception {
+	void encode(Object object, Type type, Map<Object, Type> visited) throws Exception {
 		codec.encode(this, object, type, visited);
 	}
 
@@ -130,6 +134,7 @@ public class Encoder implements Appendable, Closeable, Flushable {
 		return this;
 	}
 
+	@Override
 	public void flush() throws IOException {
 		if (closed)
 			return;
@@ -181,15 +186,14 @@ public class Encoder implements Appendable, Closeable, Flushable {
 		return this;
 	}
 
-
 	public void log(String format, Object... args) {
 		if (isLog()) {
-			JSONCodec.log(format,args);
+			JSONCodec.log(format, args);
 		}
 	}
 
 	public Encoder writeDefaults(boolean b) {
-		this.writeDefaults=b;
+		this.writeDefaults = b;
 		return this;
 	}
 }

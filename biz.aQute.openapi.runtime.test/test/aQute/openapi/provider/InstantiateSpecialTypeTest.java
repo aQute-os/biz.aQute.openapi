@@ -6,48 +6,41 @@ import org.junit.Test;
 
 import gen.instantiation.dates.InstantiationDates;
 
-public class InstantiateSpecialTypeTest extends Assert
-{
-   @Rule
-   public OpenAPIServerTestRule rule = new OpenAPIServerTestRule();
+public class InstantiateSpecialTypeTest extends Assert {
+	@Rule
+	public OpenAPIServerTestRule rule = new OpenAPIServerTestRule();
 
-   static class MyDates extends InstantiationDates.Dates
-   {
-      void foo()
-      {
+	static class MyDates extends InstantiationDates.Dates {
+		void foo() {
 
-      }
-   }
+		}
+	}
 
-   @Test
-   public void testOverridingInstantiating() throws Exception
-   {
-      class X extends InstantiationDates
-      {
+	@Test
+	public void testOverridingInstantiating() throws Exception {
+		class X extends InstantiationDates {
 
-         @SuppressWarnings("unchecked")
-         @Override
-         public <T> T instantiate_(Class<T> type)
-         {
-            if (type == Dates.class)
-               return (T) new MyDates();
+			@SuppressWarnings("unchecked")
+			@Override
+			public <T> T instantiate_(Class<T> type) {
+				if (type == Dates.class)
+					return (T) new MyDates();
 
-            return super.instantiate_(type);
-         }
+				return super.instantiate_(type);
+			}
 
-         @Override
-         protected Dates putDates(Dates token) throws Exception
-         {
-            token.error = token instanceof MyDates ? "Yes!"  : "Yuck " + token.getClass();
-            return token;
-         }
+			@Override
+			protected Dates putDates(Dates token) throws Exception {
+				token.error = token instanceof MyDates ? "Yes!" : "Yuck " + token.getClass();
+				return token;
+			}
 
-      }
-      ;
-      rule.add(new X());
+		}
+		;
+		rule.add(new X());
 
-      String offset = rule.put("/v1/dates", "{}");
-      assertEquals("{'error':'Yes!'}", offset);
-   }
+		String offset = rule.put("/v1/dates", "{}");
+		assertEquals("{'error':'Yes!'}", offset);
+	}
 
 }

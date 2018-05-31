@@ -28,8 +28,8 @@ import aQute.openapi.generator.OpenAPIGenerator;
 import aQute.openapi.v2.api.OperationObject;
 
 public class OpenAPICLI extends Env {
-	Logger	logger	= LoggerFactory.getLogger(OpenAPICLI.class);
-	boolean exceptions;
+	Logger		logger	= LoggerFactory.getLogger(OpenAPICLI.class);
+	boolean		exceptions;
 
 	Appendable	out		= System.out;
 
@@ -147,7 +147,6 @@ public class OpenAPICLI extends Env {
 
 		for (String path : arguments) {
 
-
 			File f = IO.getFile(path);
 			logger.info("using path {}", f);
 
@@ -167,9 +166,8 @@ public class OpenAPICLI extends Env {
 				JSONCodec codec = new JSONCodec();
 				String json = IO.collect(f).trim();
 
-				if ( json.startsWith("[")) {
-					List<Configuration> cs = codec.dec().from(json).get(
-							new TypeReference<List<Configuration>>() {});
+				if (json.startsWith("[")) {
+					List<Configuration> cs = codec.dec().from(json).get(new TypeReference<List<Configuration>>() {});
 					configurations.addAll(cs);
 				} else {
 					Configuration c = codec.dec().from(json).get(Configuration.class);
@@ -219,7 +217,7 @@ public class OpenAPICLI extends Env {
 
 	@Description("Show all the operation tags")
 	public void _tags(TagOptions options) throws Exception {
-		List<String> tags = new ArrayList<String>();
+		List<String> tags = new ArrayList<>();
 
 		parse(options, (gen) -> tags.addAll(gen.tags()));
 		print(tags);
@@ -234,7 +232,7 @@ public class OpenAPICLI extends Env {
 
 	@Description("Show all the operations")
 	public void _paths(PathsOptions options) throws Exception {
-		List<String> paths = new ArrayList<String>();
+		List<String> paths = new ArrayList<>();
 
 		parse(options, (gen) -> paths.addAll(gen.paths()));
 		print(paths);

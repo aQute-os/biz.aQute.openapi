@@ -13,6 +13,7 @@ public class CasingTest {
 		}
 
 	}
+
 	@Test
 	public void casing() {
 

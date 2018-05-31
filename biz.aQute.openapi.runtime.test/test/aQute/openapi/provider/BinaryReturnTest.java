@@ -20,7 +20,7 @@ public class BinaryReturnTest extends Assert {
 		class X extends ImagereturnBase {
 
 			/**
-			 * Declared with multiple 
+			 * Declared with multiple
 			 */
 			@Override
 			protected MimeWrapper image_multiple_mime() throws Exception {
@@ -51,7 +51,7 @@ public class BinaryReturnTest extends Assert {
 		assertEquals(200, go.getResponseCode());
 		assertEquals("application/json", go.getConnection().getContentType());
 		String collect = IO.collect(go.getInputStream());
-		assertEquals( "{}", collect);
+		assertEquals("{}", collect);
 	}
 
 }

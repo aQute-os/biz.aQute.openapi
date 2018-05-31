@@ -2,9 +2,9 @@ package aQute.openapi.generator;
 
 public class SourceProperty {
 
-	private final String			key;
-	private final SourceType		type;
-	final OpenAPIGenerator	gen;
+	private final String		key;
+	private final SourceType	type;
+	final OpenAPIGenerator		gen;
 
 	public SourceProperty(OpenAPIGenerator gen, String key, SourceType type) {
 		this.gen = gen;

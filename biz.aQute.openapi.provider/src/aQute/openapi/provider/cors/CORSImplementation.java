@@ -30,8 +30,8 @@ public class CORSImplementation implements CORS {
 	int			maxAge;
 	Logger		logger;
 
-	public CORSImplementation(Logger logger, String[] listOfOrigins, String[] listOfExposedHeaders, String[] listOfHeaders,
-			boolean supportCredentials, int maxAge) {
+	public CORSImplementation(Logger logger, String[] listOfOrigins, String[] listOfExposedHeaders,
+			String[] listOfHeaders, boolean supportCredentials, int maxAge) {
 		this.logger = logger;
 		this.listOfOrigins = toGlobs(listOfOrigins);
 		this.listOfExposedHeaders = listOfExposedHeaders == null ? Collections.emptySet()

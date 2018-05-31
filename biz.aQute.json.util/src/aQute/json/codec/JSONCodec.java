@@ -223,7 +223,7 @@ public class JSONCodec {
 			Class<?> clazz = (Class<?>) type;
 
 			if (Enum.class.isAssignableFrom(clazz))
-				h = new EnumHandler(this,clazz);
+				h = new EnumHandler(this, clazz);
 			else if (Iterable.class.isAssignableFrom(clazz)) // A Non Generic
 				// collection
 

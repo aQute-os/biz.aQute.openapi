@@ -47,7 +47,7 @@ public class OpenAPIGenerator extends Env {
 	Map<String,SourceFile>		sources		= new HashMap<>();
 	private static Logger		logger		= LoggerFactory.getLogger(OpenAPIGenerator.class);
 	private final Configuration	config;
-	final Map<Glob,String>		tags		= new LinkedHashMap<Glob,String>();
+	final Map<Glob,String>		tags		= new LinkedHashMap<>();
 	final String				defaultTag;
 	final File					in;
 	final String				dateTimeClass;
@@ -113,7 +113,7 @@ public class OpenAPIGenerator extends Env {
 		operation.method = method;
 		if (operation.security == null)
 			operation.security = swagger.security;
-		
+
 		if (config.tagsMustBeSet && (operation.tags == null || operation.tags.length == 0)) {
 			warning("%s – No tags set", operation.operationId);
 		}
@@ -121,9 +121,9 @@ public class OpenAPIGenerator extends Env {
 		if (operation.produces == null) {
 			operation.produces = swagger.produces;
 		}
-		if ( operation.parameters != null) {
-			for ( ParameterObject parameter : operation.parameters) {
-				if ( parameter.in == In.formData) {
+		if (operation.parameters != null) {
+			for (ParameterObject parameter : operation.parameters) {
+				if (parameter.in == In.formData) {
 					// TODO multipart
 					if (operation.consumes == null
 							|| !(operation.consumes.contains(WWWUtils.APPLICATION_X_WWW_FORM_URLENCODED)
@@ -325,7 +325,7 @@ public class OpenAPIGenerator extends Env {
 		return SourceType.getSourceType(this, schema, contextName);
 	}
 
-	public Object			dtoType;
+	public Object dtoType;
 
 	public String getVersion() {
 		if (getSwagger().info == null)
@@ -341,7 +341,7 @@ public class OpenAPIGenerator extends Env {
 	}
 
 	public List<String> tags() {
-		List<String> tags = new ArrayList<String>();
+		List<String> tags = new ArrayList<>();
 
 		getSwagger().paths.values().forEach(pi -> {
 			add(tags, pi.get);

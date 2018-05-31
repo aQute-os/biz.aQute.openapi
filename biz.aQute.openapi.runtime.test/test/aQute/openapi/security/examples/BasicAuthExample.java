@@ -9,7 +9,7 @@ import gen.basicauth.BasicauthBase;
 public class BasicAuthExample {
 	@Rule
 	public OpenAPIServerTestRule	runtime	= new OpenAPIServerTestRule();
-	DummyFramework			fw		= new DummyFramework();
+	DummyFramework					fw		= new DummyFramework();
 
 	static class Impl extends BasicauthBase {
 

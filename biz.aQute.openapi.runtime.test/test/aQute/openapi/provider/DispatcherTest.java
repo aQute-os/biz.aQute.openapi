@@ -19,7 +19,6 @@ import org.junit.Test;
 import aQute.bnd.service.url.TaggedData;
 import aQute.lib.converter.Converter;
 import aQute.libg.map.MAP;
-import aQute.openapi.provider.OpenAPIRuntime;
 import aQute.openapi.provider.OpenAPIRuntime.Configuration;
 import gen.simple.SimpleBase;
 

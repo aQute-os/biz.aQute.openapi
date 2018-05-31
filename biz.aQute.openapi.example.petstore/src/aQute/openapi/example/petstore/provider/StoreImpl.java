@@ -37,5 +37,4 @@ public class StoreImpl extends GeneratedStore {
 		return null;
 	}
 
-
 }

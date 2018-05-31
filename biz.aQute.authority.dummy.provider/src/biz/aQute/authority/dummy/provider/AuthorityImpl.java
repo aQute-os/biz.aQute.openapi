@@ -10,7 +10,7 @@ import org.osgi.service.component.annotations.Component;
 import osgi.enroute.authorization.api.Authority;
 import osgi.enroute.authorization.api.AuthorityAdmin;
 
-@Component(property= Constants.SERVICE_RANKING+":Integer="+Integer.MIN_VALUE)
+@Component(property = Constants.SERVICE_RANKING + ":Integer=" + Integer.MIN_VALUE)
 public class AuthorityImpl implements Authority, AuthorityAdmin {
 
 	@Override

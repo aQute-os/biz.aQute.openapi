@@ -380,7 +380,6 @@ public abstract class OpenAPIBase {
 		this.ops = ops;
 	}
 
-
 	protected OpenAPIContext getOpenAPIContext() {
 		return contexts.get();
 	}

@@ -23,10 +23,6 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
-import aQute.json.codec.Decoder;
-import aQute.json.codec.Encoder;
-import aQute.json.codec.Handler;
-import aQute.json.codec.JSONCodec;
 import aQute.lib.collections.MultiMap;
 import aQute.lib.converter.TypeReference;
 import aQute.lib.io.IO;
@@ -97,6 +93,7 @@ public class JSONTest extends TestCase {
 				app.encode(object.toString(), String.class, visited);
 			}
 
+			@Override
 			public Object decode(Decoder dec, String s) throws Exception {
 				return new Version(s);
 			}
@@ -265,6 +262,7 @@ public class JSONTest extends TestCase {
 		final List<String> l = Arrays.asList("a", "b", "c");
 		Iterable<String> i = new Iterable<String>() {
 
+			@Override
 			public Iterator<String> iterator() {
 				return l.iterator();
 			}
@@ -914,18 +912,20 @@ public class JSONTest extends TestCase {
 		public double	dNaN	= Double.NaN;
 		public double	dNegInf	= Double.NEGATIVE_INFINITY;
 		public double	dNormal;
-		public double	dOne = 1.1;
+		public double	dOne	= 1.1;
 		public double	dPosInf	= Double.POSITIVE_INFINITY;
 
 		public float	fNaN	= Float.NaN;
 		public float	fNegInf	= Float.NEGATIVE_INFINITY;
 		public float	fNormal;
-		public double	fOne = 1.1;
+		public double	fOne	= 1.1;
 		public float	fPosInf	= Float.POSITIVE_INFINITY;
 	}
 
 	public void testInfiniteAndNaN() throws Exception {
 		String s = new JSONCodec().enc().put(new InfiniteAndNan()).toString();
-		assertEquals( "{\"dNaN\":\"NaN\",\"dNegInf\":\"-Infinity\",\"dNormal\":0,\"dOne\":1.1,\"dPosInf\":\"Infinity\",\"fNaN\":\"NaN\",\"fNegInf\":\"-Infinity\",\"fNormal\":0,\"fOne\":1.1,\"fPosInf\":\"Infinity\"}", s);
+		assertEquals(
+				"{\"dNaN\":\"NaN\",\"dNegInf\":\"-Infinity\",\"dNormal\":0,\"dOne\":1.1,\"dPosInf\":\"Infinity\",\"fNaN\":\"NaN\",\"fNegInf\":\"-Infinity\",\"fNormal\":0,\"fOne\":1.1,\"fPosInf\":\"Infinity\"}",
+				s);
 	}
 }

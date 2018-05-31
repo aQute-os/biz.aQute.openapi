@@ -4,8 +4,6 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import biz.aQute.openapi.security.dummy.provider.SecurityProviderImpl;
-
 /*
  * Example JUNit test case
  *

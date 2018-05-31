@@ -13,7 +13,7 @@ import aQute.lib.base64.Base64;
 public class FileHandler extends Handler {
 
 	@Override
-	public void encode(Encoder app, Object object, Map<Object,Type> visited) throws IOException, Exception {
+	public void encode(Encoder app, Object object, Map<Object, Type> visited) throws IOException, Exception {
 		File f = (File) object;
 		if (!f.isFile())
 			throw new RuntimeException("Encoding a file requires the file to exist and to be a normal file " + f);

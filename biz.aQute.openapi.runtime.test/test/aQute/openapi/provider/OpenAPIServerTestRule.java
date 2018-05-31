@@ -24,22 +24,25 @@ public class OpenAPIServerTestRule implements TestRule {
 		System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
 	}
 	public URI						uri;
-	public Server					server	= new Server(0);
+	public int						port;
+	public Server					server					= new Server(0);
 	public ServletContextHandler	handler;
-	public Map<String,Object>		configuration = new HashMap<>();
-	public OpenAPIRuntime			runtime	= new OpenAPIRuntime() {
-												@Override
-												public java.io.Closeable registerServlet(String alias, Servlet servlet)
-														throws ServletException, NamespaceException {
-													if ( alias.equals("/"))
-														alias = "";
-													handler.addServlet(new ServletHolder(servlet), (alias + "/*"));
-													return () -> {
-																							};
-												};
-											};
-	public SecurityProviderManager	securityProviderManager		= new SecurityProviderManager();
-	public HttpClient				http	= new HttpClient();
+	public Map<String, Object>		configuration			= new HashMap<>();
+	public OpenAPIRuntime			runtime					= new OpenAPIRuntime() {
+																@Override
+																public java.io.Closeable registerServlet(String alias,
+																		Servlet servlet)
+																		throws ServletException, NamespaceException {
+																	if (alias.equals("/"))
+																		alias = "";
+																	handler.addServlet(new ServletHolder(servlet),
+																			(alias + "/*"));
+																	return () -> {
+																															};
+																};
+															};
+	public SecurityProviderManager	securityProviderManager	= new SecurityProviderManager();
+	public HttpClient				http					= new HttpClient();
 
 	@Override
 	public Statement apply(Statement statement, Description description) {
@@ -61,6 +64,7 @@ public class OpenAPIServerTestRule implements TestRule {
 						Thread.sleep(100);
 
 					uri = server.getURI();
+					port = uri.getPort();
 					statement.evaluate();
 				} finally {
 					server.stop();

@@ -13,6 +13,8 @@
 
 -testpath: \
 	org.apache.felix.framework, \
-	biz.aQute.openapi.oauth2.provider
+	biz.aQute.openapi.oauth2.provider, \
+	lib/htmlunit-2.29-OSG.jar;version=file
+	
 
 src=src,gen-sources

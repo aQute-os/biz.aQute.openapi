@@ -3,19 +3,17 @@ package aQute.json.codec;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import aQute.json.codec.ObjectHandler.FDesc;
 import aQute.lib.exceptions.Exceptions;
 
 public class EnumHandler extends Handler {
 	@SuppressWarnings("rawtypes")
-	final Class<? extends Enum> type;
-	final FDesc[] fields;
+	final Class<? extends Enum>	type;
+	final FDesc[]				fields;
 
-	static class FDesc implements Comparable<FDesc>{
+	static class FDesc implements Comparable<FDesc> {
 		String	name;
 		Object	instance;
 
@@ -55,7 +53,7 @@ public class EnumHandler extends Handler {
 	@SuppressWarnings("unchecked")
 	public Object decode(Decoder dec, String s) throws Exception {
 		FDesc field = getField(s);
-		if ( field == null) {
+		if (field == null) {
 			return Enum.valueOf(type, s);
 		}
 

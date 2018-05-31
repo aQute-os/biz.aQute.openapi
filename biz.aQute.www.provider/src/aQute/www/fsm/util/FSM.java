@@ -48,7 +48,7 @@ public class FSM<State extends Enum<State>, Event extends Enum<Event>, Context> 
 			transitions = new Transition[stateLength][eventLength];
 		}
 
-		public Builder<State, Event, Context,Result> transition(State from, Event event, State to,
+		public Builder<State, Event, Context, Result> transition(State from, Event event, State to,
 				Function<Context, Result> action) {
 			Transition t = transitions[from.ordinal()][event.ordinal()];
 			if (t == null) {
@@ -63,7 +63,7 @@ public class FSM<State extends Enum<State>, Event extends Enum<Event>, Context> 
 			return this;
 		}
 
-		public Builder<State, Event, Context,Result> onEnter(State state, Consumer<Context> action) {
+		public Builder<State, Event, Context, Result> onEnter(State state, Consumer<Context> action) {
 			for (int s = 0; s < stateLength; s++) {
 
 				boolean isAlsoSource = s == state.ordinal();
@@ -84,7 +84,7 @@ public class FSM<State extends Enum<State>, Event extends Enum<Event>, Context> 
 			return this;
 		}
 
-		public Builder<State, Event, Context,Result> onExit(State state, Consumer<Context> action) {
+		public Builder<State, Event, Context, Result> onExit(State state, Consumer<Context> action) {
 			int s = state.ordinal();
 
 			for (int e = 0; e < eventLength; e++) {

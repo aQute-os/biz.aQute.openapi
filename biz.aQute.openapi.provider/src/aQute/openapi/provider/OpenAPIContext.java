@@ -115,8 +115,7 @@ public class OpenAPIContext {
 		return response.getStatus() == beginStatus;
 	}
 
-	private void doHeaders() {
-	}
+	private void doHeaders() {}
 
 	private OutputStream getOutputStream() throws IOException {
 		return response.getOutputStream();

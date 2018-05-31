@@ -454,10 +454,10 @@ public class UserAdminFacade {
 	}
 
 	public boolean implies(Role user, String action, String... arguments) {
-		if ( ! (user instanceof User )) // user.anyone is role
+		if (!(user instanceof User)) // user.anyone is role
 			return false;
 
-		Authorization authorization = userAdmin.getAuthorization((User)user);
+		Authorization authorization = userAdmin.getAuthorization((User) user);
 
 		String[] roles = authorization.getRoles();
 		if (roles == null || roles.length == 0) {

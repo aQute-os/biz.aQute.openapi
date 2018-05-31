@@ -7,7 +7,7 @@ import java.util.Map;
 public class StringHandler extends Handler {
 
 	@Override
-	public void encode(Encoder app, Object object, Map<Object,Type> visited) throws IOException {
+	public void encode(Encoder app, Object object, Map<Object, Type> visited) throws IOException {
 		string(app, object.toString());
 	}
 
@@ -17,43 +17,43 @@ public class StringHandler extends Handler {
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
 			switch (c) {
-				case '"' :
-					app.append("\\\"");
-					break;
+			case '"':
+				app.append("\\\"");
+				break;
 
-				case '\\' :
-					app.append("\\\\");
-					break;
+			case '\\':
+				app.append("\\\\");
+				break;
 
-				case '\b' :
-					app.append("\\b");
-					break;
+			case '\b':
+				app.append("\\b");
+				break;
 
-				case '\f' :
-					app.append("\\f");
-					break;
+			case '\f':
+				app.append("\\f");
+				break;
 
-				case '\n' :
-					app.append("\\n");
-					break;
+			case '\n':
+				app.append("\\n");
+				break;
 
-				case '\r' :
-					app.append("\\r");
-					break;
+			case '\r':
+				app.append("\\r");
+				break;
 
-				case '\t' :
-					app.append("\\t");
-					break;
+			case '\t':
+				app.append("\\t");
+				break;
 
-				default :
-					if (Character.isISOControl(c)) {
-						app.append("\\u");
-						app.append("0123456789ABCDEF".charAt(0xF & (c >> 12)));
-						app.append("0123456789ABCDEF".charAt(0xF & (c >> 8)));
-						app.append("0123456789ABCDEF".charAt(0xF & (c >> 4)));
-						app.append("0123456789ABCDEF".charAt(0xF & (c >> 0)));
-					} else
-						app.append(c);
+			default:
+				if (Character.isISOControl(c)) {
+					app.append("\\u");
+					app.append("0123456789ABCDEF".charAt(0xF & (c >> 12)));
+					app.append("0123456789ABCDEF".charAt(0xF & (c >> 8)));
+					app.append("0123456789ABCDEF".charAt(0xF & (c >> 4)));
+					app.append("0123456789ABCDEF".charAt(0xF & (c >> 0)));
+				} else
+					app.append(c);
 			}
 		}
 		app.append('"');
@@ -118,29 +118,29 @@ public class StringHandler extends Handler {
 			sb.append((char) c);
 			if (instring)
 				switch (c) {
-					case '"' :
-						instring = true;
-						break;
+				case '"':
+					instring = true;
+					break;
 
-					case '[' :
-					case '{' :
-						level++;
-						break;
+				case '[':
+				case '{':
+					level++;
+					break;
 
-					case ']' :
-					case '}' :
-						level--;
-						break;
+				case ']':
+				case '}':
+					level--;
+					break;
 				}
 			else
 				switch (c) {
-					case '"' :
-						instring = false;
-						break;
+				case '"':
+					instring = false;
+					break;
 
-					case '\\' :
-						sb.append((char) isr.read());
-						break;
+				case '\\':
+					sb.append((char) isr.read());
+					break;
 				}
 
 			c = isr.read();

@@ -15,15 +15,16 @@ import javax.servlet.http.HttpServletRequest;
 import aQute.lib.converter.Converter;
 
 public class WWWUtils {
-	
-	public final static String APPLICATION_X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
-	public final static String MULTIPART_FORM_DATA = "multipart/form-data";
-	
-	private static final String[] EMPTY_STRING_ARRAY = new String[0];
-	static ABNF	unreserved	= new ABNF("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.~-");
-//	static ABNF	sub_delims	= new ABNF("!$&'()*+,;=");
-//	static ABNF	pchar		= new ABNF(":@%", unreserved, sub_delims);
-	static ABNF	query		= new ABNF("/?", unreserved);
+
+	public final static String		APPLICATION_X_WWW_FORM_URLENCODED	= "application/x-www-form-urlencoded";
+	public final static String		MULTIPART_FORM_DATA					= "multipart/form-data";
+
+	private static final String[]	EMPTY_STRING_ARRAY					= new String[0];
+	static ABNF						unreserved							= new ABNF(
+			"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.~-");
+	// static ABNF sub_delims = new ABNF("!$&'()*+,;=");
+	// static ABNF pchar = new ABNF(":@%", unreserved, sub_delims);
+	static ABNF						query								= new ABNF("/?", unreserved);
 
 	/**
 	 * Most HTTP header field values are defined using common syntax components
@@ -33,7 +34,7 @@ public class WWWUtils {
 	 *
 	 * <pre>
 	     token          = 1*tchar
-
+	
 	     tchar          = "!" / "#" / "$" / "%" / "&" / "'" / "*"
 	                    / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
 	                    / DIGIT / ALPHA
@@ -98,8 +99,8 @@ public class WWWUtils {
 		}
 	}
 
-	public static void properties(StringBuilder sb, Map<String,String> parameters) {
-		for (Map.Entry<String,String> e : parameters.entrySet()) {
+	public static void properties(StringBuilder sb, Map<String, String> parameters) {
+		for (Map.Entry<String, String> e : parameters.entrySet()) {
 			property(sb, e.getKey(), e.getValue());
 		}
 	}
@@ -141,39 +142,39 @@ public class WWWUtils {
 	public static char nibble(int n) {
 		n = n & 0xF;
 		switch (n) {
-			case 0 :
-				return '0';
-			case 1 :
-				return '1';
-			case 2 :
-				return '2';
-			case 3 :
-				return '3';
-			case 4 :
-				return '4';
-			case 5 :
-				return '5';
-			case 6 :
-				return '6';
-			case 7 :
-				return '7';
-			case 8 :
-				return '8';
-			case 9 :
-				return '9';
-			case 10 :
-				return 'A';
-			case 11 :
-				return 'B';
-			case 12 :
-				return 'C';
-			case 13 :
-				return 'D';
-			case 14 :
-				return 'E';
-			case 15 :
-			default :
-				return 'F';
+		case 0:
+			return '0';
+		case 1:
+			return '1';
+		case 2:
+			return '2';
+		case 3:
+			return '3';
+		case 4:
+			return '4';
+		case 5:
+			return '5';
+		case 6:
+			return '6';
+		case 7:
+			return '7';
+		case 8:
+			return '8';
+		case 9:
+			return '9';
+		case 10:
+			return 'A';
+		case 11:
+			return 'B';
+		case 12:
+			return 'C';
+		case 13:
+			return 'D';
+		case 14:
+			return 'E';
+		case 15:
+		default:
+			return 'F';
 		}
 	}
 
@@ -196,32 +197,32 @@ public class WWWUtils {
 	}
 
 	public static String basic(String clientId, String clientSecret) {
-		return "Basic " + Base64.getEncoder().encodeToString( (clientId + ":" + clientSecret).getBytes(StandardCharsets.UTF_8));
+		return "Basic "
+				+ Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes(StandardCharsets.UTF_8));
 	}
-
 
 	public static Map<String, String[]> parameters(URI uri) {
 		return parameters(uri.getRawQuery());
 	}
 
 	public static Map<String, String[]> parameters(String rawQuery) {
-		if ( query == null)
+		if (query == null)
 			return Collections.emptyMap();
 
-		Map<String,String[]> map = new HashMap<>();
+		Map<String, String[]> map = new HashMap<>();
 		String qs[] = rawQuery.split("&");
-		for( String q : qs) {
+		for (String q : qs) {
 			String parts[] = q.split("=");
 			String key = unencode(parts[0]);
 			String value = parts.length > 1 ? unencode(parts[1]) : null;
 			String[] previous = map.getOrDefault(key, EMPTY_STRING_ARRAY);
-			map.put(key, merge(value,previous));
+			map.put(key, merge(value, previous));
 		}
 		return map;
 	}
 
 	public static String[] merge(String value, String[] previous) {
-		String[] next = new String[previous.length+1];
+		String[] next = new String[previous.length + 1];
 		next[0] = value;
 		System.arraycopy(previous, 0, next, 1, previous.length);
 		return next;
@@ -230,53 +231,55 @@ public class WWWUtils {
 	public static String unencode(String string) {
 		System.out.println(query);
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
-		for(int i=0; i<string.length(); i++) {
+		for (int i = 0; i < string.length(); i++) {
 			char c = string.charAt(i);
-			if ( query.in(c))
+			if (query.in(c))
 				bout.write(c);
-			else if ( c == '%' ){
-				if ( i < string.length()+2) {
-					c = fromHexCharacters( string.charAt(i+1), string.charAt(i+2));
+			else if (c == '%') {
+				if (i < string.length() + 2) {
+					c = fromHexCharacters(string.charAt(i + 1), string.charAt(i + 2));
 					bout.write(c);
-					i+=2;
+					i += 2;
 				} else {
-					throw new IllegalArgumentException("Invalid query string, not enough characters after % sign: "+string );
+					throw new IllegalArgumentException(
+							"Invalid query string, not enough characters after % sign: " + string);
 				}
 			} else
-				throw new IllegalArgumentException("Unknown character "+c+" in query string: "+string );
+				throw new IllegalArgumentException("Unknown character " + c + " in query string: " + string);
 		}
-		return new String( bout.toByteArray(), StandardCharsets.UTF_8);
+		return new String(bout.toByteArray(), StandardCharsets.UTF_8);
 	}
 
 	public static char fromHexCharacters(char first, char second) {
 		return (char) (nibble(first) * 16 + nibble(second));
 	}
 
-	public static int nibble(char c){
-		if ( c >= '0' && c <= '9')
+	public static int nibble(char c) {
+		if (c >= '0' && c <= '9')
 			return c - '0';
 
-		if ( c >= 'A' && c <= 'Z')
+		if (c >= 'A' && c <= 'Z')
 			return c - 'A' + 10;
-		if ( c >= 'a' && c <= 'z')
+		if (c >= 'a' && c <= 'z')
 			return c - 'a' + 10;
 
-		throw new IllegalArgumentException("Invalid hex character "+c);
+		throw new IllegalArgumentException("Invalid hex character " + c);
 	}
 
-	public static <T> T parameters(Class<T> clazz, String content) throws Exception  {
+	public static <T> T parameters(Class<T> clazz, String content) throws Exception {
 		String parts[] = content.split("&");
 		T newInstance = clazz.newInstance();
-		for ( String part : parts ) {
+		for (String part : parts) {
 			String ass[] = part.split("=");
 			String key = unencode(ass[0]);
-			if ( ass.length == 2) {
+			if (ass.length == 2) {
 				try {
 					String value = unencode(ass[1]);
 					Field field = clazz.getField(key);
 					Object converted = Converter.cnv(field.getGenericType(), value);
 					field.set(newInstance, converted);
-				} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+				} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
+						| IllegalAccessException e) {
 					// ignore
 				}
 			}
@@ -285,14 +288,14 @@ public class WWWUtils {
 	}
 
 	public static String shorten(String string, int i) {
-		if( i < 3 )
+		if (i < 3)
 			throw new IllegalArgumentException("Require at least 3 characters in output");
 
-		if ( string.length() < i)
+		if (string.length() < i)
 			return string;
 
 		i -= 3;
-		return string.substring(0,  i/2) + "..." + string.substring(string.length()-i/2);
+		return string.substring(0, i / 2) + "..." + string.substring(string.length() - i / 2);
 	}
 
 	public static Optional<String[]> parseAuthorizaton(String auth) {

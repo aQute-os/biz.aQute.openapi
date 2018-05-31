@@ -8,8 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 public interface OpenAPIAuthenticator {
 
 	/**
-	 * Mandatory name as used in Open API
-	 * TODO
+	 * Mandatory name as used in Open API TODO
 	 */
 	String	NAME	= "openapi.name";
 	/**
@@ -17,7 +16,7 @@ public interface OpenAPIAuthenticator {
 	 */
 	String	TYPE	= "openapi.type";
 
-	static String filter( String name, String type) {
+	static String filter(String name, String type) {
 		return String.format("(&(%s=%s)(%s=%s))", NAME, name, TYPE, type);
 	}
 

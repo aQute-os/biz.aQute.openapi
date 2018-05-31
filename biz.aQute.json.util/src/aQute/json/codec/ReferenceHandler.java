@@ -16,12 +16,12 @@ import aQute.json.codec.ObjectVisitor.Visitor;
 import aQute.lib.converter.Converter;
 
 public class ReferenceHandler {
-	final static Logger						log			= LoggerFactory
+	final static Logger			log			= LoggerFactory
 			.getLogger(ReferenceHandler.class);
-	final Map<String, Object>				roots		= new HashMap<String, Object>();
-	final Map<String, Object>				paths		= new HashMap<>();
-	final Map<String, Object>				resolved		= new HashMap<>();
-	final static Pattern					REF_P		= Pattern
+	final Map<String, Object>	roots		= new HashMap<String, Object>();
+	final Map<String, Object>	paths		= new HashMap<>();
+	final Map<String, Object>	resolved	= new HashMap<>();
+	final static Pattern		REF_P		= Pattern
 			.compile("(?<root>[^#]*)#/(?<sub>.*)");
 
 	public ReferenceHandler(Object root, Map<String, Object> roots) {
@@ -60,10 +60,10 @@ public class ReferenceHandler {
 		if (recursive != null)
 			return locate(recursive);
 
-		if ( replacement instanceof Map) {
+		if (replacement instanceof Map) {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
-			Map<String,String> map = (Map) replacement;
-			if (  map.size() == 1 && map.containsKey("$ref"))
+			Map<String, String> map = (Map) replacement;
+			if (map.size() == 1 && map.containsKey("$ref"))
 				return locate(map.get("$ref"));
 		}
 		return replacement;
@@ -104,7 +104,7 @@ public class ReferenceHandler {
 					replacement = convert(object.getClass(), replacement);
 
 				copy(replacement, object);
-				set(object,"$ref", path);
+				set(object, "$ref", path);
 				resolve(object);
 				return object;
 			}

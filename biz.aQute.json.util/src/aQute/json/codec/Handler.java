@@ -4,7 +4,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 public abstract class Handler {
-	public abstract void encode(Encoder app, Object object, Map<Object,Type> visited) throws Exception;
+	public abstract void encode(Encoder app, Object object, Map<Object, Type> visited) throws Exception;
 
 	public Object decodeObject(Decoder isr) throws Exception {
 		throw new UnsupportedOperationException("Cannot be mapped to object " + this);

@@ -11,8 +11,6 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import aQute.openapi.security.useradmin.util.WildcardPermission;
-
 public class WildcardPermissionTest {
 
 	@Test
@@ -32,7 +30,8 @@ public class WildcardPermissionTest {
 		assertThat(WildcardPermission.ignoreCase("a\u006bc").implies("A\u004bC"), equalTo(true));
 		assertThat(WildcardPermission.ignoreCase("a\u1e60c").implies("A\u1e61C"), equalTo(true));
 	}
-@Test
+
+	@Test
 	public void testWildcardPermissionWildcards() {
 		assertThat(WildcardPermission.caseSensitive("*").implies("abc"), equalTo(true));
 		assertThat(WildcardPermission.caseSensitive("*:def").implies("abc"), equalTo(false));
@@ -62,6 +61,7 @@ public class WildcardPermissionTest {
 		assertThat(WildcardPermission.caseSensitive("abc:**").implies("abc:"), equalTo(true));
 		assertThat(WildcardPermission.caseSensitive("abc:**").implies("abc:def:ghi"), equalTo(true));
 	}
+
 	@Test
 	public void testWildcardPermissionWithOptions() {
 		assertThat(WildcardPermission.caseSensitive("abc,def,ghi").implies("def"), equalTo(true));
@@ -85,13 +85,13 @@ public class WildcardPermissionTest {
 		assertThat(WildcardPermission.caseSensitive("abc:def\\::foo").implies("abc:def\\::foo"), equalTo(true));
 	}
 
-
 	@Test
 	public void testWildcardValidity() {
 		assertThat(WildcardPermission.isValid("a*c"), equalTo("A wildcard must not be preceded with TEXT"));
 		assertThat(WildcardPermission.isValid("a\\"), equalTo("Ends with a single backslash"));
 		assertThat(WildcardPermission.isValid("abc:"), equalTo("Last part is empty"));
-		assertThat(WildcardPermission.isValid("abc:*,ghi"), equalTo("A wildcard must be followed by a ':' or end of string"));
+		assertThat(WildcardPermission.isValid("abc:*,ghi"),
+				equalTo("A wildcard must be followed by a ':' or end of string"));
 		assertThat(WildcardPermission.isValid("abc::ghi"), equalTo("Empty part"));
 		assertThat(WildcardPermission.isValid("**:ghi"), equalTo("A double wildcard must be the last part"));
 		assertThat(WildcardPermission.isValid("**b"), equalTo("A wildcard must not be followed by text"));
@@ -99,32 +99,33 @@ public class WildcardPermissionTest {
 
 	}
 
-
 	protected List<Set<String>> parts(String wildcardString) {
 
-        if (wildcardString == null || wildcardString.isEmpty()) {
-            throw new IllegalArgumentException("Wildcard string cannot be null or empty. Make sure permission strings are properly formatted.");
-        }
+		if (wildcardString == null || wildcardString.isEmpty()) {
+			throw new IllegalArgumentException(
+					"Wildcard string cannot be null or empty. Make sure permission strings are properly formatted.");
+		}
 
+		String[] partsx = wildcardString.split(":");
 
-        String[] partsx = wildcardString.split(":");
+		List<Set<String>> parts = new ArrayList<Set<String>>();
 
-        List<Set<String>> parts = new ArrayList<Set<String>>();
+		for (String part : partsx) {
+			Set<String> subparts = new HashSet<>(Arrays.asList(part.split(",")));
 
-        for (String part : partsx) {
-            Set<String> subparts = new HashSet<>(Arrays.asList(part.split(",")));
+			if (subparts.isEmpty()) {
+				throw new IllegalArgumentException(
+						"Wildcard string cannot contain parts with only dividers. Make sure permission strings are properly formatted.");
+			}
+			parts.add(subparts);
+		}
 
-            if (subparts.isEmpty()) {
-                throw new IllegalArgumentException("Wildcard string cannot contain parts with only dividers. Make sure permission strings are properly formatted.");
-            }
-            parts.add(subparts);
-        }
-
-        if (parts.isEmpty()) {
-            throw new IllegalArgumentException("Wildcard string cannot contain only dividers. Make sure permission strings are properly formatted.");
-        }
-        return parts;
-    }
+		if (parts.isEmpty()) {
+			throw new IllegalArgumentException(
+					"Wildcard string cannot contain only dividers. Make sure permission strings are properly formatted.");
+		}
+		return parts;
+	}
 
 	@Test
 	public void testShiro() {

@@ -24,9 +24,9 @@ package aQute.www.http.util;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.HttpURLConnection.HTTP_CREATED;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
-import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_NOT_MODIFIED;
+import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.Proxy.Type.HTTP;
 
@@ -367,18 +367,19 @@ public class HttpRequest {
 		for (byte b : bytes) {
 			char c = (char) b;
 
-			if ( (c >= 'a' && c <='z') ||(c >= 'A' && c <='Z') || (c >= '0' && c <='9') || c == '_' || c=='-' || c=='?' || c == '/' || c== '.' || c == '~' ) {
+			if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_' || c == '-'
+					|| c == '?' || c == '/' || c == '.' || c == '~') {
 				result.append(c);
 			} else {
 				result.append("%");
-				result.append( nibble(c/16));
-				result.append( nibble(c%16));
+				result.append(nibble(c / 16));
+				result.append(nibble(c % 16));
 			}
 		}
 	}
 
 	private static char nibble(int i) {
-		if ( i < 10)
+		if (i < 10)
 			return (char) ('0' + i);
 		else
 			return (char) ('A' - 10 + i);

@@ -78,6 +78,7 @@ public class OpenAPIGogo implements Converter {
 	public Collection<OpenAPIAuthenticator> providers() {
 		return providers.providers.values();
 	}
+
 	@Override
 	public Object convert(Class< ? > arg0, Object arg1) throws Exception {
 		return null;

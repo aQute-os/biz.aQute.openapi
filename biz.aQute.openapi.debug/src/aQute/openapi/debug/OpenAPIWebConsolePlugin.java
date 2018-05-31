@@ -14,53 +14,47 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.http.HttpService;
 
-@Component(name = "biz.aQute.openapi.webconsole", service = Servlet.class,
-         property = "felix.webconsole.label=" + OpenAPIWebConsolePlugin.PLUGIN)
-public class OpenAPIWebConsolePlugin extends org.apache.felix.webconsole.AbstractWebConsolePlugin
-{
-   private static final long serialVersionUID = 1L;
-   final static String PLUGIN = "openapi";
+@Component(name = "biz.aQute.openapi.webconsole", service = Servlet.class, property = "felix.webconsole.label="
+		+ OpenAPIWebConsolePlugin.PLUGIN)
+public class OpenAPIWebConsolePlugin extends org.apache.felix.webconsole.AbstractWebConsolePlugin {
+	private static final long	serialVersionUID	= 1L;
+	final static String			PLUGIN				= "openapi";
 
-   @Reference
-   HttpService http;
+	@Reference
+	HttpService					http;
 
-   @Activate
-   public void activate(BundleContext context)
-   {
-      super.activate(context);
-   }
+	@Override
+	@Activate
+	public void activate(BundleContext context) {
+		super.activate(context);
+	}
 
-   public void deactivate()
-   {
-      super.deactivate();
-   }
+	@Override
+	public void deactivate() {
+		super.deactivate();
+	}
 
-   @Override
-   public String getLabel()
-   {
-      return PLUGIN;
-   }
+	@Override
+	public String getLabel() {
+		return PLUGIN;
+	}
 
-   @Override
-   public String getTitle()
-   {
-      return "OpenAPI";
-   }
+	@Override
+	public String getTitle() {
+		return "OpenAPI";
+	}
 
-   @Override
-   protected void renderContent(HttpServletRequest rq, HttpServletResponse rsp) throws ServletException, IOException
-   {
-      rsp.getWriter().println("Hello World");
-   }
+	@Override
+	protected void renderContent(HttpServletRequest rq, HttpServletResponse rsp) throws ServletException, IOException {
+		rsp.getWriter().println("Hello World");
+	}
 
-   public URL getResource(String resource)
-   {
-      if (resource.equals("/" + PLUGIN))
-         return null;
+	public URL getResource(String resource) {
+		if (resource.equals("/" + PLUGIN))
+			return null;
 
-      resource = resource.replaceAll("/" + PLUGIN + "/", "");
-      return getClass().getResource(resource);
-   }
-
+		resource = resource.replaceAll("/" + PLUGIN + "/", "");
+		return getClass().getResource(resource);
+	}
 
 }

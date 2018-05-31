@@ -114,8 +114,8 @@ public interface OpenAPISecurityEnvironment {
 	 * the exception nor the servlet response. If it returns false, the normal
 	 * exception processing is used.
 	 * 
-	 * This method is not called for the ResponseExceptions since they are 
-	 * not real exceptions but only used for their alternative flow.
+	 * This method is not called for the ResponseExceptions since they are not
+	 * real exceptions but only used for their alternative flow.
 	 * 
 	 * @param exception
 	 *            Any exception by user code

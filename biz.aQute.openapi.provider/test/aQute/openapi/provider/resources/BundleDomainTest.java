@@ -14,7 +14,6 @@ import aQute.openapi.provider.resources.ResourceDomain.ResourceHolder;
 
 public class BundleDomainTest {
 
-
 	@Test
 	public void testSimple() throws Exception {
 		BundleDomain domain = new BundleDomain();

@@ -21,12 +21,12 @@ import osgi.enroute.debug.api.Debug;
 }, service = BasicAuthGogo.class)
 public class BasicAuthGogo {
 
-	private static final String BASIC = "basic";
+	private static final String	BASIC	= "basic";
 
 	@Reference
 	OpenAPISecurityEnvironment	security;
 
-	BundleContext	context;
+	BundleContext				context;
 
 	@Activate
 	void activate(BundleContext context) {

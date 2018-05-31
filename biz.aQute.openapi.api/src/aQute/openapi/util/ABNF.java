@@ -3,25 +3,26 @@ package aQute.openapi.util;
 public class ABNF {
 	final long low, high;
 
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("ABNF[");
-		for ( char c=0; c<128; c++) {
-			if ( in(c))
+		for (char c = 0; c < 128; c++) {
+			if (in(c))
 				sb.append(c);
 		}
 		sb.append("]");
 		return sb.toString();
 	}
 
-	public ABNF(String set,  ABNF... abnfs) {
+	public ABNF(String set, ABNF... abnfs) {
 		long l = 0, h = 0;
 		for (int i = 0; i < set.length(); i++) {
 			char c = set.charAt(i);
 			if (c >= 0x80)
 				throw new IllegalArgumentException("ABNF is about 7 bit ASCII, contains character " + c);
 
-			if ( c < 64) {
+			if (c < 64) {
 				l |= (1L << c);
 			} else {
 				h |= (1L << (c - 64));
@@ -39,7 +40,6 @@ public class ABNF {
 	public ABNF(ABNF... abnfs) {
 		this("", abnfs);
 	}
-
 
 	public ABNF(long low, long high) {
 		this.low = low;

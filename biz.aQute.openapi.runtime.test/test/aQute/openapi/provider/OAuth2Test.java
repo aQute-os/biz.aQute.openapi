@@ -79,7 +79,7 @@ public class OAuth2Test {
 
 		assertThat(location.getHost(), is("bndtools.com"));
 		assertThat(map.get("client_id")[0], is("clientId"));
-		assertThat(map.get("redirect_uri")[0], startsWith( runtime.uri.toString()));
+		assertThat(map.get("redirect_uri")[0], startsWith(runtime.uri.toString()));
 		assertThat("code", is(map.get("response_type")[0]));
 
 		String state = map.get("state")[0];

@@ -15,15 +15,19 @@ public class GenerateTestSources {
 	public static void responsetypes() throws Exception {
 		GenerateTestSources.generate("responsetypes", "responsetypes.json", new Configuration());
 	}
+
 	public static void recursivetype() throws Exception {
 		GenerateTestSources.generate("recursivetype", "recursivetype.json", new Configuration());
 	}
+
 	public static void imagereturn() throws Exception {
 		GenerateTestSources.generate("imagereturn", "imagereturn.json", new Configuration());
 	}
+
 	public static void inline() throws Exception {
 		GenerateTestSources.generate("inlineresponse", "inlineresponse.json", new Configuration());
 	}
+
 	public static void formdata() throws Exception {
 		GenerateTestSources.generate("formdata", "formdata.json", new Configuration());
 	}
@@ -84,7 +88,6 @@ public class GenerateTestSources {
 		GenerateTestSources.generate("enums", "enums.json", new Configuration());
 	}
 
-
 	static void createApiKeySecurity() throws Exception {
 		Configuration c = new Configuration();
 		generate("apikey", "apikey.json", c);
@@ -133,7 +136,7 @@ public class GenerateTestSources {
 	public static void generate(String name, String file, Configuration c) throws Exception {
 		System.out.println("*** " + name);
 		c.packagePrefix = "gen." + name;
-		c.versionSources  = false;
+		c.versionSources = false;
 		c.typePrefix = Character.toUpperCase(name.charAt(0)) + name.substring(1);
 		File output = IO.getFile("gen-sources");
 		InputStream in = GenerateTestSources.class.getResourceAsStream(file);

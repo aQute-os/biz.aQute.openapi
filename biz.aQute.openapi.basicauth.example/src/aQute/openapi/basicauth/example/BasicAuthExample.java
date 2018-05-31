@@ -9,9 +9,8 @@ import osgi.enroute.configurer.api.RequireConfigurerExtender;
 
 @RequireConfigurerExtender
 @ProvideBasicAuthBase
-@Component(service=OpenAPIBase.class)
+@Component(service = OpenAPIBase.class)
 public class BasicAuthExample extends BasicAuthBase {
-
 
 	@Reference
 	Authority authority;
@@ -21,7 +20,6 @@ public class BasicAuthExample extends BasicAuthBase {
 		System.out.println("Authenticated " + action);
 		return hasPermission(action);
 	}
-
 
 	@Override
 	protected boolean unauthenticated(String action) throws Exception {

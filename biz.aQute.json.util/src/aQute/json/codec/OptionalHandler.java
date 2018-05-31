@@ -32,22 +32,27 @@ public class OptionalHandler extends Handler {
 		return Optional.ofNullable(o);
 	}
 
+	@Override
 	public Object decodeObject(Decoder isr) throws Exception {
 		return decode(isr);
 	}
 
+	@Override
 	public Object decodeArray(Decoder isr) throws Exception {
 		return decode(isr);
 	}
 
+	@Override
 	public Object decode(Decoder dec, String s) throws Exception {
 		return Optional.ofNullable(s);
 	}
 
+	@Override
 	public Object decode(Decoder dec, Number s) throws Exception {
 		return Optional.ofNullable(s);
 	}
 
+	@Override
 	public Object decode(Decoder dec, boolean s) {
 		return Optional.ofNullable(s);
 	}

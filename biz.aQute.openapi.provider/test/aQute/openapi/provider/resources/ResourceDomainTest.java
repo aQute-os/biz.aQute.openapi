@@ -195,7 +195,7 @@ public class ResourceDomainTest {
 		assertEquals(ResourceDomain.ResultCode.COPIED, resource.action);
 
 	}
-	
+
 	@Test
 	public void testNewerResourceAvailble() throws Exception {
 		ResourceHolder holder = domain.createHolder(get, 1000, 100, "resourcedomain", new String[0], new String[0]);
@@ -228,7 +228,7 @@ public class ResourceDomainTest {
 		assertEquals(3, resource.details.length);
 		assertEquals("\"0BEEC7B5EA3F0FDBC95D0DD47F3C5BC275DA8A33\"", resource.details.etag);
 	}
-	
+
 	@Test
 	public void removeHolderWhileWorking() throws Exception {
 		Function<String,URL> get = (path) -> {

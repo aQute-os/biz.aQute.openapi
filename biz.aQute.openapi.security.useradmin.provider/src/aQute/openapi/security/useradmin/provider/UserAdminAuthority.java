@@ -20,7 +20,8 @@ import aQute.openapi.security.useradmin.util.UserAdminFacade;
 import osgi.enroute.authorization.api.Authority;
 import osgi.enroute.authorization.api.AuthorityAdmin;
 
-@Component(service = { Authority.class, AuthorityAdmin.class, OpenAPISecurityEnvironment.class }, configurationPid = UserAdminAuthority.PID)
+@Component(service = { Authority.class, AuthorityAdmin.class,
+		OpenAPISecurityEnvironment.class }, configurationPid = UserAdminAuthority.PID)
 public class UserAdminAuthority implements Authority, AuthorityAdmin, OpenAPISecurityEnvironment {
 
 	final static String PID = "biz.aQute.useradmin.authority";
@@ -137,7 +138,8 @@ public class UserAdminAuthority implements Authority, AuthorityAdmin, OpenAPISec
 	}
 
 	@Override
-	public <T> T dispatch(String authenticatedUser, String base, String operation, Callable<T> request) throws Exception {
+	public <T> T dispatch(String authenticatedUser, String base, String operation, Callable<T> request)
+			throws Exception {
 		return call(authenticatedUser, request);
 	}
 

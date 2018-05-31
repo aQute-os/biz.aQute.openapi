@@ -80,7 +80,7 @@ public abstract class WildcardPermission {
 						pc = permission[p];
 
 						tc = t < length ? target.charAt(t) : 0;
-						if ( tc == '\\') {
+						if (tc == '\\') {
 							t++;
 							tc = t < length ? target.charAt(t) : 0;
 						}
@@ -134,7 +134,7 @@ public abstract class WildcardPermission {
 
 				private void skipTargetPart() {
 					while (t < target.length() && target.charAt(t) != ':') {
-						if ( target.charAt(t)=='\\')
+						if (target.charAt(t) == '\\')
 							t++;
 						t++;
 					}
