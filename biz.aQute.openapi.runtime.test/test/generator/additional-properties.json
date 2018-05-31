@@ -1,32 +1,44 @@
-{  
-   "swagger":"2.0",
-   "info":{  
-      "version":"v1",
-      "title":"additionalProperties"
-   },
-   "basePath":"/v1",
-   "paths":{  
-      "/additionalProperties":{  
-         "put":{  
-            "operationId":"test",
-            "parameters": [
-                {
-                    "in": "body",
-                    "name": "body",
-                    "required": true,
-                    "schema": {
-                         "type":"object",
-                         "additionalProperties":{  
-                            "type":"string"
-                         }
-                    }
-                }
-            ],
-            "responses":{  
-               "200":{  
-               }
-            }
-         }
-      }
-   }
+{
+	"swagger": "2.0",
+	"info": 
+	{
+		"version": "v1",
+		"title": "additionalProperties"
+	},
+
+	"basePath": "/v1",
+	"paths": 
+	{
+		"/additionalProperties": 
+		{
+			"put": 
+			{
+				"operationId": "test",
+				"parameters": 
+				[
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": 
+						{
+							"type": "object",
+							"additionalProperties": 
+							{
+								"type": "string"
+							}
+						}
+					}
+				],
+
+				"responses": 
+				{
+					"200": 
+					{
+						
+					}
+				}
+			}
+		}
+	}
 }

@@ -1,16 +1,23 @@
 package aQute.openapi.provider;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.ScriptResult;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.WebResponse;
+import com.gargoylesoftware.htmlunit.WebWindow;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import aQute.lib.io.IO;
@@ -57,9 +64,9 @@ public class HTMLUnitTest {
 
 	}
 
-	//@Test
+	@Test
 	public void testSimple() throws Exception {
-		System.setProperty("org.apache.commons.logging.simplelog.defaultlog", "debug");
+		System.setProperty("org.apache.commons.logging.simplelog.defaultlog", "trace");
 		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug");
 
 		rule.add(new X());
@@ -71,12 +78,14 @@ public class HTMLUnitTest {
 		String jsContent = IO.collect(js);
 		jsContent = jsContent.replace("${url}", uri.toString());
 
-		try (final WebClient webClient = new WebClient()) {
+
+		try (final WebClient webClient = new WebClient(BrowserVersion.INTERNET_EXPLORER)) {
 			webClient.getOptions().setUseInsecureSSL(true);
 
 			final HtmlPage page = webClient.getPage(html.toURI().toURL());
 
-			page.executeJavaScript(jsContent);
+			ScriptResult executeJavaScript = page.executeJavaScript(jsContent);
+			System.out.println("js " + executeJavaScript);
 
 			while (true) {
 				Object v = page.executeJavaScript("data").getJavaScriptResult();
@@ -92,4 +101,5 @@ public class HTMLUnitTest {
 		}
 
 	}
+	
 }
