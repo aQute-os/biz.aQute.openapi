@@ -12,7 +12,7 @@ import java.time.LocalDate;
  * 
  * <ul>
  * 
- * <li>{@link #test(Type1000) PUT /additionalProperties =  test}
+ * <li>{@link #additionalProperties(DeviceResponse) PUT /additionalProperties =  AdditionalProperties}
  * 
  * </ul>
  * 
@@ -25,28 +25,50 @@ public static final String BASE_PATH = "/v1";
 
 /**
  * 
- * PUT /additionalProperties = test
+ * PUT /additionalProperties = AdditionalProperties
  * 
- * @param body –  (body) collectionFormat=%scsv
+ * @param content –  (body) collectionFormat=%scsv
  * 
    * @returns 200 / null
  * 200
  * 
  */
 
-protected abstract void test(Type1000 body) throws Exception;
+protected abstract DeviceResponse additionalProperties(DeviceResponse content) throws Exception;
 
 /**
  * 
- * Type1000
+ * DeviceResponse
+ * 
+ * The device response.
  * 
  */
 
-public static class Type1000 extends OpenAPIBase.DTO {
+public static class DeviceResponse extends OpenAPIBase.DTO {
 
+    public java.util.Map<String,List<Link>> _links;
+    public String deviceId;
 
-    public java.util.Map<String,Object> __extra;
-    public java.util.Map<String,Object> __extra(){ return this.__extra; }
+    public DeviceResponse _links(java.util.Map<String,List<Link>> _links){ this._links=_links; return this; }
+    public java.util.Map<String,List<Link>> _links(){ return this._links; }
+
+    public DeviceResponse deviceId(String deviceId){ this.deviceId=deviceId; return this; }
+    public String deviceId(){ return this.deviceId; }
+
+}
+
+/**
+ * 
+ * Link
+ * 
+ */
+
+public static class Link extends OpenAPIBase.DTO {
+
+    public Optional<String> href = Optional.empty();
+
+    public Link href(String href){ this.href=Optional.ofNullable(href); return this; }
+    public Optional<String> href(){ return this.href; }
 
 }
 
@@ -54,7 +76,7 @@ public static class Type1000 extends OpenAPIBase.DTO {
 
   public Additional_propertiesBase() {
     super(BASE_PATH,gen.additional_properties.Additional_propertiesBase.class,
-         "test                 PUT    /additionalProperties  PAYLOAD Type1000");
+         "AdditionalProperties PUT    /additionalProperties  PAYLOAD DeviceResponse  RETURN DeviceResponse");
   }
   public static java.time.Instant toDateTime(String s) {
     return java.time.Instant.parse(s);
@@ -75,7 +97,7 @@ public static class Type1000 extends OpenAPIBase.DTO {
       index++;
       if ( segments.length == index) {
         if ( context.isMethod(OpenAPIBase.Method.PUT)) {
-          test_put_(context);
+          additionalProperties_put_(context);
           return true;
         } 
         return getOpenAPIContext().doOptions("PUT");
@@ -88,19 +110,19 @@ public static class Type1000 extends OpenAPIBase.DTO {
     return false;
   }
 
-private void test_put_(OpenAPIContext context) throws Exception{
+private void additionalProperties_put_(OpenAPIContext context) throws Exception{
 
-    context.setOperation("test");
-Type1000 body_ = context.body(Type1000.class);
+    context.setOperation("AdditionalProperties");
+DeviceResponse content_ = context.body(DeviceResponse.class);
 
 
     //  VALIDATORS 
 
-    context.begin("test");
+    context.begin("AdditionalProperties");
     context.end();
 
-    context.call( () -> { test(body_); return null; });
-    context.setResult(null, 200);
+    Object result = context.call( ()-> additionalProperties(content_));
+    context.setResult(result, 200);
 
 }
 

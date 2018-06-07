@@ -1,32 +1,28 @@
 {
 	"swagger": "2.0",
+	"basePath": "/v1",
 	"info": 
 	{
-		"version": "v1",
-		"title": "additionalProperties"
+		"title": "Optional",
+		"version": "1.0"
 	},
 
-	"basePath": "/v1",
 	"paths": 
 	{
 		"/additionalProperties": 
 		{
 			"put": 
 			{
-				"operationId": "test",
+				"operationId": "AdditionalProperties",
 				"parameters": 
 				[
 					{
 						"in": "body",
-						"name": "body",
+						"name": "content",
 						"required": true,
 						"schema": 
 						{
-							"type": "object",
-							"additionalProperties": 
-							{
-								"type": "string"
-							}
+                            "$ref": "#/definitions/DeviceResponse"
 						}
 					}
 				],
@@ -35,8 +31,60 @@
 				{
 					"200": 
 					{
-						
+						"schema": 
+						{
+							"$ref": "#/definitions/DeviceResponse"
+						}
 					}
+				}
+			}
+		}
+	},
+
+	"definitions": 
+	{
+		"DeviceResponse": 
+		{
+			"description": "The device response.",
+			"required": 
+			[
+				"deviceId",
+				"_links"
+			],
+
+			"type": "object",
+			"properties": 
+			{
+				"deviceId": 
+				{
+					"description": "Gets or sets the device id.",
+					"type": "string"
+				},
+
+				"_links": 
+				{
+					"description": "Gets or sets the HATEOAS links for the current object",
+					"type": "object",
+					"additionalProperties": 
+					{
+						"type": "array",
+						"items": 
+						{
+							"$ref": "#/definitions/Link"
+						}
+					}
+				}
+			}
+		},
+
+		"Link": 
+		{
+			"type": "object",
+			"properties": 
+			{
+				"href": 
+				{
+					"type": "string"
 				}
 			}
 		}

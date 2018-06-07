@@ -1,9 +1,7 @@
 package aQute.openapi.provider;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.HashMap;
-import java.util.Map;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,23 +18,21 @@ public class AdditionalPropertiesTest {
 	public void test() throws Exception {
 		class AP extends Additional_propertiesBase {
 
-			@Override
-			protected void test(Type1000 body) throws Exception {
-				System.out.println(body);
-				assertEquals( body.__extra.get("n30"), 30);
-				assertEquals( body.__extra.get("sbar"), "bar");
-				
-				Map<String,Object> map = new HashMap<>();
-				map.put("a", 1);
-				map.put("b", 2);
-				assertEquals( body.__extra.get("object"), map);
-			}
 
+			@Override
+			protected DeviceResponse additionalProperties(DeviceResponse content) throws Exception {
+				System.out.println(content);
+				assertEquals( 1, content._links.size());
+				assertEquals( 2, content._links.get("foo").size());
+				assertEquals( "http://www.foo.com", content._links.get("foo").get(0).href.get());
+				assertFalse(content._links.get("foo").get(1).href.isPresent());
+				return null;
+			}
 		}
 		rule.add(new AP());
 
 		
-		TaggedData go = rule.http.build().put().upload("{\"n30\":30,\"sbar\":\"bar\", \"object\": { \"a\":1, \"b\":2}}").asTag().go(rule.uri.resolve("/v1/additionalProperties"));
+		TaggedData go = rule.http.build().put().upload("{ \"_links\": {\"foo\":[ {\"href\":\"http://www.foo.com\"},{}]}}").asTag().go(rule.uri.resolve("/v1/additionalProperties"));
 		assertEquals(200, go.getResponseCode());
 
 	}

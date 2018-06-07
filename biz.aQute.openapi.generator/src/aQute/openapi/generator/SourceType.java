@@ -598,6 +598,31 @@ public abstract class SourceType {
 
 	}
 
+	public static class AddditionalPropertiesType extends SourceType {
+
+		private SourceType componentType;
+
+		public AddditionalPropertiesType(OpenAPIGenerator gen, SchemaObject schema, String contextName) {
+			super(gen);
+			componentType = getSourceType(gen, schema.additionalProperties, schema.additionalProperties.$ref);
+		}
+
+		@Override
+		public String reference() {
+			return "java.util.Map<String," + componentType.reference() + ">";
+		}
+
+		@Override
+		public String conversion(String access) {
+			return String.format("to(Map.class,%s)", access);
+		}
+
+		@Override
+		public void addTypes(SourceFile sourceFile) {
+			sourceFile.addType(componentType);
+		}
+	}
+
 	public static class ObjectType extends SourceType {
 		private static int					index		= 1000;
 		private final SchemaObject			schema;
@@ -608,10 +633,15 @@ public abstract class SourceType {
 		ObjectType(OpenAPIGenerator gen, SchemaObject schema, String contextName) {
 			super(gen);
 			this.schema = schema;
-			this.className = gen.toTypeName(contextName == null ? "Type" + index++ : contextName);
+			if (schema.additionalProperties != null) {
+				String name = schema.additionalProperties.$ref;
+				this.className = "java.util.Map<String," + name + ">";
+			} else {
+				this.className = gen.toTypeName(contextName == null ? "Type" + index++ : contextName);
+			}
 		}
 
-		void build() {
+		protected void build() {
 			doProperties(getSchema(), this.getSchema().properties, true);
 		}
 
@@ -708,10 +738,19 @@ public abstract class SourceType {
 	}
 
 	private static SourceType object(OpenAPIGenerator gen, SchemaObject schema, String contextName) {
-		ObjectType objectType = new ObjectType(gen, schema, contextName);
-		types.put(schema, objectType);
-		objectType.build();
-		return objectType;
+		SourceType type;
+		if (schema.additionalProperties != null) {
+			type = new AddditionalPropertiesType(gen, schema, contextName);
+		} else {
+			type = new ObjectType(gen, schema, contextName);
+		}
+		types.put(schema, type);
+		type.build();
+		return type;
+	}
+
+	protected void build() {
+
 	}
 
 	public SourceType getEnum(String typeName) {

@@ -666,19 +666,19 @@ public class JavaGenerator extends BaseSourceGenerator {
 		format("  }\n\n");
 	}
 
-	protected void doDeclareObjectType(ObjectType t) {
+	protected void doDeclareObjectType(ObjectType objectType) {
 
 		CommentBuilder comment = comment();
-		comment.para(t.getClassName());
-		comment.para(t.getSchema().description);
+		comment.para(objectType.getClassName());
+		comment.para(objectType.getSchema().description);
 		comment.close();
 
-		doDataTypeAnnotations(t.getClassName());
-		doTypeHeader(t.getClassName(), () -> {
+		doDataTypeAnnotations(objectType.getClassName());
+		doTypeHeader(objectType.getClassName(), () -> {
 
 			String access = gen.getConfig().privateFields ? "private" : "public";
 
-			for (SourceProperty property : t.getProperties()) {
+			for (SourceProperty property : objectType.getProperties()) {
 				String init = "";
 				if (property.getType().isOptional())
 					init = " = Optional.empty()";
@@ -687,11 +687,11 @@ public class JavaGenerator extends BaseSourceGenerator {
 
 			format("\n");
 
-			if (t.hasValidator()) {
+			if (objectType.hasValidator()) {
 				format("    public void validate(OpenAPIContext context, String name) {\n");
 				format("       context.begin(name);\n");
 
-				for (SourceProperty property : t.getProperties()) {
+				for (SourceProperty property : objectType.getProperties()) {
 
 					doValidators(property.getType(), "this." + property.getKey());
 				}
@@ -700,7 +700,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 				format("    }\n");
 			}
 
-			for (SourceProperty property : t.getProperties()) {
+			for (SourceProperty property : objectType.getProperties()) {
 				String propertySetName;
 				String propertyGetName;
 				if (gen.getConfig().beans) {
@@ -716,11 +716,11 @@ public class JavaGenerator extends BaseSourceGenerator {
 					OptionalType opt = (OptionalType) property.getType();
 					SourceType type = opt.getTarget();
 					format("    public %s %s(%s %s){ this.%s=Optional.ofNullable(%s); return this; }\n",
-							t.getClassName(), propertySetName, type.wrapper().reference(), property.getKey(),
+							objectType.getClassName(), propertySetName, type.wrapper().reference(), property.getKey(),
 							property.getKey(), property.getKey());
 
 				} else {
-					format("    public %s %s(%s %s){ this.%s=%s; return this; }\n", t.getClassName(), propertySetName,
+					format("    public %s %s(%s %s){ this.%s=%s; return this; }\n", objectType.getClassName(), propertySetName,
 							property.getType().reference(), property.getKey(), property.getKey(), property.getKey());
 				}
 
@@ -728,17 +728,6 @@ public class JavaGenerator extends BaseSourceGenerator {
 						property.getKey());
 			}
 
-			if (t.getSchema().additionalProperties != null) {
-				format("    %s %s %s%s;\n", access, MAP_STRING_OBJECT, "__extra", "");
-				String propertyGetName;
-				if (gen.getConfig().beans) {
-					propertyGetName = "get__Extra";
-				} else {
-					propertyGetName = "__extra";
-				}
-
-				format("    public %s %s(){ return this.%s; }\n\n", MAP_STRING_OBJECT, propertyGetName, "__extra");
-			}
 
 		});
 	}
