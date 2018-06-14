@@ -609,7 +609,7 @@ public abstract class SourceType {
 
 		@Override
 		public String reference() {
-			return "java.util.Map<String," + componentType.reference() + ">";
+			return "java.util.Map<String," + componentType.wrapper().reference() + ">";
 		}
 
 		@Override
