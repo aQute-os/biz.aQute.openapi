@@ -5,13 +5,15 @@
 	biz.aQute.openapi.api;version=latest,\
 	biz.aQute.openapi.generator;version=latest,\
 	osgi.enroute.base.api,\
-	org.apache.felix.http.jetty,\
 	osgi.core;version=6.0,\
 	osgi.cmpn;version=6.0, \
 	biz.aQute.www.provider, \
 	org.apache.felix.gogo.runtime
 
+# ensure jetty is first since htmlunit contains jetty classes that conflict
+
 -testpath: \
+    org.apache.felix.http.jetty,\
 	org.apache.felix.framework, \
 	biz.aQute.openapi.oauth2.provider, \
 	lib/htmlunit-2.29-OSG.jar;version=file
