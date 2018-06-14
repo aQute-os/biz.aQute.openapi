@@ -1,5 +1,7 @@
 package aQute.openapi.example.petstore.provider;
 
+import java.util.Map;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -32,7 +34,7 @@ public class StoreImpl extends GeneratedStore {
 	}
 
 	@Override
-	protected GetInventoryResponse getInventory() throws Exception {
+	protected Map<String,Integer> getInventory() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
