@@ -47,10 +47,14 @@ protected abstract DeviceResponse additionalProperties(DeviceResponse content) t
 public static class DeviceResponse extends OpenAPIBase.DTO {
 
     public java.util.Map<String,List<Link>> _links;
+    public Optional<java.util.Map<String,Integer>> ints = Optional.empty();
     public String deviceId;
 
     public DeviceResponse _links(java.util.Map<String,List<Link>> _links){ this._links=_links; return this; }
     public java.util.Map<String,List<Link>> _links(){ return this._links; }
+
+    public DeviceResponse ints(java.util.Map<String,Integer> ints){ this.ints=Optional.ofNullable(ints); return this; }
+    public Optional<java.util.Map<String,Integer>> ints(){ return this.ints; }
 
     public DeviceResponse deviceId(String deviceId){ this.deviceId=deviceId; return this; }
     public String deviceId(){ return this.deviceId; }

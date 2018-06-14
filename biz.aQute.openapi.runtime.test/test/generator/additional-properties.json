@@ -63,7 +63,6 @@
 
 				"_links": 
 				{
-					"description": "Gets or sets the HATEOAS links for the current object",
 					"type": "object",
 					"additionalProperties": 
 					{
@@ -73,7 +72,16 @@
 							"$ref": "#/definitions/Link"
 						}
 					}
-				}
+				},
+                "ints": 
+                {
+                    "type": "object",
+                    "additionalProperties": 
+                    {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
 			}
 		},
 
