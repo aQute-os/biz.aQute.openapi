@@ -1664,6 +1664,7 @@ public class HttpRequest {
 	 * @return stream
 	 * @throws HttpRequestException
 	 */
+	@SuppressWarnings("resource")
 	public InputStream stream() throws HttpRequestException {
 		InputStream stream;
 		if (code() < HTTP_BAD_REQUEST)

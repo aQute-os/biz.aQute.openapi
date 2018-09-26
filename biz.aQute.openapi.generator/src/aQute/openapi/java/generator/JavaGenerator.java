@@ -41,8 +41,6 @@ import aQute.openapi.v2.api.TagObject;
 
 public class JavaGenerator extends BaseSourceGenerator {
 
-	private static final String	MAP_STRING_OBJECT	= "java.util.Map<String,Object>";
-
 	final OpenAPIGenerator	gen;
 	protected SourceFile	sourceFile;
 	private SourceMethod	method;
