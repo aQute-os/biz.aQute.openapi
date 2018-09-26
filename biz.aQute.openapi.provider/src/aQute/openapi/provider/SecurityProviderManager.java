@@ -107,12 +107,12 @@ public class SecurityProviderManager extends HttpServlet {
 	}
 
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-	void addSecurityProvider(Map<String,Object> properties, OpenAPIAuthenticator provider) {
+	void addSecurityProvider(OpenAPIAuthenticator provider, Map<String,Object> properties) {
 		String key = getKey(properties.get(NAME), properties.get(TYPE));
 		providers.put(key, provider);
 	}
 
-	void removeSecurityProvider(Map<String,Object> properties, OpenAPIAuthenticator provider) {
+	void removeSecurityProvider(OpenAPIAuthenticator provider, Map<String,Object> properties) {
 		String key = getKey(properties.get(NAME), properties.get(TYPE));
 		providers.remove(key);
 	}

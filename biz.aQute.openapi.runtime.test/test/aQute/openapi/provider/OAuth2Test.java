@@ -63,7 +63,7 @@ public class OAuth2Test {
 		properties.put("clientId", "clientId");
 
 		oauth2.activate(Converter.cnv(OAuth2Configuration.class, properties));
-		runtime.securityProviderManager.addSecurityProvider(properties, oauth2);
+		runtime.securityProviderManager.addSecurityProvider(oauth2, properties);
 
 		ServiceRegistration<OpenAPIAuthenticator> oauth2reg = fw.context
 				.registerService(OpenAPIAuthenticator.class, oauth2, properties);
