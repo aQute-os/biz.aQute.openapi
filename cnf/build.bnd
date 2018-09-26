@@ -23,8 +23,22 @@ Git-SHA:                	${system-allow-fail;git rev-list -1 HEAD}
 Bundle-Copyright: 		aQute SARL
 Bundle-Vendor:			aQute SARL
 Bundle-DocURL: 			http://openap.aqute.io
-Bundle-License:			Apache Software License 2.0
 Bundle-Version:         ${base.version}.${tstamp}
+Bundle-License:         Apache-2.0; \
+                        description="Apache License, Version 2.0"; \
+                        link="http://www.apache.org/licenses/LICENSE-2.0"
+Bundle-SCM:             url=https://github.com/aQute-os/biz.aQute.openapi, \
+                        connection=scm:https://github.com/aQute-os/biz.aQute.openapi.git, \
+                        developerConnection=scm:git:git@github.com:aQute-os/biz.aQute.openapi.git, \
+                        tag=${Git-Descriptor}
+Bundle-Developers: \
+    pkriens; \
+        email=Peter.Kriens@aQute.biz; \
+        name="Peter Kriens"; \
+        organization=aQute; \
+        organizationUrl=https://aQute.biz; \
+        roles="architect,developer"; \
+        timezone=1
 
 #
 # Access Maven Central + OSGi snapshots
