@@ -7,12 +7,10 @@
 	osgi.enroute.hamcrest.wrapper
 
 
-base.version:           1.0.0
+base.version:           1.1.0
 
 -groupid:               biz.aQute
--pom:                   version=${base.version}
-
-#-SNAPSHOT
+-pom:                   version=${base.version}-SNAPSHOT
 
 Bundle-Version:         ${base.version}.${tstamp}
 Bundle-Vendor			aQute SARL
