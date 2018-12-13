@@ -1,5 +1,10 @@
 -workingset authentication
 
+Require-Bundle org.apache.felix.gogo.runtime;resolution:=optional
+Import-Package \
+    !org.apache.felix.service.command , \
+    *
+ 
 -buildpath: \
 	biz.aQute.openapi.api;version=latest,\
 	biz.aQute.openapi.provider;version=latest,\

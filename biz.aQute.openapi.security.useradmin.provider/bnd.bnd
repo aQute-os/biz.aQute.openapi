@@ -13,6 +13,8 @@ Export-Package: \
 Private-Package: \
 	aQute.openapi.security.useradmin.gogo,\
 	aQute.openapi.security.useradmin.provider
-Import-Package: \
-	org.apache.felix.service.command;resolution:=optional,\
+
+Require-Bundle org.apache.felix.gogo.runtime;resolution:=optional
+Import-Package \
+    !org.apache.felix.service.command , \
 	*

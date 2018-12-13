@@ -9,6 +9,11 @@ Export-Package: \
 	aQute.json.codec,\
 	aQute.json.naming
 
+Require-Bundle org.apache.felix.gogo.runtime;resolution:=optional
+Import-Package \
+    !org.apache.felix.service.command , \
+    *
+    
 -conditionalpackage: aQute.lib*, aQute.json.util, aQute.bnd.header.*, aQute.bnd.version, aQute.service.reporter
 
 -buildpath: \
@@ -26,9 +31,6 @@ Export-Package: \
 	osgi.identity;filter:='(osgi.identity=biz.aQute.openapi.provider)',\
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.webconsole)'
 
-Import-Package: \
-	org.apache.felix.service.command;resolution:=optional,\
-	*
 Private-Package: \
 	aQute.openapi.provider.resources,\
 	aQute.openapi.provider.cors

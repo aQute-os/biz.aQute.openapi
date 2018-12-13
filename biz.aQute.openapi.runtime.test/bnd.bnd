@@ -1,3 +1,9 @@
+
+Require-Bundle org.apache.felix.gogo.runtime;resolution:=optional
+Import-Package \
+    !org.apache.felix.service.command , \
+    *
+
 -buildpath: \
     biz.aQute.bnd;packages=*,\
 	biz.aQute.json.util;version=latest;packages=*,\
