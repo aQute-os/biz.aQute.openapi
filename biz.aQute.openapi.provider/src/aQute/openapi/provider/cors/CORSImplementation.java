@@ -226,8 +226,9 @@ public class CORSImplementation implements CORS {
 
 		boolean eachSimpleHeader = headers.stream().allMatch(this::isSimpleHeader);
 		boolean noneIsContentType = !headers.contains("content-type");
+		boolean skipStep = eachSimpleHeader && noneIsContentType;
 
-		if (!eachSimpleHeader && noneIsContentType) {
+		if (!skipStep) {
 
 			// Add one or more Access-Control-Allow-Headers headers consisting
 			// of (a subset of) the list of headers.
