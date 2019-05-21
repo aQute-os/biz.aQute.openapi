@@ -532,4 +532,22 @@ public class OpenAPIContext {
 		return false;
 	}
 
+	public <T extends Enum<T>> T toEnumMember(Class<T> eClass, String value) {
+		if (value == null)
+			return null;
+
+		try {
+			return Enum.valueOf(eClass, value);
+		} catch (Exception e) {
+			for (T c : eClass.getEnumConstants()) {
+				if (c.name().equalsIgnoreCase(value))
+					return c;
+
+				if (c.toString().equalsIgnoreCase(value))
+					return c;
+			}
+			return null;
+		}
+	}
+
 }

@@ -10,12 +10,17 @@ public class SourceArgument {
 	private final ParameterObject	par;
 	private final SourceType		type;
 
-	public SourceArgument(SourceMethod method, ParameterObject par) {
+	public SourceArgument(OpenAPIGenerator gen, SourceMethod method, ParameterObject par) {
 		this.par = par;
 		this.name = method.toParameterName(par.name);
 
-		SourceType type = par.schema != null ? method.getParent().getGen().getSourceType(par.schema)
-				: method.getParent().getGen().getSourceType(par);
+		String contextName = gen.toTypeName(method.name + "_" + this.name);
+
+		SourceType type = par.schema != null
+				? method.getParent().getGen().getSourceType(par.schema, contextName /*
+																					 * XXX
+																					 */)
+				: method.getParent().getGen().getSourceType(par, contextName);
 		if (type == null) {
 			throw new IllegalArgumentException("No type for " + par.schema);
 		}

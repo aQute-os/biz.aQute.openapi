@@ -9,6 +9,10 @@ import aQute.openapi.generator.OpenAPIGenerator;
 
 public class GenerateTestSources {
 	
+	public static void parameterEnum() throws Exception {
+		GenerateTestSources.generate("parameter_enum", "parameter-enum.json", new Configuration());
+				
+	}
 	public static void additionalProperties() throws Exception {
 		GenerateTestSources.generate("additional_properties", "additional-properties.json", new Configuration());
 				
@@ -162,6 +166,7 @@ public class GenerateTestSources {
 
 	public static void main(String args[]) throws Exception {
 		// dummy();
+		parameterEnum();
 		additionalProperties();
 		cors();
 		routes();

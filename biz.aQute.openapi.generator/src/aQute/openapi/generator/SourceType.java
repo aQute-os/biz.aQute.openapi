@@ -149,6 +149,13 @@ public abstract class SourceType {
 									return enum1;
 								}
 							}
+						} else if (schema.enum$ != null) {
+							if (contextName != null) {
+								SourceType enum1 = stringType.getEnum(contextName);
+								if (enum1 != null) {
+									return enum1;
+								}
+							}
 						}
 						return stringType;
 				}
@@ -438,15 +445,16 @@ public abstract class SourceType {
 		@SuppressWarnings("unchecked")
 		@Override
 		public SourceType getEnum(String typeName) {
-			if (getSchema().__extra != null && getSchema().__extra.containsKey("enum")) {
+			ItemsObject schema = getSchema();
+			if (schema.__extra != null && schema.__extra.containsKey("enum")) {
 				// TODO fix, json should support reserved names
-				getSchema().enum$ = (List<Object>) getSchema().__extra.get("enum");
+				schema.enum$ = (List<Object>) schema.__extra.get("enum");
 			}
-			if (getSchema().enum$ == null || getSchema().enum$.isEmpty()) {
+			if (schema.enum$ == null || schema.enum$.isEmpty()) {
 				return null;
 			}
 
-			return new StringEnumType(gen, typeName, getSchema());
+			return new StringEnumType(gen, typeName, schema);
 
 		}
 	}
@@ -459,7 +467,7 @@ public abstract class SourceType {
 
 		@Override
 		public String conversion(String access) {
-			return String.format("toEnumMember(%s.class,%s)", reference(), getName());
+			return String.format("toEnumMember(%s.class,%s)", reference(), access);
 		}
 	}
 

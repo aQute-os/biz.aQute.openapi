@@ -1,0 +1,38 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "v1",
+        "title": "imagereturn"
+    },
+    "basePath": "/v1",
+    "paths": {
+        "/widgets/gauge/power": {
+            "get": {
+                "tags": [
+                    "WidgetApi"
+                ],
+                "operationId": "GetPowerWidget",
+                "consumes": [],
+                "produces": [
+                    "application/json",
+                    "text/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "required": true,
+                        "type": "string",
+                        "enum": [
+                            "A",
+                            "B",
+                            "C"
+                        ]
+                    }
+                ],
+                "responses": {
+                }                
+            }
+        }
+    }
+}

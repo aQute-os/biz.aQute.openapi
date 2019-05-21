@@ -45,13 +45,13 @@ public class SourceFile {
 		getLogger().info("        Return {}", m.getReturnType());
 
 		for (ParameterObject par : parameters) {
-			SourceArgument sourceArgument = new SourceArgument(m, par);
+			SourceArgument sourceArgument = new SourceArgument(gen, m, par);
 			OpenAPIGenerator.getLogger().info("        Par (base) {}", sourceArgument);
 			m.prototype.put(par.name, sourceArgument);
 			addType(sourceArgument.getType());
 		}
 		for (ParameterObject par : operation.parameters) {
-			SourceArgument sourceArgument = new SourceArgument(m, par);
+			SourceArgument sourceArgument = new SourceArgument(gen, m, par);
 			OpenAPIGenerator.getLogger().info("        Par (op) {}", sourceArgument);
 			m.prototype.put(par.name, sourceArgument);
 			addType(sourceArgument.getType());

@@ -24,7 +24,7 @@ import java.time.LocalDate;
  * 
  * <li>{@link #addPet(Pet) POST /pet =  addPet}
  * 
- * <li>{@link #findPetsByStatus(List<String>) GET /pet/findByStatus =  findPetsByStatus}
+ * <li>{@link #findPetsByStatus(List<FindPetsByStatus_status>) GET /pet/findByStatus =  findPetsByStatus}
  * 
  * <li>{@link #updatePetWithForm(long,Optional<String>,Optional<String>) POST /pet/<b>[petId]</b> =  updatePetWithForm}
  * 
@@ -178,7 +178,7 @@ protected abstract void addPet(Pet body) throws Exception;
  * 
  */
 
-protected abstract Iterable<? extends Pet> findPetsByStatus(List<String> status) throws Exception, OpenAPIBase.BadRequestResponse;
+protected abstract Iterable<? extends Pet> findPetsByStatus(List<FindPetsByStatus_status> status) throws Exception, OpenAPIBase.BadRequestResponse;
 
 /**
  * 
@@ -262,6 +262,24 @@ public static class ApiResponse extends OpenAPIBase.DTO {
     public Optional<String> message(){ return this.message; }
 
 }
+
+/**
+ * 
+ * FindPetsByStatus_status
+ * 
+ */
+
+  public enum FindPetsByStatus_status {
+    available("available"),
+    pending("pending"),
+    sold("sold");
+
+    public final String value;
+
+    FindPetsByStatus_status(String value) {
+      this.value = value;
+    }
+  }
 
 /**
  * 
@@ -515,7 +533,7 @@ private void findPetsByStatus_get_(OpenAPIContext context) throws Exception{
 
     context.setOperation("findPetsByStatus");
     context.verify(aQute.openapi.example.petstore.GeneratedBase.petstore_auth,"write:pets","read:pets").verify();
-List<String> status_ = context.toArray(String.class, context.csv(context.parameters("status")));
+List<FindPetsByStatus_status> status_ = context.toArray(FindPetsByStatus_status.class, context.csv(context.parameters("status")));
 
 
     //  VALIDATORS 
@@ -524,16 +542,6 @@ List<String> status_ = context.toArray(String.class, context.csv(context.paramet
        if  ( context.require(status_, "status_") ) {
     context.validate(status_.size() <= 10, status_, "status_", "status_.size() <= 10");
     context.validate(status_.size() >= 0, status_, "status_", "status_.size() >= 0");
-    int counter_=0;
-    for( String item_ : status_) {
-        context.begin(counter_++);
-       if  ( context.require(item_, "item_") ) {
-    context.validate(item_.length() >= 4, item_, "item_", "item_.length() >= 4");
-    context.validate(item_.length() <= 9, item_, "item_", "item_.length() <= 9");
-    context.validate(context.in(item_, "available", "pending", "sold"), item_, "item_", "context.in(item_, \"available\", \"pending\", \"sold\")");
-       }
-        context.end();
-    }
        }
     context.end();
 

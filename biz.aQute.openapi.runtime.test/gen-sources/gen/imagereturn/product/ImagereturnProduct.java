@@ -12,7 +12,7 @@ import java.time.LocalDate;
  * 
  * <ul>
  * 
- * <li>{@link #getProductIcon(String,String,int,Optional<String>) GET /product/icon/<b>[productTagId]</b>/<b>[iconType]</b>/<b>[size]</b> =  GetProductIcon}
+ * <li>{@link #getProductIcon(String,GetProductIcon_iconType,int,Optional<GetProductIcon_fileFormat>) GET /product/icon/<b>[productTagId]</b>/<b>[iconType]</b>/<b>[size]</b> =  GetProductIcon}
  * 
  * </ul>
  * 
@@ -45,7 +45,40 @@ public static final String BASE_PATH = "/v1";
  * 
  */
 
-protected abstract MimeWrapper getProductIcon(String productTagId, String iconType, int size, Optional<String> fileFormat) throws Exception;
+protected abstract MimeWrapper getProductIcon(String productTagId, GetProductIcon_iconType iconType, int size, Optional<GetProductIcon_fileFormat> fileFormat) throws Exception;
+
+/**
+ * 
+ * GetProductIcon_iconType
+ * 
+ */
+
+  public enum GetProductIcon_iconType {
+    Neutral("Neutral");
+
+    public final String value;
+
+    GetProductIcon_iconType(String value) {
+      this.value = value;
+    }
+  }
+
+/**
+ * 
+ * GetProductIcon_fileFormat
+ * 
+ */
+
+  public enum GetProductIcon_fileFormat {
+    Png("Png"),
+    Svg("Svg");
+
+    public final String value;
+
+    GetProductIcon_fileFormat(String value) {
+      this.value = value;
+    }
+  }
 
   /*****************************************************************/
 
@@ -98,9 +131,9 @@ private void getProductIcon_get_(OpenAPIContext context) throws Exception{
 
     context.setOperation("GetProductIcon");
 String productTagId_ = context.toString(context.path("productTagId"));
-String iconType_ = context.toString(context.path("iconType"));
+GetProductIcon_iconType iconType_ = context.toEnumMember(GetProductIcon_iconType.class,context.path("iconType"));
 Integer size_ = context.toInt(context.path("size"));
-Optional<String> fileFormat_ = context.optional(context.toString(context.parameter("fileFormat")));
+Optional<GetProductIcon_fileFormat> fileFormat_ = context.optional(context.toEnumMember(GetProductIcon_fileFormat.class,context.parameter("fileFormat")));
 
 
     //  VALIDATORS 
