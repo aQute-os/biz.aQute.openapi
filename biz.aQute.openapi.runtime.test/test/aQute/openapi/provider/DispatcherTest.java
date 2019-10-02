@@ -5,12 +5,15 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,6 +23,7 @@ import aQute.bnd.service.url.TaggedData;
 import aQute.lib.converter.Converter;
 import aQute.libg.map.MAP;
 import aQute.openapi.provider.OpenAPIRuntime.Configuration;
+import gen.pathparams.PathparamsBase;
 import gen.simple.SimpleBase;
 
 public class DispatcherTest {
@@ -85,6 +89,48 @@ public class DispatcherTest {
 		assertThat(go.getResponseCode(), is(200));
 		assertThat(System.currentTimeMillis() - start, lessThan(2000L));
 		assertThat(visited.get(), is(true));
+	}
+
+	@Test
+	public void testPathParameterOrder() throws Exception {
+		runtime.runtime.activate(fw.context,
+				getConfig(MAP.$("registerOnStart", (Object) new String[] { "/api/v1" }).$("delayOnNotFoundInSecs",
+						3)));
+		long start = System.currentTimeMillis();
+
+		List<String> result = new ArrayList<String>();
+		runtime.runtime.add(new PathparamsBase() {
+
+			@Override
+			protected void getmap(String a) throws Exception {
+				result.add("getmap-"+a);
+			}
+			
+			@Override
+			protected void setmap(String a, String b) throws Exception {
+				result.add("setmap-"+a+"-"+b);
+			}
+
+
+			@Override
+			protected void deletemap(String a) throws Exception {
+				result.add("deletemap-"+a);
+			}
+
+		});
+
+		TaggedData get = runtime.http.build().get().asTag().go(runtime.uri.resolve("/api/v1/a/1"));
+		assertThat(get.getResponseCode(), is(200));
+		
+		TaggedData delete = runtime.http.build().delete().asTag().go(runtime.uri.resolve("/api/v1/a/1"));
+		assertThat(delete.getResponseCode(), is(200));
+		
+		TaggedData put = runtime.http.build().put().upload("hi").asTag().go(runtime.uri.resolve("/api/v1/a/1/2"));
+		assertThat(put.getResponseCode(), is(200));
+		
+		assertThat(result,Matchers.containsInAnyOrder("getmap-1", "setmap-1-2", "deletemap-1"));
+		
+		assertThat(System.currentTimeMillis() - start, lessThan(2000L));
 	}
 
 	private Configuration getConfig(Map<String, Object> config) throws Exception {

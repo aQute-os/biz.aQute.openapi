@@ -351,9 +351,8 @@ public static class MappingFileList extends OpenAPIBase.DTO {
             } 
             return getOpenAPIContext().doOptions("PUT", "POST", "GET");
 
-          } else           if ( index < segments.length ) {
-            context.pathParameter("deviceId",segments[index]);
-            index++;
+          } else           if ( index + 1 == segments.length ) {
+            context.pathParameter("deviceId",segments[index++]);
             if ( segments.length == index) {
               if ( context.isMethod(OpenAPIBase.Method.DELETE)) {
                 removeModbusDevice_delete_(context);
@@ -364,7 +363,9 @@ public static class MappingFileList extends OpenAPIBase.DTO {
             }
 
 
-          }          // end devices
+          }
+
+          // end devices
         }  else         if( index < segments.length && "mappingFiles".equals(segments[index])) {
           index++;
           if ( segments.length == index) {

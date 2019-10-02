@@ -9,6 +9,11 @@ import aQute.openapi.generator.OpenAPIGenerator;
 
 public class GenerateTestSources {
 	
+	public static void pathPaaramsOrder() throws Exception {
+		GenerateTestSources.generate("pathparams", "pathparams.json", new Configuration());
+				
+	}
+	
 	public static void parameterEnum() throws Exception {
 		GenerateTestSources.generate("parameter_enum", "parameter-enum.json", new Configuration());
 				
@@ -166,6 +171,7 @@ public class GenerateTestSources {
 
 	public static void main(String args[]) throws Exception {
 		// dummy();
+		pathPaaramsOrder();
 		parameterEnum();
 		additionalProperties();
 		cors();

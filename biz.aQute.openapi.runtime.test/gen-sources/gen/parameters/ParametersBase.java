@@ -148,9 +148,8 @@ public static class Body extends OpenAPIBase.DTO {
     if( index < segments.length && "parameter".equals(segments[index])) {
       index++;
 
-      if ( index < segments.length ) {
-        context.pathParameter("path",segments[index]);
-        index++;
+      if ( index + 1 == segments.length ) {
+        context.pathParameter("path",segments[index++]);
         if ( segments.length == index) {
           if ( context.isMethod(OpenAPIBase.Method.PUT)) {
             putParameter_put_(context);
@@ -167,7 +166,9 @@ public static class Body extends OpenAPIBase.DTO {
         }
 
 
-      }      // end parameter
+      }
+
+      // end parameter
     } 
 
     return false;

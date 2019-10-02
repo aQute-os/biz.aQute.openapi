@@ -95,30 +95,23 @@ protected abstract MimeWrapper getProductIcon(String productTagId, GetProductIco
       if( index < segments.length && "icon".equals(segments[index])) {
         index++;
 
-        if ( index < segments.length ) {
-          context.pathParameter("productTagId",segments[index]);
-          index++;
+        if ( index + 3 == segments.length ) {
+          context.pathParameter("productTagId",segments[index++]);
+          context.pathParameter("iconType",segments[index++]);
+          context.pathParameter("size",segments[index++]);
+          if ( segments.length == index) {
+            if ( context.isMethod(OpenAPIBase.Method.GET)) {
+              getProductIcon_get_(context);
+              return true;
+            } 
+            return getOpenAPIContext().doOptions("GET");
 
-          if ( index < segments.length ) {
-            context.pathParameter("iconType",segments[index]);
-            index++;
-
-            if ( index < segments.length ) {
-              context.pathParameter("size",segments[index]);
-              index++;
-              if ( segments.length == index) {
-                if ( context.isMethod(OpenAPIBase.Method.GET)) {
-                  getProductIcon_get_(context);
-                  return true;
-                } 
-                return getOpenAPIContext().doOptions("GET");
-
-              }
-
-
-            }
           }
-        }        // end icon
+
+
+        }
+
+        // end icon
       } 
 
       // end product

@@ -1,0 +1,58 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v1",
+    "title": "Overlapping path parameters"
+  },
+  "basePath": "/api/v1",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+     "/a/{a}": {
+      "get": {
+        "operationId": "getmap",
+        "parameters": [
+          {
+            "name": "a",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deletemap",
+        "parameters": [
+          {
+            "name": "a",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },  
+     "/a/{a}/{b}": {
+      "put": {
+        "operationId": "setmap",
+        "parameters": [
+          {
+            "name": "a",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "b",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+  }
+}
