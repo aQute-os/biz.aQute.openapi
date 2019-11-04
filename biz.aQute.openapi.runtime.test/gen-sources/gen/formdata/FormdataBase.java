@@ -85,19 +85,7 @@ protected abstract String oauth2(String grant_type, String username, String pass
 
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
 
-    if( index < segments.length && "test".equals(segments[index])) {
-      index++;
-      if ( segments.length == index) {
-        if ( context.isMethod(OpenAPIBase.Method.POST)) {
-          form_post_(context);
-          return true;
-        } 
-        return getOpenAPIContext().doOptions("POST");
-
-      }
-
-      // end test
-    }  else     if( index < segments.length && "oauth2".equals(segments[index])) {
+    if( index < segments.length && "oauth2".equals(segments[index])) {
       index++;
       if ( segments.length == index) {
         if ( context.isMethod(OpenAPIBase.Method.POST)) {
@@ -109,6 +97,18 @@ protected abstract String oauth2(String grant_type, String username, String pass
       }
 
       // end oauth2
+    }  else     if( index < segments.length && "test".equals(segments[index])) {
+      index++;
+      if ( segments.length == index) {
+        if ( context.isMethod(OpenAPIBase.Method.POST)) {
+          form_post_(context);
+          return true;
+        } 
+        return getOpenAPIContext().doOptions("POST");
+
+      }
+
+      // end test
     } 
 
     return false;

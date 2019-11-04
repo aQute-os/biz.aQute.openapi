@@ -60,6 +60,11 @@
 				"parameters":
 				[
 					{
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "type":"string"
+                    },{
 						"name": "array",
 						"in": "query",
 						"required": true,
@@ -150,6 +155,11 @@
 				"parameters":
 				[
 					{
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "type":"string"
+                    },{
 						"name": "form1",
 						"in": "formData",
 						"required": true,

@@ -12,7 +12,7 @@ import java.time.LocalDate;
  * 
  * <ul>
  * 
- * <li>{@link #optionalValidation(Optional<String>,Optional<Body>,Optional<String>,Optional<String>,Optional<String>) GET /validation =  optionalValidation}
+ * <li>{@link #optionalValidation(Optional<String>,Optional<Body>,Optional<String>,Optional<String>) GET /validation =  optionalValidation}
  * 
  * </ul>
  * 
@@ -33,8 +33,6 @@ public static final String BASE_PATH = "/optional/{path}";
  * 
  * @param inheader –  (header) collectionFormat=%scsv
  * 
- * @param inpath –  (path) collectionFormat=%scsv
- * 
  * @param formData –  (formData) collectionFormat=%scsv
  * 
    * @returns 200 / null
@@ -42,7 +40,7 @@ public static final String BASE_PATH = "/optional/{path}";
  * 
  */
 
-protected abstract void optionalValidation(Optional<String> inoptional, Optional<Body> inbody, Optional<String> inheader, Optional<String> inpath, Optional<String> formData) throws Exception;
+protected abstract void optionalValidation(Optional<String> inoptional, Optional<Body> inbody, Optional<String> inheader, Optional<String> formData) throws Exception;
 
 /**
  * 
@@ -111,7 +109,6 @@ private void optionalValidation_get_(OpenAPIContext context) throws Exception{
 Optional<String> inoptional_ = context.optional(context.toString(context.parameter("inoptional")));
 Optional<Body> inbody_ = context.optional(context.body(Body.class));
 Optional<String> inheader_ = context.optional(context.toString(context.header("inheader")));
-Optional<String> inpath_ = context.optional(context.toString(context.path("inpath")));
 Optional<String> formData_ = context.optional(context.toString(context.formData("formData")));
 
 
@@ -129,17 +126,13 @@ Optional<String> formData_ = context.optional(context.toString(context.formData(
     context.validate(inheader_.get().length() >= 0, inheader_.get(), "inheader_.get()", "inheader_.get().length() >= 0");
     context.validate(inheader_.get().length() <= 40, inheader_.get(), "inheader_.get()", "inheader_.get().length() <= 40");
        }
-       if  (inpath_.isPresent() ) {
-    context.validate(inpath_.get().length() >= 0, inpath_.get(), "inpath_.get()", "inpath_.get().length() >= 0");
-    context.validate(inpath_.get().length() <= 40, inpath_.get(), "inpath_.get()", "inpath_.get().length() <= 40");
-       }
        if  (formData_.isPresent() ) {
     context.validate(formData_.get().length() >= 0, formData_.get(), "formData_.get()", "formData_.get().length() >= 0");
     context.validate(formData_.get().length() <= 40, formData_.get(), "formData_.get()", "formData_.get().length() <= 40");
        }
     context.end();
 
-    context.call( () -> { optionalValidation(inoptional_, inbody_, inheader_, inpath_, formData_); return null; });
+    context.call( () -> { optionalValidation(inoptional_, inbody_, inheader_, formData_); return null; });
     context.setResult(null, 200);
 
 }

@@ -81,9 +81,8 @@ protected abstract boolean unauthenticated(String action) throws Exception;
     if( index < segments.length && "authenticated".equals(segments[index])) {
       index++;
 
-      if ( index < segments.length ) {
-        context.pathParameter("action",segments[index]);
-        index++;
+      if ( index + 1 == segments.length ) {
+        context.pathParameter("action",segments[index++]);
         if ( segments.length == index) {
           if ( context.isMethod(OpenAPIBase.Method.GET)) {
             authenticated_get_(context);
@@ -94,13 +93,14 @@ protected abstract boolean unauthenticated(String action) throws Exception;
         }
 
 
-      }      // end authenticated
+      }
+
+      // end authenticated
     }  else     if( index < segments.length && "unauthenticated".equals(segments[index])) {
       index++;
 
-      if ( index < segments.length ) {
-        context.pathParameter("action",segments[index]);
-        index++;
+      if ( index + 1 == segments.length ) {
+        context.pathParameter("action",segments[index++]);
         if ( segments.length == index) {
           if ( context.isMethod(OpenAPIBase.Method.GET)) {
             unauthenticated_get_(context);
@@ -111,7 +111,9 @@ protected abstract boolean unauthenticated(String action) throws Exception;
         }
 
 
-      }      // end unauthenticated
+      }
+
+      // end unauthenticated
     } 
 
     return false;

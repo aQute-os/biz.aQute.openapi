@@ -99,29 +99,29 @@ protected abstract void a_post() throws Exception;
     if( index < segments.length && "a".equals(segments[index])) {
       index++;
       if ( segments.length == index) {
-        if ( context.isMethod(OpenAPIBase.Method.PUT)) {
-          a_put_put_(context);
+        if ( context.isMethod(OpenAPIBase.Method.GET)) {
+          a_get_get_(context);
           return true;
         }  else         if ( context.isMethod(OpenAPIBase.Method.POST)) {
           a_post_post_(context);
           return true;
-        }  else         if ( context.isMethod(OpenAPIBase.Method.GET)) {
-          a_get_get_(context);
+        }  else         if ( context.isMethod(OpenAPIBase.Method.PUT)) {
+          a_put_put_(context);
           return true;
         } 
-        return getOpenAPIContext().doOptions("PUT", "POST", "GET");
+        return getOpenAPIContext().doOptions("GET", "POST", "PUT");
 
       } else       if( index < segments.length && "b".equals(segments[index])) {
         index++;
         if ( segments.length == index) {
-          if ( context.isMethod(OpenAPIBase.Method.POST)) {
-            a_b_post_post_(context);
-            return true;
-          }  else           if ( context.isMethod(OpenAPIBase.Method.GET)) {
+          if ( context.isMethod(OpenAPIBase.Method.GET)) {
             a_b_get_get_(context);
             return true;
+          }  else           if ( context.isMethod(OpenAPIBase.Method.POST)) {
+            a_b_post_post_(context);
+            return true;
           } 
-          return getOpenAPIContext().doOptions("POST", "GET");
+          return getOpenAPIContext().doOptions("GET", "POST");
 
         }
 

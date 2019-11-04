@@ -4,11 +4,14 @@ import static aQute.openapi.generator.OpenAPIGenerator.getLogger;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import aQute.openapi.generator.SourceRoute.RootSourceRoute;
 import aQute.openapi.v2.api.HeaderObject;
+import aQute.openapi.v2.api.In;
 import aQute.openapi.v2.api.OperationObject;
 import aQute.openapi.v2.api.ParameterObject;
 import aQute.openapi.v2.api.ResponseObject;
@@ -50,14 +53,25 @@ public class SourceFile {
 			m.prototype.put(par.name, sourceArgument);
 			addType(sourceArgument.getType());
 		}
+
+		Set<String> pathParameters = new HashSet<>();
 		for (ParameterObject par : operation.parameters) {
 			SourceArgument sourceArgument = new SourceArgument(gen, m, par);
+
+			if (par.in == In.path)
+				pathParameters.add(par.name);
+
 			OpenAPIGenerator.getLogger().info("        Par (op) {}", sourceArgument);
 			m.prototype.put(par.name, sourceArgument);
 			addType(sourceArgument.getType());
 		}
 
-		root.add(path, method, m);
+		Set<String> inPath = root.add(path, method, m);
+		if (!inPath.equals(pathParameters)) {
+			throw new IllegalArgumentException(
+					"Path parameters specified in path and in Parameter objects differ. In path: " + path
+							+ " and in P.O.: " + pathParameters);
+		}
 	}
 
 	private ResponseObject getResponseObject(String path, SourceMethod m, Map.Entry<String,ResponseObject> e) {

@@ -33,9 +33,28 @@
         ]
       }
     },  
-     "/a/{a}/{b}": {
+     "/a/{x}/{b}": {
       "put": {
-        "operationId": "setmap",
+        "operationId": "setmap_x",
+        "parameters": [
+          {
+            "name": "x",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "b",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },
+     "/a/{a}/foo/{b}": {
+      "put": {
+        "operationId": "setmap_foo",
         "parameters": [
           {
             "name": "a",
@@ -45,6 +64,38 @@
           },
           {
             "name": "b",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },
+     "/a/{a}/bar/{b}": {
+      "put": {
+        "operationId": "setmap_bar",
+        "parameters": [
+          {
+            "name": "a",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "b",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },
+     "/a/{a}/foo/bar": {
+      "put": {
+        "operationId": "setmap_foo_bar",
+        "parameters": [
+          {
+            "name": "a",
             "in": "path",
             "required": true,
             "type": "string"

@@ -36,14 +36,6 @@
 						"minLength": 0
 					},
 					{
-						"name": "inpath",
-						"in": "path",
-						"required": false,
-						"type": "string",
-						"maxLength": 40,
-						"minLength": 0
-					},
-					{
 						"name": "formData",
 						"in": "formData",
 						"required": false,

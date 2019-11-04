@@ -103,33 +103,57 @@ public class DispatcherTest {
 
 			@Override
 			protected void getmap(String a) throws Exception {
-				result.add("getmap-"+a);
-			}
-			
-			@Override
-			protected void setmap(String a, String b) throws Exception {
-				result.add("setmap-"+a+"-"+b);
+				result.add("getmap-" + a);
 			}
 
+			@Override
+			protected void setmap_x(String a, String b) throws Exception {
+				result.add("setmap-" + a + "-" + b);
+			}
 
 			@Override
 			protected void deletemap(String a) throws Exception {
-				result.add("deletemap-"+a);
+				result.add("deletemap-" + a);
+			}
+
+			@Override
+			protected void setmap_foo_bar(String a) throws Exception {
+				result.add("setmap_foo_bar-" + a);
+			}
+
+			@Override
+			protected void setmap_bar(String a, String b) throws Exception {
+				result.add("setmap_bar" + a + b);
+			}
+
+			@Override
+			protected void setmap_foo(String a, String b) throws Exception {
+				result.add("setmap_foo" + a + b);
 			}
 
 		});
 
 		TaggedData get = runtime.http.build().get().asTag().go(runtime.uri.resolve("/api/v1/a/1"));
 		assertThat(get.getResponseCode(), is(200));
-		
+
 		TaggedData delete = runtime.http.build().delete().asTag().go(runtime.uri.resolve("/api/v1/a/1"));
 		assertThat(delete.getResponseCode(), is(200));
-		
+
 		TaggedData put = runtime.http.build().put().upload("hi").asTag().go(runtime.uri.resolve("/api/v1/a/1/2"));
 		assertThat(put.getResponseCode(), is(200));
-		
-		assertThat(result,Matchers.containsInAnyOrder("getmap-1", "setmap-1-2", "deletemap-1"));
-		
+
+		TaggedData putfoobar = runtime.http.build().put().upload("hi").asTag().go(runtime.uri.resolve("/api/v1/a/1/foo/bar"));
+		assertThat(putfoobar.getResponseCode(), is(200));
+
+		TaggedData putfoo = runtime.http.build().put().upload("hi").asTag().go(runtime.uri.resolve("/api/v1/a/1/bar/2"));
+		assertThat(putfoo.getResponseCode(), is(200));
+
+		TaggedData putbar = runtime.http.build().put().upload("hi").asTag().go(runtime.uri.resolve("/api/v1/a/1/foo/2"));
+		assertThat(putbar.getResponseCode(), is(200));
+
+		assertThat(result, Matchers.containsInAnyOrder("getmap-1", "setmap-1-2", "deletemap-1", "setmap_foo_bar-1",
+				"setmap_bar12", "setmap_foo12"));
+
 		assertThat(System.currentTimeMillis() - start, lessThan(2000L));
 	}
 

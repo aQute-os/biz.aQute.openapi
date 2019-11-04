@@ -1,20 +1,23 @@
 package aQute.openapi.generator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Formatter;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import aQute.lib.strings.Strings;
 
 public abstract class SourceRoute {
-	final Map<String,SourceRoute>	segments	= new HashMap<>();
+	private static final String		PARAMETER_KEY	= "";
 
-	final static Pattern			PARAMETER_P	= Pattern.compile("\\{(?<name>.+)\\}");
+	final Map<String,SourceRoute>	segments		= new TreeMap<>();
+
+	final static Pattern			PARAMETER_P		= Pattern.compile("\\{(?<name>.+)\\}");
 
 	public static class RootSourceRoute extends SourceRoute {
 
@@ -49,19 +52,18 @@ public abstract class SourceRoute {
 
 	static class ParameterRoute extends SourceRoute {
 
-		String[] parameterNames;
-
-		public ParameterRoute(String[] parameterNames) {
-			this.parameterNames = parameterNames;
-		}
+		Set<String> parameterNames = new HashSet<>();
 
 		@Override
 		public void generate(OpenAPIGenerator gen, Formatter f, String indent) {
 
-			f.format("%sif ( index + %s == segments.length ) {\n", indent, parameterNames.length);
-			for (int i = 0; i < parameterNames.length; i++) {
-				f.format("%s  context.pathParameter(\"%s\",segments[index++]);\n", indent, parameterNames[i]);
+			f.format("%s  if ( index < segments.length ) {\n", indent);
+
+			for (String parameterName : parameterNames) {
+				f.format("%s  context.pathParameter(\"%s\",segments[index]);\n", indent, parameterName);
 			}
+			f.format("%s  index++;\n", indent);
+
 			super.generate(gen, f, indent);
 			f.format("\n%s}", indent);
 		}
@@ -69,13 +71,24 @@ public abstract class SourceRoute {
 		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
-			String del = "/";
-			for (String segment : parameterNames) {
-				sb.append(del).append("{").append(segment).append("}");
+			sb.append("/").append("{");
+			String del = "";
+			for (String s : parameterNames) {
+				sb.append(del).append(s);
+				del = "|";
 			}
+			sb.append("}");
+
+			if (segments.size() > 1) {
+				sb.append("[ ");
+			}
+			del = "";
 			for (SourceRoute s : segments.values()) {
-				OperationRoute or = (OperationRoute) s;
-				sb.append(" ").append(or.method);
+				sb.append(del).append(s);
+				del = ",";
+			}
+			if (segments.size() > 1) {
+				sb.append(" ]");
 			}
 			return sb.toString();
 		}
@@ -108,8 +121,11 @@ public abstract class SourceRoute {
 	 * @param path
 	 * @param method
 	 * @param operation
+	 * @return
 	 */
-	void add(String path, String method, SourceMethod operation) {
+	Set<String> add(String path, String method, SourceMethod operation) {
+		Set<String> pathParameterNames = new HashSet<>();
+
 		String segments[] = path.substring(1).split("/");
 		SourceRoute rover = this;
 		for (int n = 0; n < segments.length; n++) {
@@ -121,45 +137,17 @@ public abstract class SourceRoute {
 				rover = rover.segments.computeIfAbsent(segment, SegmentRoute::new);
 			} else {
 
-				// all following segments MUST now be
-				// parameters
-
-				int arity = segments.length - n;
-				String[] parameterNames = new String[arity];
-				parameterNames[0] = m.group("name");
-				int p = 1;
-				n++;
-				for (; n < segments.length; n++) {
-					m = PARAMETER_P.matcher(segments[n]);
-					if (!m.matches()) {
-						throw new IllegalArgumentException(
-								"After a path parameters is used, all subsequent segments must also be path parameters. I.e. /a/b/{foo}/d is very wrong");
-					}
-					parameterNames[p++] = m.group("name");
-				}
-
-				String key = "__" + arity;
-
-				ParameterRoute candidate = (ParameterRoute) rover.segments.get(key);
-
-				if (candidate == null) {
-					candidate = new ParameterRoute(parameterNames);
-					rover.segments.put(key, candidate);
-				} else {
-					if (!Arrays.deepEquals(parameterNames, candidate.parameterNames)) {
-						throw new IllegalArgumentException(String.format(
-								"There are two or more operations with same prefix path %s and the same number of parameters. This is not valid: previous=%s, current=%s",
-								path, Arrays.toString(candidate.parameterNames), Arrays.toString(parameterNames)));
-					}
-				}
-
-				rover = candidate;
-				assert n == segments.length;
-
+				ParameterRoute r = (ParameterRoute) rover.segments.computeIfAbsent(PARAMETER_KEY,
+						ss -> new ParameterRoute());
+				String name = m.group("name");
+				r.parameterNames.add(name);
+				pathParameterNames.add(name);
+				rover = r;
 			}
 		}
 		OperationRoute or = new OperationRoute(method, operation);
 		rover.segments.put("$$" + method + "$$", or);
+		return pathParameterNames;
 	}
 
 	/**

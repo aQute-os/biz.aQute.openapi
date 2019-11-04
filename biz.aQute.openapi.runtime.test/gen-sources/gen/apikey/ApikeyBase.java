@@ -119,31 +119,7 @@ protected abstract String orSecurity() throws Exception;
 
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
 
-    if( index < segments.length && "overrideNoSecurity".equals(segments[index])) {
-      index++;
-      if ( segments.length == index) {
-        if ( context.isMethod(OpenAPIBase.Method.GET)) {
-          overrideNoSecurity_get_(context);
-          return true;
-        } 
-        return getOpenAPIContext().doOptions("GET");
-
-      }
-
-      // end overrideNoSecurity
-    }  else     if( index < segments.length && "orAndSecurity".equals(segments[index])) {
-      index++;
-      if ( segments.length == index) {
-        if ( context.isMethod(OpenAPIBase.Method.GET)) {
-          orAndSecurity_get_(context);
-          return true;
-        } 
-        return getOpenAPIContext().doOptions("GET");
-
-      }
-
-      // end orAndSecurity
-    }  else     if( index < segments.length && "andSecurity".equals(segments[index])) {
+    if( index < segments.length && "andSecurity".equals(segments[index])) {
       index++;
       if ( segments.length == index) {
         if ( context.isMethod(OpenAPIBase.Method.GET)) {
@@ -167,6 +143,18 @@ protected abstract String orSecurity() throws Exception;
       }
 
       // end defaultSecurity
+    }  else     if( index < segments.length && "orAndSecurity".equals(segments[index])) {
+      index++;
+      if ( segments.length == index) {
+        if ( context.isMethod(OpenAPIBase.Method.GET)) {
+          orAndSecurity_get_(context);
+          return true;
+        } 
+        return getOpenAPIContext().doOptions("GET");
+
+      }
+
+      // end orAndSecurity
     }  else     if( index < segments.length && "orSecurity".equals(segments[index])) {
       index++;
       if ( segments.length == index) {
@@ -179,6 +167,18 @@ protected abstract String orSecurity() throws Exception;
       }
 
       // end orSecurity
+    }  else     if( index < segments.length && "overrideNoSecurity".equals(segments[index])) {
+      index++;
+      if ( segments.length == index) {
+        if ( context.isMethod(OpenAPIBase.Method.GET)) {
+          overrideNoSecurity_get_(context);
+          return true;
+        } 
+        return getOpenAPIContext().doOptions("GET");
+
+      }
+
+      // end overrideNoSecurity
     } 
 
     return false;

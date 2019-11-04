@@ -339,20 +339,21 @@ public static class MappingFileList extends OpenAPIBase.DTO {
         if( index < segments.length && "devices".equals(segments[index])) {
           index++;
           if ( segments.length == index) {
-            if ( context.isMethod(OpenAPIBase.Method.PUT)) {
-              editModbusDeviceToPlant_put_(context);
+            if ( context.isMethod(OpenAPIBase.Method.GET)) {
+              getModbusDevices_get_(context);
               return true;
             }  else             if ( context.isMethod(OpenAPIBase.Method.POST)) {
               addModbusDeviceToPlant_post_(context);
               return true;
-            }  else             if ( context.isMethod(OpenAPIBase.Method.GET)) {
-              getModbusDevices_get_(context);
+            }  else             if ( context.isMethod(OpenAPIBase.Method.PUT)) {
+              editModbusDeviceToPlant_put_(context);
               return true;
             } 
-            return getOpenAPIContext().doOptions("PUT", "POST", "GET");
+            return getOpenAPIContext().doOptions("GET", "POST", "PUT");
 
-          } else           if ( index + 1 == segments.length ) {
-            context.pathParameter("deviceId",segments[index++]);
+          } else             if ( index < segments.length ) {
+            context.pathParameter("deviceId",segments[index]);
+            index++;
             if ( segments.length == index) {
               if ( context.isMethod(OpenAPIBase.Method.DELETE)) {
                 removeModbusDevice_delete_(context);

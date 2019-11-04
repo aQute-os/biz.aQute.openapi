@@ -18,7 +18,7 @@ public class ParameterSourceTest extends Assert {
 		class X extends ParametersBase {
 
 			@Override
-			protected Response postParameter(String form1, int form2, String path, String header, String query)
+			protected Response postParameter(String path, String form1, int form2, String header, String query)
 					throws Exception {
 				Response response = new Response();
 
@@ -52,7 +52,7 @@ public class ParameterSourceTest extends Assert {
 			}
 
 			@Override
-			protected Response arrayConversion(List<String> array, List<String> arrayNone, List<String> arrayPipes,
+			protected Response arrayConversion(String path, List<String> array, List<String> arrayNone, List<String> arrayPipes,
 					List<String> arrayTsv, List<String> arrayMulti, List<String> arrayCsv, List<String> arraySsv)
 					throws Exception {
 				// TODO Auto-generated method stub
