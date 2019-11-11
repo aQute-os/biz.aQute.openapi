@@ -678,7 +678,7 @@ public abstract class SourceType {
 					type = enumType;
 				}
 
-				String memberName = gen.toMemberName(e.getKey());
+				String memberName = gen.toSafeName(e.getKey());
 				SourceProperty property = new SourceProperty(gen, memberName, type);
 
 				this.properties.put(e.getKey(), property);

@@ -1,0 +1,53 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "v1",
+        "title": "parameters"
+    },
+    "basePath": "/v1",
+    "paths": {
+        "/parameter": {
+            "put": {
+                "operationId": "putParameter",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Body"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "$ref": "#/definitions/Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Body": {
+            "type": "object",
+            "properties": {
+                "StartsWithUppercase": {
+                    "type": "string"
+                }
+            }
+        },
+        "Response": {
+            "type": "object",
+            "required": [
+                "error"
+            ],
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

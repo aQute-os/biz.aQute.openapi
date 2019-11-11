@@ -9,6 +9,12 @@ import aQute.openapi.generator.OpenAPIGenerator;
 
 public class GenerateTestSources {
 	
+	
+	public static void fieldCasing() throws Exception {
+		GenerateTestSources.generate("fieldcasing", "fieldcasing.json", new Configuration());
+				
+	}
+	
 	public static void pathPaaramsOrder() throws Exception {
 		GenerateTestSources.generate("pathparams", "pathparams.json", new Configuration());
 				
@@ -171,6 +177,7 @@ public class GenerateTestSources {
 
 	public static void main(String args[]) throws Exception {
 		// dummy();
+		fieldCasing();
 		pathPaaramsOrder();
 		parameterEnum();
 		additionalProperties();
