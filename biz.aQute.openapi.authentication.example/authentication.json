@@ -63,7 +63,7 @@
 				} ]
 			}
 		},
-		"unauthenticated": {
+		"/unauthenticated": {
 			"get": {
 				"operationId": "unauthenticated",
 				"security": [],

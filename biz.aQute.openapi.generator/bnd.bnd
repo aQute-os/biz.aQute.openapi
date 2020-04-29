@@ -1,9 +1,11 @@
 -buildpath: \
 	osgi.enroute.base.api,\
-	biz.aQute.bndlib;packages=*,\
-	biz.aQute.json.util, \
-	biz.aQute.openapi.provider, \
-	biz.aQute.openapi.api
+	biz.aQute.bndlib;packages=*;version=@5,\
+	aQute.libg;packages=*;version=@5,\
+	biz.aQute.json.util,\
+	biz.aQute.openapi.provider,\
+	biz.aQute.openapi.api,\
+	osgi.annotation;version=7.0.0
 
 
 

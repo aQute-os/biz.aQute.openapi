@@ -1,4 +1,5 @@
 -buildpath: \
-	osgi.enroute.base.api, \
-	biz.aQute.bndlib;packages=*, \
-	org.apache.felix.webconsole
+	osgi.enroute.base.api,\
+	biz.aQute.bndlib;packages=*;version=@5,\
+	org.apache.felix.webconsole,\
+	org.osgi.service.component.annotations;version=1.4.0

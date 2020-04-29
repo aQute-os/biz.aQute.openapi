@@ -2,10 +2,12 @@
 
 -buildpath: \
 	osgi.enroute.base.api,\
-	biz.aQute.bndlib;packages=*,\
+	biz.aQute.bndlib;packages=*;version=@5,\
 	org.apache.felix.webconsole,\
 	biz.aQute.openapi.provider,\
-	org.osgi.service.jdbc;version=1.0
+	org.osgi.service.jdbc;version=1.0,\
+	org.osgi.service.component.annotations;version=1.4.0,\
+	org.apache.felix.http.servlet-api
 	
 -includeresource: static=static, bin
 	
@@ -59,10 +61,9 @@ src=gen-src,src
 	Central
 	
 	
--openapi: \
+-generate: \
 	petstore.json; \
-		tags				= "*"; \
-		typePrefix		= "Generated"; \
-		baseName			= "OpenAPIBase"; \
-		packagePrefix	= "aQute.openapi.example.petstore"
+		output=gen-src/;\
+		generate="openapi -o gen-src --tags * --typeprefix Generated --basename OpenAPIBase --packageprefix aQute.openapi.example.petstore petstore.json"
+	
 	

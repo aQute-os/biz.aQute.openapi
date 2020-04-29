@@ -5,3 +5,4 @@ bin_test/
 generated/
 *.class
 sma/
+/.metadata/

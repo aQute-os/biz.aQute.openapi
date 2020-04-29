@@ -205,7 +205,7 @@ public static class Order extends OpenAPIBase.DTO {
           } 
           return getOpenAPIContext().doOptions("POST");
 
-        } else         if ( index < segments.length ) {
+        } else           if ( index < segments.length ) {
           context.pathParameter("orderId",segments[index]);
           index++;
           if ( segments.length == index) {
@@ -221,7 +221,9 @@ public static class Order extends OpenAPIBase.DTO {
           }
 
 
-        }        // end order
+        }
+
+        // end order
       } 
 
       // end store

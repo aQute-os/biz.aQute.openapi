@@ -81,7 +81,7 @@ protected abstract boolean unauthenticated(String action) throws Exception;
     if( index < segments.length && "authenticated".equals(segments[index])) {
       index++;
 
-      if ( index < segments.length ) {
+        if ( index < segments.length ) {
         context.pathParameter("action",segments[index]);
         index++;
         if ( segments.length == index) {
@@ -94,11 +94,13 @@ protected abstract boolean unauthenticated(String action) throws Exception;
         }
 
 
-      }      // end authenticated
+      }
+
+      // end authenticated
     }  else     if( index < segments.length && "unauthenticated".equals(segments[index])) {
       index++;
 
-      if ( index < segments.length ) {
+        if ( index < segments.length ) {
         context.pathParameter("action",segments[index]);
         index++;
         if ( segments.length == index) {
@@ -111,7 +113,9 @@ protected abstract boolean unauthenticated(String action) throws Exception;
         }
 
 
-      }      // end unauthenticated
+      }
+
+      // end unauthenticated
     } 
 
     return false;

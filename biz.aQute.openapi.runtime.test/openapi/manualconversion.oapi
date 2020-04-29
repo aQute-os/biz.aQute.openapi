@@ -1,0 +1,8 @@
+{
+		"dateTimeClass"		: "java.time.Instant",
+		"conversions"		: [
+				"       DateTimeFormatter idtf = DateTimeFormatter.ofPattern(\"yyyy-MM-dd'T'HH:mm:ss[.SSS]X\").withZone(java.time.ZoneId.of(\"UTC\"));\n",
+				"       CODEC.addStringHandler(Instant.class, (i) -> idtf.format(i), (s)-> Instant.from(idtf.parse(s)));\n"
+		],
+    	"openapiFile"		: "withconfig/datetimeencoding.json"
+}

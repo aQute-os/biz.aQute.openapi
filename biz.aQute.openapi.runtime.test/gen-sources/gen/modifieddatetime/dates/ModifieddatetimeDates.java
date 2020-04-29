@@ -69,10 +69,6 @@ public static class Dates extends OpenAPIBase.DTO {
     super(BASE_PATH,gen.modifieddatetime.ModifieddatetimeBase.class,
          "putDates             PUT    /dates  PAYLOAD Dates  RETURN Dates");
   }
-    public OpenAPIBase.Codec codec_() {
-        return gen.modifieddatetime.ModifieddatetimeBase.CODEC;
-    }
-
 
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
 

@@ -15,11 +15,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.hamcrest.Matchers;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import aQute.bnd.service.url.TaggedData;
+import aQute.launchpad.Launchpad;
+import aQute.launchpad.LaunchpadBuilder;
 import aQute.lib.converter.Converter;
 import aQute.libg.map.MAP;
 import aQute.openapi.provider.OpenAPIRuntime.Configuration;
@@ -31,12 +32,7 @@ public class DispatcherTest {
 
 	@Rule
 	public OpenAPIServerTestRule	runtime		= new OpenAPIServerTestRule();
-	DummyFramework					fw;
-
-	@Before
-	public void before() throws Exception {
-		fw = new DummyFramework();
-	}
+	Launchpad fw = new LaunchpadBuilder().create();
 
 	@After
 	public void close() throws Exception {
@@ -45,7 +41,7 @@ public class DispatcherTest {
 
 	@Test
 	public void testNoBlockingWhenNotFound() throws Exception {
-		runtime.runtime.activate(fw.context, getConfig(MAP.$("registerOnStart", new String[] {})));
+		runtime.runtime.activate(fw.getBundleContext(), getConfig(MAP.$("registerOnStart", new String[] {})));
 		long start = System.currentTimeMillis();
 		TaggedData go = runtime.http.build().get().asTag().go(runtime.uri.resolve("/abc/whatever"));
 		assertThat(go.getResponseCode(), is(404));
@@ -54,7 +50,7 @@ public class DispatcherTest {
 
 	@Test
 	public void testBlockingWhenNotFound() throws Exception {
-		runtime.runtime.activate(fw.context,
+		runtime.runtime.activate(fw.getBundleContext(),
 				getConfig(MAP.$("registerOnStart", (Object) new String[] { "/abc" }).$("delayOnNotFoundInSecs", 2)));
 		long start = System.currentTimeMillis();
 		TaggedData go = runtime.http.build().get().asTag().go(runtime.uri.resolve("/abc/whatever"));
@@ -67,7 +63,7 @@ public class DispatcherTest {
 		System.out.println("testBlockingWhenNotFoundUntilRegistered");
 		AtomicBoolean visited = new AtomicBoolean();
 
-		runtime.runtime.activate(fw.context,
+		runtime.runtime.activate(fw.getBundleContext(),
 				getConfig(MAP.$("registerOnStart", (Object) new String[] { "/v1" }).$("delayOnNotFoundInSecs",
 						2)));
 		long start = System.currentTimeMillis();
@@ -93,7 +89,7 @@ public class DispatcherTest {
 
 	@Test
 	public void testPathParameterOrder() throws Exception {
-		runtime.runtime.activate(fw.context,
+		runtime.runtime.activate(fw.getBundleContext(),
 				getConfig(MAP.$("registerOnStart", (Object) new String[] { "/api/v1" }).$("delayOnNotFoundInSecs",
 						3)));
 		long start = System.currentTimeMillis();

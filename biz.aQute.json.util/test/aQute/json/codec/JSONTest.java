@@ -741,8 +741,7 @@ public class JSONTest extends TestCase {
 	 */
 
 	public static void testRepeat() throws Exception {
-		Decoder dec = new JSONCodec().dec().keepOpen();
-		try {
+		try(Decoder dec = new JSONCodec().dec().keepOpen()) {
 			StringReader r = new StringReader("1\t2\r3\n 4      5   \n\r");
 			assertEquals((Integer) 1, dec.from(r).get(Integer.class));
 			assertEquals((Integer) 2, dec.get(Integer.class));
@@ -751,10 +750,7 @@ public class JSONTest extends TestCase {
 			assertFalse(dec.isEof());
 			assertEquals((Integer) 5, dec.get(Integer.class));
 			assertTrue(dec.isEof());
-		} finally {
-			dec.close();
 		}
-
 	}
 
 	/**
@@ -848,16 +844,14 @@ public class JSONTest extends TestCase {
 		byte[] original = enc.digest();
 		String string = enc.put(original).append("\n").toString();
 
-		Decoder dec = new JSONCodec().dec().keepOpen();
-		try {
+		try (Decoder dec = new JSONCodec().dec().keepOpen()) {
+		
 			String x = dec.mark().from(string).get(String.class);
 			assertEquals("Hello World", x);
 			byte read[] = dec.digest();
 			byte read2[] = dec.get(byte[].class);
 			assertTrue(Arrays.equals(original, read));
 			assertTrue(Arrays.equals(read, read2));
-		} finally {
-			dec.close();
 		}
 	}
 

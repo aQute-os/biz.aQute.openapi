@@ -5,8 +5,10 @@ Require-Capability: \
 -conditionalpackage: aQute.lib*
 
 -buildpath: \
-	osgi.enroute.base.api, \
-	biz.aQute.bndlib;packages=*
+	biz.aQute.bndlib;packages=*;version=@5,\
+	org.apache.felix.http.servlet-api;version=1.1.2,\
+	osgi.annotation;version=7.0.0
+
 Export-Package: \
 	aQute.openapi.security.environment.api,\
 	aQute.openapi.security.api,\

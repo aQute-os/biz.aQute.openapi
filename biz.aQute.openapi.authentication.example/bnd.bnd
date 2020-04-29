@@ -17,9 +17,10 @@ EnRoute-Application: 	biz.aQute.openapi.authentication.example
 	web=web
 
 -buildpath: \
-	osgi.enroute.base.api;version=2.0, \
-	biz.aQute.openapi.provider, \
-	biz.aQute.openapi.cli
+	osgi.enroute.base.api;version=2.0,\
+	biz.aQute.openapi.provider,\
+	biz.aQute.openapi.cli,\
+	osgi.enroute.base.api;version=2.1.0
 
 
 -testpath: \
@@ -27,9 +28,7 @@ EnRoute-Application: 	biz.aQute.openapi.authentication.example
 
 src=src,gen-src
 
--openapi	= \
-	authentication.json; \
-		tags="*"; \
-		baseName	 = "OpenAPIBase"; \
-		typePrefix="Authentication"; \
-		packagePrefix="aQute.openapi.authentication.generated"
+-generate: \
+    authentication.json; \
+        output=gen-src; \
+        generate="openapi -o gen-src --tags * --basename OpenAPIBase --typeprefix Authentication --packageprefix aQute.openapi.authentication.generated authentication.json " 

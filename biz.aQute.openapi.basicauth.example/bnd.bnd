@@ -9,16 +9,15 @@ Private-Package: aQute.openapi.basicauth.example
 -includeresource: configuration=configuration
 
 -buildpath: \
-	biz.aQute.openapi.provider, \
-	osgi.enroute.base.api
+	biz.aQute.openapi.provider,\
+	osgi.enroute.base.api,\
+	org.osgi.service.component.annotations;version=1.4.0
 
 # needed to tell bnd that we have generated sources
 src = src, gen-src
 
--openapi: \
+-generate: \
 	openapi.json; \
-		tags					= "*"; \
-		typePrefix			= "BasicAuth"; \
-		baseName				= "OpenAPIBase"; \
-		packagePrefix		= "aQute.openapi.basicauth.example"
+		output=gen-src/; \
+		generate="openapi -o gen-src --tags * --typeprefix BasicAuth --basename OpenAPIBase --packageprefix aQute.openapi.basicauth.example openapi.json"
 	

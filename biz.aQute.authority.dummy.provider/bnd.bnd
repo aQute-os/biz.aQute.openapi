@@ -2,4 +2,6 @@ Private-Package: biz.aQute.authority.dummy.provider
 Export-Package: osgi.enroute.authorization.api
 
 -buildpath: \
-	osgi.enroute.base.api
+	org.osgi.service.component.annotations;version=1.4.0,\
+	org.osgi.framework;version=1.9.0,\
+	osgi.enroute.base.api;version=2.1.0

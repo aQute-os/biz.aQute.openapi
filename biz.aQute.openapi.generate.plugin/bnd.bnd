@@ -1,0 +1,11 @@
+-buildpath: \
+	biz.aQute.bndlib;version=5.1.0,\
+	biz.aQute.openapi.generator;version=1.3.0,\
+	biz.aQute.json.util,\
+	aQute.libg;version=5.1.0,\
+	osgi.annotation
+
+-conditionalpackage: aQute.openapi.*, aQute.json.*, aQute.lib*
+
+-privatepackage org.osgi.annotation.versioning
+-includepackage: biz.aQute.openapi.generate.plugin.*, org.osgi.annotation.versioning

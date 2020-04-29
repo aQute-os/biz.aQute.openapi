@@ -1,3 +1,4 @@
+-dependson biz.aQute.openapi.generate.plugin
 
 Require-Bundle org.apache.felix.gogo.runtime;resolution:=optional
 Import-Package \
@@ -5,24 +6,28 @@ Import-Package \
     *
 
 -buildpath: \
-    biz.aQute.bnd;packages=*,\
+	biz.aQute.bndlib;packages=*;version=@5,\
 	biz.aQute.json.util;version=latest;packages=*,\
 	biz.aQute.openapi.provider;version=latest;packages=*,\
 	biz.aQute.openapi.api;version=latest,\
 	biz.aQute.openapi.generator;version=latest,\
 	osgi.enroute.base.api,\
-	osgi.core;version=6.0,\
-	osgi.cmpn;version=6.0, \
-	biz.aQute.www.provider, \
-	org.apache.felix.gogo.runtime
+	biz.aQute.www.provider,\
+	org.apache.felix.gogo.runtime,\
+	aQute.libg
 
 # ensure jetty is first since htmlunit contains jetty classes that conflict
 
 -testpath: \
-    org.apache.felix.http.jetty,\
-	org.apache.felix.framework, \
-	biz.aQute.openapi.oauth2.provider, \
-	lib/htmlunit-2.29-OSG.jar;version=file
+	org.apache.felix.http.jetty,\
+	org.apache.felix.framework,\
+	biz.aQute.openapi.oauth2.provider,\
+	lib/htmlunit-2.29-OSG.jar;version=file,\
+	biz.aQute.launchpad;version=5.1.0
 	
 
 src=src,gen-sources
+
+-generate: openapi/; \
+	output=gen-sources/; \
+	generate="openapi -a -o gen-sources/ --packageprefix gen openapi/"

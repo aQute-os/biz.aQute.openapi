@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.osgi.framework.ServiceRegistration;
@@ -22,18 +23,25 @@ import aQute.openapi.security.api.OpenAPIAuthenticator;
 import aQute.openapi.util.WWWUtils;
 import aQute.www.http.util.HttpRequest;
 import gen.oauth2.Oauth2Base;
+import aQute.launchpad.Launchpad;
+import aQute.launchpad.LaunchpadBuilder;
 
 @SuppressWarnings("restriction")
 public class OAuth2Test {
 
 	@Rule
-	public OpenAPIServerTestRule	runtime	= new OpenAPIServerTestRule();
-	DummyFramework					fw		= new DummyFramework();
+	public OpenAPIServerTestRule runtime = new OpenAPIServerTestRule();
+	Launchpad fw = new LaunchpadBuilder().create();
+
+	@After
+	public void close() throws Exception {
+		fw.close();
+	}
 
 	@Test
 	public void testAccess() throws Exception {
 
-		runtime.runtime.activate(fw.context, getConfig());
+		runtime.runtime.activate(fw.getBundleContext(), getConfig());
 
 		class X extends Oauth2Base {
 
@@ -65,8 +73,8 @@ public class OAuth2Test {
 		oauth2.activate(Converter.cnv(OAuth2Configuration.class, properties));
 		runtime.securityProviderManager.addSecurityProvider(oauth2, properties);
 
-		ServiceRegistration<OpenAPIAuthenticator> oauth2reg = fw.context
-				.registerService(OpenAPIAuthenticator.class, oauth2, properties);
+		ServiceRegistration<OpenAPIAuthenticator> oauth2reg = fw.getBundleContext().registerService(OpenAPIAuthenticator.class,
+				oauth2, properties);
 
 		URI resolve = runtime.uri.resolve("/.openapi/security/oauth2/oauth2/login");
 

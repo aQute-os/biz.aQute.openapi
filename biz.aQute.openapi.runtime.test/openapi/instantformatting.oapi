@@ -1,0 +1,5 @@
+{
+		"dateTimeClass"		: "java.time.Instant",
+		"dateTimeFormat"	: "y",
+    	"openapiFile"		: "withconfig/datetimeencoding.json"
+}

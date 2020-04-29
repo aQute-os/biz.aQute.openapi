@@ -1,0 +1,6 @@
+{
+	"dateFormat"	: "yyyy-DDD",
+    "dateTimeClass"	: "java.time.Instant",
+    "dateTimeFormat": "yyyy-MM-dd'T'HH:mm:ss[.SSS]X",
+    "openapiFile"	: "withconfig/datetimeencoding.json"
+}

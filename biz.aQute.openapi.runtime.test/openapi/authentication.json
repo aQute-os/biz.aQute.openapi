@@ -1,0 +1,77 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"title":"Authentiction Example",
+		"version":"1.0"
+	},
+	"securityDefinitions": {
+		"openid": {
+		    "type": "oauth2",
+		    "flow": "accessCode",
+		    "scopes":{ "openid":"", "email":""},
+		    "authorizationUrl": "",
+		    "tokenUrl": ""
+		},
+		"google": {
+		    "type": "oauth2",
+		    "flow": "accessCode",
+		    "scopes":{ "openid":"", "email":""},
+		    "authorizationUrl": "",
+		    "tokenUrl": ""
+		},
+		"github": {
+		    "type": "oauth2",
+		    "flow": "accessCode",
+		    "scopes":{ "user:email":""},
+		    "authorizationUrl": "",
+		    "tokenUrl": ""
+		},
+		"basic": {
+		    "type": "basic"
+		}
+	},
+	"security": [ ],
+	"basePath": "/authentication",
+	"paths": {
+		"/google": {
+			"get": {
+				"operationId": "google",
+                "responses": {
+          			"200": {
+            			"schema": {
+              				"type":"string"
+            			}
+          			}
+            	},
+				"security": [ {
+					"google":[]
+				} ]
+			}
+		},
+		"/basic": {
+			"get": {
+				"operationId": "basic",
+                "responses": {
+          			"200": {
+            			"schema": {
+              				"type":"string"
+            			}
+          			}
+            	},
+				"security": [ {
+						"basic":[]
+				} ]
+			}
+		},
+		"unauthenticated": {
+			"get": {
+				"operationId": "unauthenticated",
+				"security": [],
+				"responses": {
+          			"200": {
+          			}
+            	}
+			}
+		}
+	}
+}

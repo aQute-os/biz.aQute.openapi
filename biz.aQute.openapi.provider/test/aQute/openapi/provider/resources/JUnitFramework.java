@@ -44,7 +44,6 @@ import aQute.bnd.osgi.Descriptors.PackageRef;
 import aQute.bnd.osgi.Jar;
 import aQute.bnd.osgi.JarResource;
 import aQute.bnd.osgi.Resource;
-import aQute.bnd.osgi.URLResource;
 import aQute.bnd.service.Strategy;
 import aQute.bnd.version.VersionRange;
 import aQute.lib.exceptions.Exceptions;
@@ -241,7 +240,11 @@ public class JUnitFramework implements AutoCloseable {
 		}
 
 		public BundleBuilder addResource(String path, URL url) {
-			return addResource(path, new URLResource(url));
+			try {
+				return addResource(path, Resource.fromURL(url));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 		public BundleBuilder addResource(String path, Resource resource) {

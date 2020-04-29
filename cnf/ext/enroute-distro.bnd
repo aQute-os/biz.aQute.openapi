@@ -6,14 +6,6 @@
 
 -runfw: org.eclipse.osgi
 
--plugin.enroute.distro = \
-	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
-		snapshotUrls=https://oss.sonatype.org/content/groups/osgi; \
-		releaseUrls=https://repo1.maven.org/maven2/; \
-		revision=org.osgi:osgi.enroute.pom.distro:2.0.0; \
-		name=Distro; \
-		location=${build}/cache/enroute-distro.xml
-
 -runblacklist.enroute:	\
 	osgi.identity;filter:='(osgi.identity=osgi.enroute.base.api)', \
 	osgi.identity;filter:='(osgi.identity=org.osgi.compendium)', \

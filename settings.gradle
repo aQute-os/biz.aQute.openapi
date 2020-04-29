@@ -1,8 +1,15 @@
 buildscript {
-	repositories { mavenCentral() }
-	dependencies { classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:${bnd_version}" }
+    repositories {
+        mavenCentral()
+        maven { url uri(bnd_repourl) }
+    }
+    dependencies { classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:${bnd_version}" }
+}
+
+buildCache {
+    local(DirectoryBuildCache) {
+        directory = new File("${rootDir}", '.build-cache')
+    }
 }
 
 apply plugin: 'biz.aQute.bnd.workspace'
-
-

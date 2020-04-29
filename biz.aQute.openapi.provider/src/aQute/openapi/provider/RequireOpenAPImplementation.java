@@ -1,8 +1,8 @@
 package aQute.openapi.provider;
 
-import aQute.bnd.annotation.headers.RequireCapability;
+import org.osgi.annotation.bundle.Requirement;
 
-@RequireCapability(ns = "aQute.openapi", filter = "")
+@Requirement(namespace = "aQute.openapi", filter = "")
 public @interface RequireOpenAPImplementation {
 
 }

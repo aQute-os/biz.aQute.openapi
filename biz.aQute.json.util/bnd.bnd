@@ -1,6 +1,7 @@
 -buildpath: \
-	biz.aQute.bndlib;packages=*, \
-	osgi.enroute.base.api
+	biz.aQute.bndlib;packages=*;version=@5,\
+	osgi.enroute.base.api,\
+	slf4j.api;version=1.7.30
 Export-Package: \
 	aQute.json.codec,\
 	aQute.json.naming

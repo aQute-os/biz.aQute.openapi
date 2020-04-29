@@ -41,26 +41,32 @@ Bundle-Developers: \
 # Access Maven Central + OSGi snapshots
 #
 
--plugin.4.Central:  \
-	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
-		snapshotUrls=https://oss.sonatype.org/content/groups/osgi; \
-		releaseUrls='https://repo1.maven.org/maven2/,https://repo.gradle.org/gradle/libs-releases-local/'; \
-		pom=${build}/central.xml; \
-		name=Central; \
-		location=${build}/cache/enroute-central.xml
-	        
+-plugin.4.Build:  \
+    aQute.bnd.repository.maven.provider.MavenBndRepository;\
+        name="Build";\
+        snapshotUrl=https://oss.sonatype.org/content/groups/osgi; \
+        releaseUrl='https://repo1.maven.org/maven2/,https://repo.gradle.org/gradle/libs-releases-local/'; \
+        index="${.}/build.mvn";\
+        readOnly=true,\
+    aQute.bnd.repository.maven.provider.MavenBndRepository;\
+        name="Runtime";\
+        snapshotUrl=https://oss.sonatype.org/content/groups/osgi; \
+        releaseUrl='https://repo1.maven.org/maven2/,https://repo.gradle.org/gradle/libs-releases-local/'; \
+        index="${.}/runtime.mvn";\
+        readOnly=true
+
 #
 # Release to Nexus
 #
 
--plugin.8.nexus: \
+-plugin.8.Release: \
 	aQute.bnd.repository.maven.provider.MavenBndRepository; \
 		snapshotUrl=https://oss.sonatype.org/content/repositories/snapshots/; \
 		releaseUrl= 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'; \
 		index=${.}/osgi-nexus.maven; \
-		name="Nexus"
+		name="Release"
 
--releaserepo: Nexus
+-releaserepo: Release
 
 # On Travis, you can set the secret as follows
 # travis encrypt REPOSITORY_USERNAME=<user> REPOSITORY_PASSWORD=<passwd> -a env.secure
@@ -77,7 +83,7 @@ usr = ${env;REPOSITORY_USERNAME;}
 
 -plugin.~.local: \
     aQute.bnd.repository.maven.provider.MavenBndRepository;\
-        name='Local';\
+        name='.m2';\
         noupdateOnRelease=true
 
--buildrepo: Local
+-buildrepo: .m2

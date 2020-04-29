@@ -354,14 +354,14 @@ public static class Pet extends OpenAPIBase.DTO {
     if( index < segments.length && "pet".equals(segments[index])) {
       index++;
       if ( segments.length == index) {
-        if ( context.isMethod(OpenAPIBase.Method.PUT)) {
-          updatePet_put_(context);
-          return true;
-        }  else         if ( context.isMethod(OpenAPIBase.Method.POST)) {
+        if ( context.isMethod(OpenAPIBase.Method.POST)) {
           addPet_post_(context);
           return true;
+        }  else         if ( context.isMethod(OpenAPIBase.Method.PUT)) {
+          updatePet_put_(context);
+          return true;
         } 
-        return getOpenAPIContext().doOptions("PUT", "POST");
+        return getOpenAPIContext().doOptions("POST", "PUT");
 
       } else       if( index < segments.length && "findByStatus".equals(segments[index])) {
         index++;
@@ -387,21 +387,21 @@ public static class Pet extends OpenAPIBase.DTO {
         }
 
         // end findByTags
-      }  else       if ( index < segments.length ) {
+      }  else         if ( index < segments.length ) {
         context.pathParameter("petId",segments[index]);
         index++;
         if ( segments.length == index) {
           if ( context.isMethod(OpenAPIBase.Method.DELETE)) {
             deletePet_delete_(context);
             return true;
-          }  else           if ( context.isMethod(OpenAPIBase.Method.POST)) {
-            updatePetWithForm_post_(context);
-            return true;
           }  else           if ( context.isMethod(OpenAPIBase.Method.GET)) {
             getPetById_get_(context);
             return true;
+          }  else           if ( context.isMethod(OpenAPIBase.Method.POST)) {
+            updatePetWithForm_post_(context);
+            return true;
           } 
-          return getOpenAPIContext().doOptions("DELETE", "POST", "GET");
+          return getOpenAPIContext().doOptions("DELETE", "GET", "POST");
 
         } else         if( index < segments.length && "uploadImage".equals(segments[index])) {
           index++;
@@ -418,7 +418,9 @@ public static class Pet extends OpenAPIBase.DTO {
         } 
 
 
-      }      // end pet
+      }
+
+      // end pet
     } 
 
     return false;

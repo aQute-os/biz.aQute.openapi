@@ -18,24 +18,19 @@ public class FileHandler extends Handler {
 		if (!f.isFile())
 			throw new RuntimeException("Encoding a file requires the file to exist and to be a normal file " + f);
 
-		FileInputStream in = new FileInputStream(f);
-		try {
+		try(FileInputStream in = new FileInputStream(f)) {
 			app.append('"');
 			Base64.encode(in, app);
 			app.append('"');
-		} finally {
-			in.close();
 		}
 	}
 
 	@Override
 	public Object decode(Decoder dec, String s) throws Exception {
 		File tmp = File.createTempFile("json", ".bin");
-		FileOutputStream fout = new FileOutputStream(tmp);
-		try {
+		try (FileOutputStream fout = new FileOutputStream(tmp)) {
+		
 			Base64.decode(new StringReader(s), fout);
-		} finally {
-			fout.close();
 		}
 		return tmp;
 	}

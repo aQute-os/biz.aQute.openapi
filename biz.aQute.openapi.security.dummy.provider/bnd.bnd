@@ -13,9 +13,10 @@ Private-Package:  \
 
 -includeresource: {readme.md}
 
--buildpath:  \
-	osgi.enroute.base.api;version=2.0, \
-	biz.aQute.openapi.api
+-buildpath: \
+	biz.aQute.openapi.api,\
+	org.osgi.service.component.annotations;version=1.4.0,\
+	org.osgi.service.metatype.annotations;version=1.4.0
 
 -testpath: \
 	osgi.enroute.junit.wrapper;version=4.12, \

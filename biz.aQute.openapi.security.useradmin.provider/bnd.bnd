@@ -1,7 +1,7 @@
 
 -buildpath: \
 	osgi.enroute.base.api,\
-	biz.aQute.bndlib;packages=*,\
+	biz.aQute.bndlib;packages=*;version=@5,\
 	org.apache.felix.gogo.runtime,\
 	biz.aQute.openapi.api;version=latest
 

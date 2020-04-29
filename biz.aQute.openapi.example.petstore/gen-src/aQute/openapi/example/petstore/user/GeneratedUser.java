@@ -262,18 +262,18 @@ public static class User extends OpenAPIBase.DTO {
         } 
         return getOpenAPIContext().doOptions("POST");
 
-      } else       if( index < segments.length && "logout".equals(segments[index])) {
+      } else       if( index < segments.length && "createWithArray".equals(segments[index])) {
         index++;
         if ( segments.length == index) {
-          if ( context.isMethod(OpenAPIBase.Method.GET)) {
-            logoutUser_get_(context);
+          if ( context.isMethod(OpenAPIBase.Method.POST)) {
+            createUsersWithArrayInput_post_(context);
             return true;
           } 
-          return getOpenAPIContext().doOptions("GET");
+          return getOpenAPIContext().doOptions("POST");
 
         }
 
-        // end logout
+        // end createWithArray
       }  else       if( index < segments.length && "createWithList".equals(segments[index])) {
         index++;
         if ( segments.length == index) {
@@ -286,18 +286,6 @@ public static class User extends OpenAPIBase.DTO {
         }
 
         // end createWithList
-      }  else       if( index < segments.length && "createWithArray".equals(segments[index])) {
-        index++;
-        if ( segments.length == index) {
-          if ( context.isMethod(OpenAPIBase.Method.POST)) {
-            createUsersWithArrayInput_post_(context);
-            return true;
-          } 
-          return getOpenAPIContext().doOptions("POST");
-
-        }
-
-        // end createWithArray
       }  else       if( index < segments.length && "login".equals(segments[index])) {
         index++;
         if ( segments.length == index) {
@@ -310,26 +298,40 @@ public static class User extends OpenAPIBase.DTO {
         }
 
         // end login
-      }  else       if ( index < segments.length ) {
+      }  else       if( index < segments.length && "logout".equals(segments[index])) {
+        index++;
+        if ( segments.length == index) {
+          if ( context.isMethod(OpenAPIBase.Method.GET)) {
+            logoutUser_get_(context);
+            return true;
+          } 
+          return getOpenAPIContext().doOptions("GET");
+
+        }
+
+        // end logout
+      }  else         if ( index < segments.length ) {
         context.pathParameter("username",segments[index]);
         index++;
         if ( segments.length == index) {
-          if ( context.isMethod(OpenAPIBase.Method.PUT)) {
-            updateUser_put_(context);
-            return true;
-          }  else           if ( context.isMethod(OpenAPIBase.Method.DELETE)) {
+          if ( context.isMethod(OpenAPIBase.Method.DELETE)) {
             deleteUser_delete_(context);
             return true;
           }  else           if ( context.isMethod(OpenAPIBase.Method.GET)) {
             getUserByName_get_(context);
             return true;
+          }  else           if ( context.isMethod(OpenAPIBase.Method.PUT)) {
+            updateUser_put_(context);
+            return true;
           } 
-          return getOpenAPIContext().doOptions("PUT", "DELETE", "GET");
+          return getOpenAPIContext().doOptions("DELETE", "GET", "PUT");
 
         }
 
 
-      }      // end user
+      }
+
+      // end user
     } 
 
     return false;

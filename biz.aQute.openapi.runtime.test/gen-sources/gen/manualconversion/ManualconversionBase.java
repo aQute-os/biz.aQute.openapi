@@ -38,18 +38,6 @@ public static final String BASE_PATH = "/v1";
     return s.toString();
   }
 
-    static final public OpenAPIBase.Codec CODEC = OpenAPIBase.createOpenAPICodec();
-    static {
-             DateTimeFormatter idtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss[.SSS]X").withZone(java.time.ZoneId.of("UTC"));
-       CODEC.addStringHandler(Instant.class, (i) -> idtf.format(i), (s)-> Instant.from(idtf.parse(s)));
-
-    }
-
-    public OpenAPIBase.Codec codec_() {
-        return gen.manualconversion.ManualconversionBase.CODEC;
-    }
-
-
   public boolean dispatch_(OpenAPIContext context, String segments[], int index ) throws Exception {
 
 

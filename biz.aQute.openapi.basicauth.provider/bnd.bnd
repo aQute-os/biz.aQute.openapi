@@ -8,4 +8,5 @@ Import-Package \
 -buildpath: \
 	biz.aQute.openapi.api;version=latest,\
 	osgi.enroute.base.api,\
-	org.apache.felix.gogo.runtime
+	org.apache.felix.gogo.runtime,\
+	org.osgi.service.metatype.annotations;version=1.4.0

@@ -19,7 +19,8 @@ Private-Package: aQute.openapi.gradle.plugin
 	org.gradle:gradle-messaging,\
 	biz.aQute.openapi.generator;version=latest, \
 	biz.aQute.json.util, \
-	biz.aQute.bndlib;packages=*, \
+    aQute.libg;packages=*;version=@5,\
+	biz.aQute.bndlib;packages=*;version=@5, \
 	osgi.enroute.base.api
 
 -includeresource: META-INF=META-INF
