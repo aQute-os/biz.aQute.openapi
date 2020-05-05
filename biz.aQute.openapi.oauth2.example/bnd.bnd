@@ -14,6 +14,7 @@ EnRoute-Application: 	biz.aQute.openapi.oauth2.example
 
 src=src,gen-src
 
+
 -includeresource: \
 	{readme.md}, \
 	{configuration=configuration}, \
@@ -29,6 +30,7 @@ src=src,gen-src
 
 -workingset authentication
 
+-dependson biz.aQute.openapi.generate.plugin
 -generate: \
 	openapi.json; \
 		output=gen-src/;\

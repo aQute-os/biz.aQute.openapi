@@ -8,15 +8,15 @@ public interface OpenAPIOptions extends Options {
 
 	String basename(String baseName);
 
-	boolean beans();
+	boolean beans(boolean beans);
 
-	String[] conversions();
+	String[] conversions(String[] conversions);
 
-	String dateformat();
+	String dateformat(String dateFormat);
 
-	String datetimeclass();
+	String datetimeclass(String dateTimeClass);
 
-	String dateTimeformat();
+	String dateTimeformat(String dateTimeFormat);
 
 	String dtotype(String dtoType);
 
@@ -24,21 +24,21 @@ public interface OpenAPIOptions extends Options {
 
 	String license();
 
-	boolean mandatorytags();
+	boolean mandatorytags(boolean tagsMustBeSet);
 
 	String packageprefix(String packagePrefix);
 
-	boolean privatefields();
+	boolean privatefields(boolean privateFields);
 
 	File output();
 
-	String[] tags();
+	String[] tags(String[] tags);
 
 	String typeprefix(String typePrefix);
 
-	boolean uisupport();
+	boolean uisupport(boolean uisupport);
 
-	boolean versionsources();
+	boolean versionsources(boolean versionSources);
 
 	boolean autoname();
 }

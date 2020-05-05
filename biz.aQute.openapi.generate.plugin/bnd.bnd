@@ -7,5 +7,7 @@
 
 -conditionalpackage: aQute.openapi.*, aQute.json.*, aQute.lib*
 
+-testpath: org.assertj.core, slf4j.api, slf4j.simple
+
 -privatepackage org.osgi.annotation.versioning
 -includepackage: biz.aQute.openapi.generate.plugin.*, org.osgi.annotation.versioning

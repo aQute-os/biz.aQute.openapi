@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import aQute.openapi.annotations.Required;
-
 /**
  * Describes a single API operation on a path.
  *
@@ -75,7 +73,7 @@ public class OperationObject extends BaseOpenAPIObject {
 	 * Required. The list of possible responses as they are returned from
 	 * executing this operation.
 	 */
-	@Required
+
 	public Map<String,ResponseObject>		responses	= new HashMap<>();
 
 	/**

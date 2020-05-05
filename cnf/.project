@@ -14,16 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>build.gradle</name>
-			<type>1</type>
-			<location>/Ws/aQute/biz.aQute.openapi/build.gradle</location>
-		</link>
-		<link>
-			<name>settings.gradle</name>
-			<type>1</type>
-			<location>/Ws/aQute/biz.aQute.openapi/settings.gradle</location>
-		</link>
-	</linkedResources>
 </projectDescription>

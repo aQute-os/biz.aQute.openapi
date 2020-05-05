@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import aQute.bnd.osgi.Processor;
 import aQute.bnd.service.externalplugin.ExternalPlugin;
 import aQute.bnd.service.generate.BuildContext;
 import aQute.bnd.service.generate.Generator;
@@ -23,6 +24,11 @@ public class OpenAPI implements Generator<OpenAPIOptions> {
 	@Override
 	public Optional<String> generate(BuildContext context, OpenAPIOptions options) throws Exception {
 
+		return generate((Processor)context, options);
+	}
+	
+	Optional<String> generate(Processor context, OpenAPIOptions options) {
+		System.out.println("Generate OPENAPI");
 		File output = options.output();
 		if (output == null) {
 			return Optional.of("No output directory specified");
@@ -42,7 +48,7 @@ public class OpenAPI implements Generator<OpenAPIOptions> {
 			for (File f : fs)
 				try {
 					String name = f.getName();
-					
+
 					Configuration configuration;
 
 					if (f.getName().endsWith(".oapi")) {
@@ -62,7 +68,7 @@ public class OpenAPI implements Generator<OpenAPIOptions> {
 						context.error(result);
 						continue;
 					}
-					
+
 					if (options.autoname()) {
 						String[] parts = Strings.extension(name);
 						configuration.typePrefix = parts[0];
@@ -72,10 +78,21 @@ public class OpenAPI implements Generator<OpenAPIOptions> {
 						configuration.packagePrefix += "." + parts[0].toLowerCase();
 					}
 
-					OpenAPIGenerator gen = new OpenAPIGenerator(f, configuration);
-					gen.generate(output);
+					File preprocessed = IO.createTempFile(f.getParentFile(), "openapi", ".json");
+					try {
+						String content = IO.collect(f);
+						content = context.getReplacer().process(content);
+						IO.store(content, preprocessed);
+						OpenAPIGenerator gen = new OpenAPIGenerator(preprocessed, configuration);
+						gen.generate(output);
 
-					context.getInfo(gen, path);
+						if ( !gen.isOk()) {
+							String s = Strings.join("\n",gen.getErrors());
+							return Optional.of(s);
+						}
+					} finally {
+						IO.delete(preprocessed);
+					}
 				} catch (Exception e) {
 					context.exception(e, "generate failed for %s : %s", path, Exceptions.causes(e));
 				}
@@ -83,24 +100,24 @@ public class OpenAPI implements Generator<OpenAPIOptions> {
 		return Optional.empty();
 	}
 
-	private String getConfiguration(OpenAPIOptions options, Configuration c, BuildContext context) {
+	private String getConfiguration(OpenAPIOptions options, Configuration c, Processor context) {
 
 		c.baseName = options.basename(c.baseName);
-		c.beans = options.beans();
-		c.conversions = options.conversions();
-		c.dateFormat = options.dateformat();
-		c.dateTimeClass = options.datetimeclass();
-		c.dateTimeFormat = options.dateTimeformat();
+		c.beans = options.beans(c.beans);
+		c.conversions = options.conversions(c.conversions);
+		c.dateFormat = options.dateformat(c.dateFormat);
+		c.dateTimeClass = options.datetimeclass(c.dateTimeClass);
+		c.dateTimeFormat = options.dateTimeformat(c.dateTimeFormat);
 		c.dtoType = options.dtotype(c.dtoType);
-//		c.importsExtra = options.imports();
+		// c.importsExtra = options.imports();
 		c.license = options.license();
-		c.tagsMustBeSet = options.mandatorytags();
+		c.tagsMustBeSet = options.mandatorytags(c.tagsMustBeSet);
 		c.packagePrefix = options.packageprefix(c.packagePrefix);
-		c.privateFields = options.privatefields();
-		c.tags = options.tags();
+		c.privateFields = options.privatefields(c.privateFields);
+		c.tags = options.tags(c.tags);
 		c.typePrefix = options.typeprefix(c.typePrefix);
-		c.uisupport = options.uisupport();
-		c.versionSources = options.versionsources();
+		c.uisupport = options.uisupport(c.uisupport);
+		c.versionSources = options.versionsources(c.versionSources);
 
 		return null;
 	}

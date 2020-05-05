@@ -44,13 +44,11 @@ Bundle-Developers: \
 -plugin.4.Build:  \
     aQute.bnd.repository.maven.provider.MavenBndRepository;\
         name="Build";\
-        snapshotUrl=https://oss.sonatype.org/content/groups/osgi; \
-        releaseUrl='https://repo1.maven.org/maven2/,https://repo.gradle.org/gradle/libs-releases-local/'; \
+        releaseUrl='https://repo1.maven.org/maven2/,https://repo.gradle.org/gradle/libs-releases-local/,https://bndtools.jfrog.io/bndtools/update-snapshot/'; \
         index="${.}/build.mvn";\
         readOnly=true,\
     aQute.bnd.repository.maven.provider.MavenBndRepository;\
         name="Runtime";\
-        snapshotUrl=https://oss.sonatype.org/content/groups/osgi; \
         releaseUrl='https://repo1.maven.org/maven2/,https://repo.gradle.org/gradle/libs-releases-local/'; \
         index="${.}/runtime.mvn";\
         readOnly=true
@@ -76,14 +74,4 @@ usr = ${env;REPOSITORY_USERNAME;}
 
 -connection-settings: ${if;${pwd};server;-dummy};id=https://oss.sonatype.org;username=${usr};password=${pwd}, -bnd
 
-
-# 
-# Install a copy in the local Maven repository (~/.m2/repository) after every build
-#
-
--plugin.~.local: \
-    aQute.bnd.repository.maven.provider.MavenBndRepository;\
-        name='.m2';\
-        noupdateOnRelease=true
-
--buildrepo: .m2
+-remoteworkspace: true

@@ -1,4 +1,3 @@
--dependson biz.aQute.openapi.gradle.plugin
 
 Bundle-Description: \
 	An OpenAPI example for using basic authentication and the \
@@ -6,6 +5,7 @@ Bundle-Description: \
 
 Private-Package: aQute.openapi.basicauth.example
 
+-dependson biz.aQute.openapi.generate.plugin
 -includeresource: configuration=configuration
 
 -buildpath: \
@@ -14,10 +14,11 @@ Private-Package: aQute.openapi.basicauth.example
 	org.osgi.service.component.annotations;version=1.4.0
 
 # needed to tell bnd that we have generated sources
-src = src, gen-src
+src = ${^src}, gen-src
 
+-dependson biz.aQute.openapi.generate.plugin
 -generate: \
 	openapi.json; \
 		output=gen-src/; \
-		generate="openapi -o gen-src --tags * --typeprefix BasicAuth --basename OpenAPIBase --packageprefix aQute.openapi.basicauth.example openapi.json"
+		generate="openapi --output gen-src --tags * --typeprefix BasicAuth --basename OpenAPIBase --packageprefix aQute.openapi.basicauth.example openapi.json"
 	

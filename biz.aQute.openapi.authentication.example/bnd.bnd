@@ -28,6 +28,7 @@ EnRoute-Application: 	biz.aQute.openapi.authentication.example
 
 src=src,gen-src
 
+-dependson biz.aQute.openapi.generate.plugin
 -generate: \
     authentication.json; \
         output=gen-src; \

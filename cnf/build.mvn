@@ -5,7 +5,6 @@ biz.aQute.bnd:aQute.libg:5.1.0-SNAPSHOT
 biz.aQute.bnd:biz.aQute.launchpad:5.1.0-SNAPSHOT
 biz.aQute.bnd:biz.aQute.bnd.runtime.gogo:5.1.0-SNAPSHOT
 biz.aQute.bnd:biz.aQute.bnd.runtime.snapshot:5.1.0-SNAPSHOT
-biz.aQute:biz.aQute.osgi.templates:1.0.0-SNAPSHOT
 
 org.osgi:osgi.annotation:7.0.0
 org.osgi:org.osgi.dto:1.1.0

@@ -1,5 +1,3 @@
--dependson biz.aQute.openapi.gradle.plugin
-
 -buildpath: \
 	osgi.enroute.base.api,\
 	biz.aQute.bndlib;packages=*;version=@5,\
@@ -61,6 +59,7 @@ src=gen-src,src
 	Central
 	
 	
+-dependson biz.aQute.openapi.generate.plugin
 -generate: \
 	petstore.json; \
 		output=gen-src/;\

@@ -1,5 +1,3 @@
--dependson biz.aQute.openapi.generate.plugin
-
 Require-Bundle org.apache.felix.gogo.runtime;resolution:=optional
 Import-Package \
     !org.apache.felix.service.command , \
@@ -26,8 +24,9 @@ Import-Package \
 	biz.aQute.launchpad;version=5.1.0
 	
 
-src=src,gen-sources
+src=${^src},gen-sources
 
+-dependson biz.aQute.openapi.generate.plugin
 -generate: openapi/; \
 	output=gen-sources/; \
 	generate="openapi -a -o gen-sources/ --packageprefix gen openapi/"
