@@ -31,5 +31,5 @@ src=src,gen-src
 -dependson biz.aQute.openapi.generate.plugin
 -generate: \
     authentication.json; \
-        output=gen-src; \
+        output=gen-src/; \
         generate="openapi -o gen-src --tags * --basename OpenAPIBase --typeprefix Authentication --packageprefix aQute.openapi.authentication.generated authentication.json " 

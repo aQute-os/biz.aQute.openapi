@@ -20,6 +20,7 @@ Import-Package \
 	biz.aQute.bndlib;packages=*;version=5,\
 	org.apache.felix.framework;version=5,\
 	biz.aQute.openapi.api;version=latest,\
+	org.osgi.service.http.whiteboard, \
 	osgi.enroute.base.api,\
 	biz.aQute.json.util,\
 	org.apache.felix.gogo.runtime,\

@@ -66,6 +66,35 @@ public class OpenAPIRuntime {
 				" no-cache", "no-store", "must-revalidate"
 		};
 
+		/**
+		 * https://docs.osgi.org/javadoc/osgi.enterprise/7.0.0/org/osgi/service/http/whiteboard/HttpWhiteboardConstants.html#HTTP_WHITEBOARD_SERVLET_MULTIPART_ENABLED
+		 */
+		@AttributeDefinition(description = "Enable multi part file uploads")
+		boolean mp_enabled() default false;
+
+		/**
+		 * https://docs.osgi.org/javadoc/osgi.enterprise/7.0.0/org/osgi/service/http/whiteboard/HttpWhiteboardConstants.html#HTTP_WHITEBOARD_SERVLET_MULTIPART_FILESIZETHRESHOLD
+		 */
+		@AttributeDefinition(description = "Size threshold after which the file will be written to disk")
+		long mp_fileSizeThreshold() default -1;
+
+		/**
+		 * https://docs.osgi.org/javadoc/osgi.enterprise/7.0.0/org/osgi/service/http/whiteboard/HttpWhiteboardConstants.html#HTTP_WHITEBOARD_SERVLET_MULTIPART_LOCATION
+		 */
+		@AttributeDefinition(description = "Location where the files can be stored on disk")
+		String mp_location() default "";
+
+		/**
+		 * https://docs.osgi.org/javadoc/osgi.enterprise/7.0.0/org/osgi/service/http/whiteboard/HttpWhiteboardConstants.html#HTTP_WHITEBOARD_SERVLET_MULTIPART_MAXFILESIZE
+		 */
+		@AttributeDefinition(description = "Maximum size of a file being uploaded")
+		long mp_maxFileSize() default -1;
+
+		/**
+		 * https://docs.osgi.org/javadoc/osgi.enterprise/7.0.0/org/osgi/service/http/whiteboard/HttpWhiteboardConstants.html#HTTP_WHITEBOARD_SERVLET_MULTIPART_MAXREQUESTSIZE
+		 */
+		@AttributeDefinition(description = "Maximum request size")
+		long mp_maxRequestSize() default -1;
 	}
 
 	class Tracker {
@@ -167,6 +196,26 @@ public class OpenAPIRuntime {
 		logger.info("Registering servlet {}", alias);
 		Hashtable<String,Object> p = new Hashtable<>();
 		p.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN, alias + "/*");
+
+		if (configuration.mp_enabled()) {
+			p.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_MULTIPART_ENABLED, configuration.mp_enabled());
+
+			if (configuration.mp_location() != null && !configuration.mp_location().isEmpty())
+				p.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_MULTIPART_LOCATION, configuration.mp_location());
+
+			if (configuration.mp_fileSizeThreshold() > 0)
+				p.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_MULTIPART_FILESIZETHRESHOLD,
+						configuration.mp_fileSizeThreshold());
+
+			if (configuration.mp_maxFileSize() > 0)
+				p.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_MULTIPART_MAXFILESIZE,
+						configuration.mp_maxFileSize());
+
+			if (configuration.mp_maxRequestSize() > 0)
+				p.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_MULTIPART_MAXREQUESTSIZE,
+						configuration.mp_maxRequestSize());
+		}
+
 		ServiceRegistration<Servlet> registration = context.registerService(Servlet.class, servlet, p);
 		return () -> {
 			logger.info("Unregistering servlet {}", alias);

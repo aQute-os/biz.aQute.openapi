@@ -1,0 +1,29 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"version": "v1",
+		"title": "file"
+	},
+	"basePath": "/v1",
+	"paths": {
+		"/file": {
+			"post": {
+				"operationId": "file",
+				"consumes": [
+					"multipart/form-data"
+				],
+				"produces": [],
+				"parameters": [
+					{
+						"name": "file",
+						"in": "formData",
+						"required": true,
+						"type": "file"
+					}
+				],
+				"responses": {
+				}
+			}
+		}
+	}
+}

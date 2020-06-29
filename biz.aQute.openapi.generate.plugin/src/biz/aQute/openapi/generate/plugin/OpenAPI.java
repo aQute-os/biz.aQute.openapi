@@ -17,7 +17,7 @@ import aQute.lib.strings.Strings;
 import aQute.openapi.generator.Configuration;
 import aQute.openapi.generator.OpenAPIGenerator;
 
-@ExternalPlugin(name = "openapi", objectClass = Generator.class, subtype = OpenAPIOptions.class)
+@ExternalPlugin(name = "openapi", objectClass = Generator.class)
 public class OpenAPI implements Generator<OpenAPIOptions> {
 	final static JSONCodec codec = new JSONCodec();
 
@@ -38,7 +38,7 @@ public class OpenAPI implements Generator<OpenAPIOptions> {
 			return Optional.of("Cannot create output directory " + output);
 
 		List<String> arguments = options._arguments();
-		arguments.remove(0);
+
 		for (String path : arguments) {
 			Set<File> fs = new FileSet(context.getBase(), path).getFiles();
 			if (fs.isEmpty()) {

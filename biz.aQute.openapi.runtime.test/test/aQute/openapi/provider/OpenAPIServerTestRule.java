@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.MultipartConfigElement;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
@@ -18,6 +19,7 @@ import org.junit.runners.model.Statement;
 import org.osgi.service.http.NamespaceException;
 
 import aQute.bnd.http.HttpClient;
+import aQute.lib.io.IO;
 
 public class OpenAPIServerTestRule implements TestRule {
 	static {
@@ -35,8 +37,11 @@ public class OpenAPIServerTestRule implements TestRule {
 																		throws ServletException, NamespaceException {
 																	if (alias.equals("/"))
 																		alias = "";
-																	handler.addServlet(new ServletHolder(servlet),
+																	ServletHolder servletHolder = new ServletHolder(servlet);
+																	handler.addServlet(servletHolder,
 																			(alias + "/*"));
+																	MultipartConfigElement mce = new MultipartConfigElement(IO.getFile("generated").getAbsolutePath());
+																	servletHolder.getRegistration().setMultipartConfig(mce);
 																	return () -> {
 																															};
 																};
@@ -55,7 +60,8 @@ public class OpenAPIServerTestRule implements TestRule {
 					handler = new ServletContextHandler(
 							ServletContextHandler.SESSIONS);
 					handler.setContextPath("/");
-					handler.addServlet(new ServletHolder(securityProviderManager),
+					ServletHolder servletHolder = new ServletHolder(securityProviderManager);
+					handler.addServlet(servletHolder,
 							SecurityProviderManager.PATTERN);
 					server.setHandler(handler);
 					server.start();
