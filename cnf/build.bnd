@@ -10,7 +10,8 @@
 base.version:           1.3.0
 
 -groupid:               biz.aQute
--pom:                   version=${base.version}-SNAPSHOT
+-pom:                   version=${base.version}
+#-SNAPSHOT
 
 Bundle-Vendor			aQute SARL
 
