@@ -1,6 +1,8 @@
 #
 # This file is left open for you to define your macros
 #
+# No maven dependencies
+-maven-dependencies     ""
 
 -testpath.default = \
 	osgi.enroute.junit.wrapper, \

@@ -94,7 +94,7 @@ public class SecurityProviderImpl implements OpenAPISecurityEnvironment {
 
 	@Override
 	public Optional<String> getUser(String userId) {
-		return Optional.of(user.get());
+		return Optional.ofNullable(user.get());
 	}
 
 }
