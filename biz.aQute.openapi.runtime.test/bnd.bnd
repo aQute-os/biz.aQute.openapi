@@ -13,6 +13,7 @@ Import-Package \
 	biz.aQute.openapi.generator;version=latest,\
 	osgi.enroute.base.api,\
 	biz.aQute.www.provider,\
+    osgi.annotation, \
 	org.apache.felix.gogo.runtime,\
 	aQute.libg
 

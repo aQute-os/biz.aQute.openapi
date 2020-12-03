@@ -20,7 +20,8 @@ EnRoute-Application: 	biz.aQute.openapi.authentication.example
 	osgi.enroute.base.api;version=2.0,\
 	biz.aQute.openapi.provider,\
 	biz.aQute.openapi.cli,\
-	osgi.enroute.base.api;version=2.1.0
+	osgi.enroute.base.api;version=2.1.0, \
+    osgi.annotation
 
 
 -testpath: \

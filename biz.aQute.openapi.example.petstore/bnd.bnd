@@ -5,7 +5,8 @@
 	biz.aQute.openapi.provider,\
 	org.osgi.service.jdbc;version=1.0,\
 	org.osgi.service.component.annotations;version=1.4.0,\
-	org.apache.felix.http.servlet-api
+	org.apache.felix.http.servlet-api, \
+	osgi.annotation
 	
 -includeresource: static=static, bin
 	

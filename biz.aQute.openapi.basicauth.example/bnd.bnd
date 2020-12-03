@@ -11,7 +11,8 @@ Private-Package: aQute.openapi.basicauth.example
 -buildpath: \
 	biz.aQute.openapi.provider,\
 	osgi.enroute.base.api,\
-	org.osgi.service.component.annotations;version=1.4.0
+	org.osgi.service.component.annotations;version=1.4.0, \
+    osgi.annotation
 
 # needed to tell bnd that we have generated sources
 src = ${^src}, gen-src

@@ -14,8 +14,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
-import aQute.bnd.annotation.headers.ProvideCapability;
-import aQute.bnd.annotation.headers.RequireCapability;
+import org.osgi.annotation.bundle.Capability;
+import org.osgi.annotation.bundle.Requirement;
+
 import aQute.lib.io.IO;
 import aQute.openapi.generator.OpenAPIGenerator;
 import aQute.openapi.generator.SourceArgument;
@@ -91,7 +92,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 
 			generate(requirePath, () -> {
 				doRequireProvideProlog(packageName);
-				doImport(RequireCapability.class);
+				doImport(Requirement.class);
 				doRequireAnnotation(requireName);
 			});
 
@@ -100,7 +101,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 
 			generate(providePath, () -> {
 				doRequireProvideProlog(packageName);
-				doImport(ProvideCapability.class);
+				doImport(Capability.class);
 				doProvideAnnotation(provideName);
 			});
 		}
@@ -151,8 +152,8 @@ public class JavaGenerator extends BaseSourceGenerator {
 
 	protected void doRequireMetaAnnotations() {
 		doRetentionAndTarget();
-		try (Annotate<RequireCapability> rc = annotate(RequireCapability.class);) {
-			rc.setQuoted(rc.get().ns(), "aQute.openapi");
+		try (Annotate<Requirement> rc = annotate(Requirement.class);) {
+			rc.setQuoted(rc.get().namespace(), "aQute.openapi");
 			rc.setQuoted(rc.get().effective(), "active");
 			String mv = gen.getVersion();
 			VersionHelper r = new VersionHelper(mv);
@@ -163,8 +164,8 @@ public class JavaGenerator extends BaseSourceGenerator {
 
 	protected void doProvideMetaAnnotations() {
 		doRetentionAndTarget();
-		try (Annotate<ProvideCapability> rc = annotate(ProvideCapability.class);) {
-			rc.setQuoted(rc.get().ns(), "aQute.openapi");
+		try (Annotate<Capability> rc = annotate(Capability.class);) {
+			rc.setQuoted(rc.get().namespace(), "aQute.openapi");
 			rc.setQuoted(rc.get().effective(), "active");
 			rc.setQuoted(rc.get().name(), sourceFile.getFQN());
 			String mv = gen.getVersion();
