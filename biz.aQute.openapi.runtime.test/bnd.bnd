@@ -25,6 +25,7 @@ Import-Package \
 	biz.aQute.openapi.oauth2.provider,\
 	lib/htmlunit-2.29-OSG.jar;version=file,\
 	biz.aQute.launchpad;version=5.1.0,\
+    org.assertj.core,\
     org.assertj.core
 	
 

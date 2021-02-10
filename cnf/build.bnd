@@ -12,9 +12,7 @@
 base.version:           1.4.0
 
 -groupid:               biz.aQute
--pom:                   version=${base.version}
-
-#-SNAPSHOT
+-pom:                   version=${base.version}-SNAPSHOT
 
 Bundle-Vendor			aQute SARL
 
@@ -45,23 +43,22 @@ Bundle-Developers: \
 # Access Maven Central + OSGi snapshots
 #
 
--plugin.4.Build:  \
-    aQute.bnd.repository.maven.provider.MavenBndRepository;\
-        name="Build";\
-        releaseUrl='https://repo1.maven.org/maven2/,https://repo.gradle.org/gradle/libs-releases-local/,https://bndtools.jfrog.io/bndtools/update-snapshot/'; \
-        index="${.}/build.mvn";\
-        readOnly=true,\
-    aQute.bnd.repository.maven.provider.MavenBndRepository;\
-        name="Runtime";\
-        releaseUrl='https://repo1.maven.org/maven2/,https://repo.gradle.org/gradle/libs-releases-local/'; \
-        index="${.}/runtime.mvn";\
-        readOnly=true
-
-#
-# Release to Nexus
-#
-
--plugin.8.Release: \
+-plugin: \
+	aQute.bnd.repository.maven.provider.MavenBndRepository;\
+		name                =Build;\
+		releaseUrl          ='https://repo1.maven.org/maven2/,https://repo.gradle.org/gradle/libs-releases-local/,https://bndtools.jfrog.io/bndtools/update-snapshot/';\
+		index               ='${.}/build.mvn';\
+		readOnly            =true,\
+	aQute.bnd.repository.maven.provider.MavenBndRepository;\
+		name                =Runtime;\
+		releaseUrl          ='https://repo1.maven.org/maven2/,https://repo.gradle.org/gradle/libs-releases-local/';\
+		index               ='${.}/runtime.mvn';\
+		readOnly            =true,\
+	aQute.bnd.repository.maven.provider.MavenBndRepository;\
+		name                =enRoute;\
+		noupdateOnRelease   =true;\
+		readOnly            =true;\
+		source              ="${enRoute}", \
 	aQute.bnd.repository.maven.provider.MavenBndRepository; \
 		snapshotUrl=https://oss.sonatype.org/content/repositories/snapshots/; \
 		releaseUrl= 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'; \
@@ -79,3 +76,41 @@ usr = ${env;REPOSITORY_USERNAME;}
 -connection-settings: ${if;${pwd};server;-dummy};id=https://oss.sonatype.org;username=${usr};password=${pwd}, -bnd
 
 -remoteworkspace: true
+
+enRoute= \
+    biz.aQute:osgi.enroute.websecurity.adapter:2.2.0, \
+    biz.aQute:osgi.enroute.webconsole.xray.provider:2.2.0, \
+    biz.aQute:osgi.enroute.web.simple.test:2.2.0, \
+    biz.aQute:osgi.enroute.web.simple.provider:2.2.0, \
+    biz.aQute:osgi.enroute.twitter.bootstrap.webresource:3.3.5, \
+    biz.aQute:osgi.enroute.stackexchange.pagedown.webresource:1.1.1, \
+    biz.aQute:osgi.enroute.scheduler.simple.provider:2.2.0, \
+    biz.aQute:osgi.enroute.rest.simple.provider:2.2.0, \
+    biz.aQute:osgi.enroute.logreader.rolling.provider:2.2.0, \
+    biz.aQute:osgi.enroute.logger.simple.provider:2.2.0, \
+    biz.aQute:osgi.enroute.junit.wrapper:4.13.0, \
+    biz.aQute:osgi.enroute.jsplumb.webresource:1.7.6, \
+    biz.aQute:osgi.enroute.jsonrpc.simple.provider:2.2.0, \
+    biz.aQute:osgi.enroute.iot.pi.provider:2.2.0, \
+    biz.aQute:osgi.enroute.iot.pi.command:2.2.0, \
+    biz.aQute:osgi.enroute.iot.lego.adapter:2.2.0, \
+    biz.aQute:osgi.enroute.iot.circuit.application:2.2.0, \
+    biz.aQute:osgi.enroute.iot.circuit.provider:2.2.0, \
+    biz.aQute:osgi.enroute.iot.circuit.command:2.2.0, \
+    biz.aQute:osgi.enroute.hamcrest.wrapper:1.3.0, \
+    biz.aQute:osgi.enroute.google.angular.webresource:1.5.7, \
+    biz.aQute:osgi.enroute.github.angular-ui.webresource:0.13.3, \
+    biz.aQute:osgi.enroute.executor.simple.provider:2.2.0, \
+    biz.aQute:osgi.enroute.equinox.log.adapter:2.2.0, \
+    biz.aQute:osgi.enroute.easse.simple.adapter:2.2.0, \
+    biz.aQute:osgi.enroute.dtos.bndlib.provider:2.2.0, \
+    biz.aQute:osgi.enroute.configurer.simple.provider:2.2.0, \
+    biz.aQute:osgi.enroute.bostock.d3.webresource:3.5.6, \
+    biz.aQute:osgi.enroute.bndtools.templates:2.2.0, \
+    biz.aQute:osgi.enroute.base.test:2.2.0, \
+    biz.aQute:osgi.enroute.base.provider:2.2.0, \
+    biz.aQute:osgi.enroute.base.debug.provider:2.2.0, \
+    biz.aQute:osgi.enroute.base.api:2.2.0, \
+    biz.aQute:osgi.enroute.authorization.simple.provider:2.2.0, \
+    biz.aQute:osgi.enroute.authenticator.simple.provider:2.2.0, \
+    biz.aQute:osgi.enroute.authenticator.github.provider:2.2.0

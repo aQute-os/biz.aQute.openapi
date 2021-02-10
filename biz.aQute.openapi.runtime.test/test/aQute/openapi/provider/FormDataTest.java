@@ -1,8 +1,6 @@
 package aQute.openapi.provider;
 
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,12 +50,11 @@ public class FormDataTest {
 				})
 				.go(rule.uri.resolve("/formdata/test"));
 
-		assertThat(result, hasItems(
-				"1",
+		assertThat(result).contains(				"1",
 				"1", "2",
 				"1",
 				"1", "2",
-				"1", "2"));
+				"1", "2");
 	}
 
 	@Test
@@ -71,6 +68,6 @@ public class FormDataTest {
 				.get(String.class)
 				.go(rule.uri.resolve("/formdata/oauth2"));
 
-		assertThat(result, is("\"password:johndoe:A3ddj3w\""));
+		assertThat(result).isEqualTo("\"password:johndoe:A3ddj3w\"");
 	}
 }

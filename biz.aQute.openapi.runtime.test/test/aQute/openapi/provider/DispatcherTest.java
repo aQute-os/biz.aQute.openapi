@@ -1,9 +1,6 @@
 package aQute.openapi.provider;
 
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThan;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +10,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,8 +40,8 @@ public class DispatcherTest {
 		runtime.runtime.activate(fw.getBundleContext(), getConfig(MAP.$("registerOnStart", new String[] {})));
 		long start = System.currentTimeMillis();
 		TaggedData go = runtime.http.build().get().asTag().go(runtime.uri.resolve("/abc/whatever"));
-		assertThat(go.getResponseCode(), is(404));
-		assertThat(System.currentTimeMillis() - start, lessThan(5000L));
+		assertThat(go.getResponseCode()).isEqualTo(404);
+		assertThat(System.currentTimeMillis() - start).isLessThan(5000L);
 	}
 
 	@Test
@@ -54,8 +50,8 @@ public class DispatcherTest {
 				getConfig(MAP.$("registerOnStart", (Object) new String[] { "/abc" }).$("delayOnNotFoundInSecs", 2)));
 		long start = System.currentTimeMillis();
 		TaggedData go = runtime.http.build().get().asTag().go(runtime.uri.resolve("/abc/whatever"));
-		assertThat(go.getResponseCode(), is(404));
-		assertThat(System.currentTimeMillis() - start, greaterThan(2000L));
+		assertThat(go.getResponseCode()).isEqualTo(404);
+		assertThat(System.currentTimeMillis() - start).isGreaterThan(2000L);
 	}
 
 	@Test
@@ -82,9 +78,9 @@ public class DispatcherTest {
 		System.out.println("Waiting for response ");
 		TaggedData go = runtime.http.build().get().asTag().go(runtime.uri.resolve("/v1/simple"));
 		System.out.println("Response " + go);
-		assertThat(go.getResponseCode(), is(200));
-		assertThat(System.currentTimeMillis() - start, lessThan(2000L));
-		assertThat(visited.get(), is(true));
+		assertThat(go.getResponseCode()).isEqualTo(200);
+		assertThat(System.currentTimeMillis() - start).isLessThan(2000L);
+		assertThat(visited.get()).isTrue();
 	}
 
 	@Test
@@ -130,27 +126,27 @@ public class DispatcherTest {
 		});
 
 		TaggedData get = runtime.http.build().get().asTag().go(runtime.uri.resolve("/api/v1/a/1"));
-		assertThat(get.getResponseCode(), is(200));
+		assertThat(get.getResponseCode()).isEqualTo(200);
 
 		TaggedData delete = runtime.http.build().delete().asTag().go(runtime.uri.resolve("/api/v1/a/1"));
-		assertThat(delete.getResponseCode(), is(200));
+		assertThat(delete.getResponseCode()).isEqualTo(200);
 
 		TaggedData put = runtime.http.build().put().upload("hi").asTag().go(runtime.uri.resolve("/api/v1/a/1/2"));
-		assertThat(put.getResponseCode(), is(200));
+		assertThat(put.getResponseCode()).isEqualTo(200);
 
 		TaggedData putfoobar = runtime.http.build().put().upload("hi").asTag().go(runtime.uri.resolve("/api/v1/a/1/foo/bar"));
-		assertThat(putfoobar.getResponseCode(), is(200));
+		assertThat(putfoobar.getResponseCode()).isEqualTo(200);
 
 		TaggedData putfoo = runtime.http.build().put().upload("hi").asTag().go(runtime.uri.resolve("/api/v1/a/1/bar/2"));
-		assertThat(putfoo.getResponseCode(), is(200));
+		assertThat(putfoo.getResponseCode()).isEqualTo(200);
 
 		TaggedData putbar = runtime.http.build().put().upload("hi").asTag().go(runtime.uri.resolve("/api/v1/a/1/foo/2"));
-		assertThat(putbar.getResponseCode(), is(200));
+		assertThat(putbar.getResponseCode()).isEqualTo(200);
 
-		assertThat(result, Matchers.containsInAnyOrder("getmap-1", "setmap-1-2", "deletemap-1", "setmap_foo_bar-1",
-				"setmap_bar12", "setmap_foo12"));
+		assertThat(result).contains("getmap-1", "setmap-1-2", "deletemap-1", "setmap_foo_bar-1",
+				"setmap_bar12", "setmap_foo12");
 
-		assertThat(System.currentTimeMillis() - start, lessThan(2000L));
+		assertThat(System.currentTimeMillis() - start).isLessThan(2000L);
 	}
 
 	private Configuration getConfig(Map<String, Object> config) throws Exception {

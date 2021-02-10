@@ -3,5 +3,5 @@ Export-Package: osgi.enroute.authorization.api
 
 -buildpath: \
 	org.osgi.service.component.annotations;version=1.4.0,\
-	org.osgi.framework;version=1.9.0,\
+	org.osgi.framework;version=1.8.0,\
 	osgi.enroute.base.api;version=2.1.0

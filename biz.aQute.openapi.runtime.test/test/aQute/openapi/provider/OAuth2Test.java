@@ -1,9 +1,7 @@
 package aQute.openapi.provider;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.startsWith;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -85,10 +83,10 @@ public class OAuth2Test {
 		System.out.println(location);
 		System.out.println(map);
 
-		assertThat(location.getHost(), is("bndtools.com"));
-		assertThat(map.get("client_id")[0], is("clientId"));
-		assertThat(map.get("redirect_uri")[0], startsWith(runtime.uri.toString()));
-		assertThat("code", is(map.get("response_type")[0]));
+		assertThat(location.getHost()).isEqualTo("bndtools.com");
+		assertThat(map.get("client_id")[0]).isEqualTo("clientId");
+		assertThat(map.get("redirect_uri")[0]).startsWith(runtime.uri.toString());
+		assertThat("code").isEqualTo(map.get("response_type")[0]);
 
 		String state = map.get("state")[0];
 		URI callback = new URI(map.get("redirect_uri")[0]
@@ -98,7 +96,7 @@ public class OAuth2Test {
 		HttpRequest reqw = HttpRequest.get(callback.toURL()).followRedirects(false);
 		assertEquals(302, reqw.code());
 		location = new URI(reqw.header("Location"));
-		assertThat(location.toString(), startsWith("http://bndtools.com/final?error"));
+		assertThat(location.toString()).startsWith("http://bndtools.com/final?error");
 		oauth2reg.unregister();
 
 	}

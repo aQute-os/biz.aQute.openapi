@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
+@SuppressWarnings("deprecation")
 public class WildcardPermissionTest {
 
 	@Test

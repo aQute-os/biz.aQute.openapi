@@ -72,7 +72,7 @@ public class Dispatcher extends HttpServlet {
 				try {
 					if (path.endsWith("/"))
 						path = path.substring(1, path.length() - 1);
-					else
+					else if (path.startsWith("/"))
 						path = path.substring(1);
 
 					String segments[] = path.split("/");
