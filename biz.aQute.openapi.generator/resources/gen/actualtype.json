@@ -20,27 +20,15 @@
 		}
 	},
 	"definitions": {
-		"AnEnum": {
-	          "type": "string",
-	          "enum": [
-	            "None",
-	            "Info",
-	            "Warn",
-	            "Error"
-	          ]
-		},
 		"References": {
-		    "x-actualType":"String",
+		    "x-actualType": "biz.aQute.openapi.validator.Foo",
 			"required": [
-				"anenum"
+				"foo"
 			],
 			"type": "object",
 			"properties": {
-				"anenum": {
-						"$ref": "#/definitions/AnEnum"
-				},
-				"benum": {
-						"$ref": "#/definitions/AnEnum"
+				"foo": {
+				    "type": "string"
 				}
 			}
 		}

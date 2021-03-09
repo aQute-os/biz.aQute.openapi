@@ -634,6 +634,7 @@ public abstract class SourceType {
 	public static class ObjectType extends SourceType {
 		private static int					index		= 1000;
 		private final SchemaObject			schema;
+		private final String				actualType;
 		private final String				className;
 		final Map<String,SourceProperty>	properties	= new HashMap<>();
 		private Boolean						hasValidator;
@@ -641,6 +642,7 @@ public abstract class SourceType {
 		ObjectType(OpenAPIGenerator gen, SchemaObject schema, String contextName) {
 			super(gen);
 			this.schema = schema;
+			this.actualType = schema.__extra != null ? (String) schema.__extra.get("x-actualType") : null;
 			if (schema.additionalProperties != null) {
 				String name = schema.additionalProperties.$ref;
 				this.className = "java.util.Map<String," + name + ">";
@@ -718,6 +720,9 @@ public abstract class SourceType {
 
 		@Override
 		public String reference() {
+			if (actualType != null)
+				return actualType;
+
 			return getClassName();
 		}
 

@@ -17,3 +17,4 @@ Export-Package: \
 	aQute.openapi.validator
 
 -testpath: \
+    org.assertj.core
