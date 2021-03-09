@@ -290,7 +290,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 
 		for (SourceArgument a : method.getArguments()) {
 			String name = a.getName() + "_";
-			doValidators(a.getType(), name);
+			doValidators(a.getType(), name, a.getParameterObject().required);
 		}
 		format("    context.end();\n\n");
 	}
@@ -692,7 +692,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 
 				for (SourceProperty property : objectType.getProperties()) {
 
-					doValidators(property.getType(), "this." + property.getKey());
+					doValidators(property.getType(), "this." + property.getKey(), false);
 				}
 
 				format("     context.end();\n");
@@ -731,7 +731,13 @@ public class JavaGenerator extends BaseSourceGenerator {
 		});
 	}
 
-	private void doValidators(SourceType type, String reference) {
+	private void doValidators(SourceType type, String reference, boolean required) {
+		String escaped = escapeString(reference);
+
+		if (required) {
+			format("       context.require(%s,%s);", reference, escaped);
+		}
+
 		if (!type.hasValidator())
 			return;
 
@@ -742,7 +748,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 			reference = reference + ".get()";
 			close = true;
 		} else if (!type.isPrimitive()) {
-			format("       if  ( context.require(%s, %s) ) {\n", reference, escapeString(reference));
+			format("       if  ( context.require(%s, %s) ) {\n", reference, escaped);
 			close = true;
 		}
 
@@ -751,7 +757,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 		} else if (type instanceof SourceType.SimpleType) {
 			doSimpleTypeValidator((SourceType.SimpleType) type, reference);
 		} else if (type instanceof SourceType.ObjectType) {
-			format("       %s.validate(context, %s);\n", reference, escapeString(reference));
+			format("       %s.validate(context, %s);\n", reference, escaped);
 		} else if (type instanceof SourceType.ArrayType) {
 			doArrayTypeValidator((SourceType.ArrayType) type, reference);
 		} else
@@ -783,7 +789,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 			format("    int %s=0;\n", counter);
 			format("    for( %s %s : %s) {\n", type.getComponentType().reference(), item, reference);
 			format("        context.begin(%s++);\n", counter);
-			doValidators(type.getComponentType(), item);
+			doValidators(type.getComponentType(), item, false);
 			format("        context.end();\n");
 			format("    }\n");
 			level = level.substring(0, level.length() - 1);
