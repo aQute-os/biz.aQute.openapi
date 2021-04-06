@@ -231,7 +231,7 @@ public class OpenAPIContext {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> List<T> toArray(Class<T> type, String values[]) throws Exception {
+	public <T> List<T> toArray(Class<T> type, String... values) throws Exception {
 		if (values == null)
 			return null;
 

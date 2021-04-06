@@ -46,7 +46,7 @@
 	                    }
           			},
                 		{
-						"in": "formData",
+						"in": "query",
 	          			"name": "s_1c2_csv",
 	          			"required": true,
 	          			"type": "array",
