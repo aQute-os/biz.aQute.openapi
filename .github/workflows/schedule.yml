@@ -2,7 +2,7 @@ name: scheduled
 
 on:
   schedule:
-    - cron: '* * * * *'
+  - cron: '* * * * *'
 
 env:
   LC_ALL: en_US.UTF-8
