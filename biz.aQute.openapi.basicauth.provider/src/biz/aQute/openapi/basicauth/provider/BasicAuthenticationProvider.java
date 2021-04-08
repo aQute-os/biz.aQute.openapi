@@ -123,9 +123,10 @@ public class BasicAuthenticationProvider implements OpenAPIAuthenticator {
 				}
 
 				boolean authenticated = WWWUtils.slowEquals(digest, expected);
-				logger.info("Authenticated: user={} authenticated={}", userId, authenticated);
 				if (authenticated) {
 					this.user = user;
+				} else {
+					logger.debug("Authenticated: user={} not authenticated", userId);
 				}
 				return authenticated;
 			}
