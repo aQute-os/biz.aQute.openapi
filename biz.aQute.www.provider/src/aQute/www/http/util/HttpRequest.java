@@ -2297,7 +2297,7 @@ public class HttpRequest {
 	 */
 	public HttpRequest basic(final String name, final String password) {
 		byte[] bytes = (name + ':' + password).getBytes(StandardCharsets.UTF_8);
-		return authorization("Basic " + Base64.getEncoder().encode(bytes));
+		return authorization("Basic " + new String(Base64.getEncoder().encode(bytes), StandardCharsets.US_ASCII));
 	}
 
 	/**
@@ -2310,7 +2310,7 @@ public class HttpRequest {
 	 */
 	public HttpRequest proxyBasic(final String name, final String password) {
 		byte[] bytes = (name + ':' + password).getBytes(StandardCharsets.UTF_8);
-		return proxyAuthorization("Basic " + Base64.getEncoder().encode(bytes));
+		return proxyAuthorization("Basic " + new String(Base64.getEncoder().encode(bytes), StandardCharsets.US_ASCII));
 	}
 
 	/**

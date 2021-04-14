@@ -38,14 +38,12 @@ public class ResourceDomain {
 
 	/**
 	 * Get a resource from one of the bundles registered as resource providers
-	 * 
+	 *
 	 * @param path The web path of the resources
-	 * @param etag the etag or null
-	 * @param modifiedSince the last modified date seen or <= 0
 	 * @param out the stream to copy the resource to
 	 * @param compressions the list of compression algorithms. Supported: gzip,
 	 *            deflate (case insensitive)
-	 * @return a resource
+	 * @return a result
 	 */
 	Result getResource(String path, BiFunction<String,Long,Boolean> doConditionally, OutputStream out,
 			String... compressions) throws Exception {
@@ -172,8 +170,6 @@ public class ResourceDomain {
 				this.state = new ResourceState(found.holder, compress, toEtag(digester), found.url,
 						matches(path, found.holder.uncached), cin.length, found.holder.version, found.holder.maxAge);
 			} else {
-
-				assert this.state != null;
 
 				if (doConditionally != null && !doConditionally.apply(this.state.etag, this.state.holder.modified)) {
 					result.action = ResultCode.UNMODIFIED;

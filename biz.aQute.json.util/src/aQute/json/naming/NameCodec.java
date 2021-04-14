@@ -75,8 +75,6 @@ public class NameCodec {
 	/**
 	 * Decode a name that was encoded with the encode method.
 	 *
-	 * @param name
-	 *            the encoded name that is a valid Java Identifier
 	 * @return the decoded name
 	 */
 	public static String decode(Field field) {

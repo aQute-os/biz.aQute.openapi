@@ -168,7 +168,7 @@ public abstract class SourceRoute {
 					first = false;
 					f.format("%s  if ( segments.length == index) {\n", indent);
 				} else {
-					f.format(" else ", indent);
+					f.format("%s else ", indent);
 				}
 				methods.add(((OperationRoute) r).method);
 				r.generate(gen, f, indent + "  ");

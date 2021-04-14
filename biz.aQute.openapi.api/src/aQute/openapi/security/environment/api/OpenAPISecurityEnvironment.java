@@ -64,8 +64,6 @@ public interface OpenAPISecurityEnvironment {
 	/**
 	 * Return a user id for a user that has the given value for the given key
 	 *
-	 * @param user
-	 *            the user id
 	 * @param key
 	 *            the property key
 	 * @param value
@@ -97,7 +95,7 @@ public interface OpenAPISecurityEnvironment {
 	/**
 	 * Answer if the user associated with this thread has the following
 	 * permission
-	 * 
+	 *
 	 * @param action
 	 *            the action to perform
 	 * @param arguments
@@ -113,10 +111,10 @@ public interface OpenAPISecurityEnvironment {
 	 * the method handled the exception and the runtime should not further touch
 	 * the exception nor the servlet response. If it returns false, the normal
 	 * exception processing is used.
-	 * 
+	 *
 	 * This method is not called for the ResponseExceptions since they are not
 	 * real exceptions but only used for their alternative flow.
-	 * 
+	 *
 	 * @param exception
 	 *            Any exception by user code
 	 * @param operation

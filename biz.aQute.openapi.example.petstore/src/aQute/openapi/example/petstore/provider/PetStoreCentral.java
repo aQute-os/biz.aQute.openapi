@@ -43,9 +43,10 @@ public class PetStoreCentral {
 
 	private void executBatch(Connection connection, String name) throws IOException, SQLException {
 		String schema = read(PetStoreCentral.class.getResourceAsStream(name));
-		Statement statement = connection.createStatement();
-		statement.addBatch(schema);
-		int[] result = statement.executeBatch();
+		try (Statement statement = connection.createStatement()) {
+			statement.addBatch(schema);
+			int[] result = statement.executeBatch();
+		}
 	}
 
 	private String read(InputStream in) throws IOException {

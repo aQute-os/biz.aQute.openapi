@@ -206,8 +206,8 @@ public class ReferenceHandler {
 		try {
 			if (r == null) {
 				System.out.println("??");
-			}
-			return r.getClass().getField(segment);
+			} else
+				return r.getClass().getField(segment);
 		} catch (NoSuchFieldException | SecurityException e) {
 			// ignore
 		}

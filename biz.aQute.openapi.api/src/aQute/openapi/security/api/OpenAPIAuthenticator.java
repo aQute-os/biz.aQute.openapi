@@ -24,8 +24,6 @@ public interface OpenAPIAuthenticator {
 	 * Create an authentication object for verifying the authentication state
 	 * machine.
 	 *
-	 * @param context
-	 *            the current context
 	 * @param dto
 	 *            the security definition
 	 * @return an Authentication

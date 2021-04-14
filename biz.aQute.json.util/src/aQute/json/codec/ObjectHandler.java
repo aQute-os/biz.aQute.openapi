@@ -113,7 +113,7 @@ public class ObjectHandler extends Handler {
 					if (value == f.deflt)
 						continue;
 
-					if (value != null && value.equals(f.deflt))
+					if (value.equals(f.deflt))
 						continue;
 				}
 

@@ -465,7 +465,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 			if (hasNamedFormat) {
 				format("    return %s.from(%s.parse(s));\n", dateTimeClass, named);
 			} else {
-				format("    return %s.from(dateTimeFormat.parse(s));\n", dateTimeClass, named);
+				format("    return %s.from(dateTimeFormat.parse(s));\n", dateTimeClass);
 			}
 
 		} else {
@@ -512,7 +512,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 			if (hasNamedFormat) {
 				format("    return LocalDate.from(%s.parse(s));\n", named);
 			} else {
-				format("    return LocalDate.from(dateFormat.parse(s));\n", named);
+				format("    return LocalDate.from(dateFormat.parse(s));\n");
 			}
 
 		} else {
@@ -595,12 +595,12 @@ public class JavaGenerator extends BaseSourceGenerator {
 						case "application" :
 							format(" OpenAPISecurityDefinition.application(%s, BASE_PATH, %s, %s %s);\n",
 									escapeString(security), escapeString(so.authorizationUrl),
-									escapeString(so.tokenUrl), null, toScopes(so.scopes));
+									escapeString(so.tokenUrl), toScopes(so.scopes));
 							break;
 						case "password" :
 							format(" OpenAPISecurityDefinition.password(%s, BASE_PATH, %s, %s %s);\n",
 									escapeString(security), escapeString(so.authorizationUrl),
-									escapeString(so.tokenUrl), null, toScopes(so.scopes));
+									escapeString(so.tokenUrl), toScopes(so.scopes));
 							break;
 						case "accessCode" :
 							format(" OpenAPISecurityDefinition.accessCode(%s, BASE_PATH, %s, %s %s);\n",
@@ -658,10 +658,10 @@ public class JavaGenerator extends BaseSourceGenerator {
 			del = ",\n";
 		}
 		format(";\n\n", enumType.getName());
-		format("    public final String value;\n\n", enumType.getName());
+		format("    public final String value;\n\n");
 		format("    %s(String value) {\n", enumType.getName());
-		format("      this.value = value;\n", enumType.getName());
-		format("    }\n", enumType.getName());
+		format("      this.value = value;\n");
+		format("    }\n");
 		format("  }\n\n");
 	}
 
@@ -764,7 +764,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 			gen.error("Unknown type %s with a validator?", type);
 
 		if (close)
-			format("       }\n", reference);
+			format("       }\n");
 	}
 
 	protected void doValidate(String expression, String reference) {

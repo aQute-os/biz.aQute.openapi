@@ -119,7 +119,7 @@ public class BasicAuthenticationProvider implements OpenAPIAuthenticator {
 				byte[] expected = security.getCredential(user, pwkey).orElse(new byte[0]);
 
 				if (digest.length != expected.length) {
-					logger.warn("User={}. Stored hash has different length");
+					logger.warn("User={}. Stored hash has different length", userId);
 				}
 
 				boolean authenticated = WWWUtils.slowEquals(digest, expected);
