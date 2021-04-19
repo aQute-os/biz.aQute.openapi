@@ -9,7 +9,7 @@
 	osgi.enroute.hamcrest.wrapper
 
 
-base.version:           1.6.0
+base.version:           1.7.0
 
 -groupid:               biz.aQute
 -pom:                   version=${base.version}-SNAPSHOT
