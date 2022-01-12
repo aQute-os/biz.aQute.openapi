@@ -9,5 +9,5 @@
 
 -testpath: org.assertj.core, slf4j.api, slf4j.simple
 
--privatepackage org.osgi.annotation.versioning,org.osgi.annotation.bundle
+-privatepackage org.osgi.annotation.versioning,org.osgi.annotation.bundle, org.osgi.dto
 -includepackage: biz.aQute.openapi.generate.plugin.*, org.osgi.annotation.versioning
