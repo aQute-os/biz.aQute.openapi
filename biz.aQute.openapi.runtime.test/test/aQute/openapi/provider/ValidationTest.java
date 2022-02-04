@@ -24,6 +24,8 @@ public class ValidationTest {
 	@Test(expected = OpenAPIBase.BadRequestResponse.class)
 	public void testBasicValidationWithMissingField() {
 		ModbusDeviceData dd = new ValidationDeviceManagementModbusApi.ModbusDeviceData();
+		dd.mappingFileName = "";
+		dd.ip = "";
 		dd.validate(context, "foo");
 	}
 
