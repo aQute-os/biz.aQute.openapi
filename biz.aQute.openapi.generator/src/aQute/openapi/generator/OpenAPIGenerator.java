@@ -65,17 +65,19 @@ public class OpenAPIGenerator extends Env {
 		} else
 			this.dateTimeClass = Instant.class.getName();
 
-		setSwagger(new JSONCodec().dec().resolve().from(in).get(SwaggerObject.class));
+		try {
+			setSwagger(new JSONCodec().dec().resolve().from(in).get(SwaggerObject.class));
+			getOrCreateSourceFile(BASE_SOURCE);
+			fixup(getSwagger());
 
-		getOrCreateSourceFile(BASE_SOURCE);
-		fixup(getSwagger());
-
-		Validator v = new Validator(this);
-		v.verify(getSwagger());
-		getInfo(v);
-
-		for (Map.Entry<String,PathItemObject> entry : getSwagger().paths.entrySet()) {
-			pathItem(entry.getKey(), entry.getValue());
+			Validator v = new Validator(this);
+			v.verify(getSwagger());
+			getInfo(v);
+			for (Map.Entry<String,PathItemObject> entry : getSwagger().paths.entrySet()) {
+				pathItem(entry.getKey(), entry.getValue());
+			}
+		} catch (Exception e) {
+			error("failed to process %s, error %s", in, e.getMessage());
 		}
 	}
 

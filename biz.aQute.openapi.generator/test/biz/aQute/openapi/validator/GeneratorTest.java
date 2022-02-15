@@ -38,4 +38,23 @@ public class GeneratorTest {
 		String content = IO.collect(base);
 		assertThat(content).contains("protected abstract biz.aQute.openapi.validator.Foo references()");
 	}
+
+	@Test
+	public void testMissingReference() throws Exception {
+		Configuration c = new Configuration();
+		File f = IO.getFile("resources/gen/missing-reference.json");
+		OpenAPIGenerator g = new OpenAPIGenerator(f, c);
+		assertThat(g.check("Ref to #/definitions/Missing")).isTrue();
+	}
+
+	@Test
+	public void testValidationCompleteness() throws Exception {
+		Configuration c = new Configuration();
+		File f = IO.getFile("resources/gen/validate_require.json");
+		OpenAPIGenerator g = new OpenAPIGenerator(f, c);
+		File out = tmp.newFolder();
+		g.generate(out);
+		File base = IO.getFile(out, "org/example/openapi/GeneratedBase.java");
+
+	}
 }
