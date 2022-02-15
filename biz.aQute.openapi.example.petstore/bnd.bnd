@@ -64,6 +64,6 @@ src=gen-src,src
 -generate: \
 	petstore.json; \
 		output=gen-src/;\
-		generate="openapi -o gen-src --tags * --typeprefix Generated --basename OpenAPIBase --packageprefix aQute.openapi.example.petstore petstore.json"
+		generate="openapi -o gen-src --tags * --typeprefix Generated --basename OpenAPIBase --packageprefix aQute.openapi.example.petstore petstore.json 1>t 2>t"
 	
 	

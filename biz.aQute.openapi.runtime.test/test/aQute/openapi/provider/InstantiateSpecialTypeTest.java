@@ -39,7 +39,7 @@ public class InstantiateSpecialTypeTest extends Assert {
 		;
 		rule.add(new X());
 
-		String offset = rule.put("/v1/dates", "{}");
+		String offset = rule.put("/v1/dates", "{\"error\":\"ok\"}");
 		assertEquals("{'error':'Yes!'}", offset);
 	}
 

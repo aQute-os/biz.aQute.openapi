@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import aQute.lib.converter.Converter;
 import aQute.lib.io.IO;
 import aQute.lib.strings.Strings;
-import aQute.openapi.provider.OpenAPIBase.BadRequestResponse;
 import aQute.openapi.provider.OpenAPIBase.Method;
 import aQute.openapi.provider.OpenAPIBase.MimeWrapper;
 import aQute.openapi.security.api.Authentication;
@@ -318,11 +317,7 @@ public class OpenAPIContext {
 	}
 
 	public boolean require(Object value, String name) {
-		boolean validate = validate(value != null, value, name, " required but not set");
-		if (!validate) {
-			throw new BadRequestResponse("Operation " + operation + " required " + name + " but this was not given");
-		}
-		return validate;
+		return validate(value != null, value, name, " required but not set");
 	}
 
 	public char[] toPassword(String value) {

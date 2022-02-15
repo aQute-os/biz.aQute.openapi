@@ -372,7 +372,7 @@ public abstract class SourceType {
 
 		@Override
 		public boolean hasValidator() {
-			return !Double.isNaN(getSchema().minimum) || !Double.isNaN(getSchema().maximum)
+			return !isOptional() || !Double.isNaN(getSchema().minimum) || !Double.isNaN(getSchema().maximum)
 					|| getSchema().multipleOf > 0 || (getSchema().enum$ != null && !getSchema().enum$.isEmpty());
 		}
 
@@ -429,7 +429,8 @@ public abstract class SourceType {
 
 		@Override
 		public boolean hasValidator() {
-			return getSchema().pattern != null || getSchema().minLength > 0 || getSchema().maxLength >= 0;
+			return !isOptional() || getSchema().pattern != null || getSchema().minLength > 0
+					|| getSchema().maxLength >= 0;
 		}
 
 		@Override
@@ -495,8 +496,8 @@ public abstract class SourceType {
 		@Override
 		public boolean hasValidator() {
 			if (hasValidator == null) {
-				hasValidator = Boolean.FALSE;
-				hasValidator = getSchema().maxItems > 0 || getSchema().minItems > 0
+				hasValidator = !isOptional();
+				hasValidator |= getSchema().maxItems > 0 || getSchema().minItems > 0
 						|| getComponentType().hasValidator();
 			}
 
@@ -708,8 +709,8 @@ public abstract class SourceType {
 		@Override
 		public boolean hasValidator() {
 			if (hasValidator == null) {
-				hasValidator = Boolean.FALSE;
-				hasValidator = properties.values()
+				hasValidator = !isOptional();
+				hasValidator |= properties.values()
 						.stream()
 						.filter(p -> p.getType().hasValidator())
 						.findAny()

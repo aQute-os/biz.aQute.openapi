@@ -38,13 +38,13 @@ public class DateTimeEncodingsTest extends Assert {
 		;
 		rule.add(new X());
 
-		String offset = rule.put("/v1/dates", "{'date':'1970-01-01', 'dateTime':'1970-01-01T00:00:00Z' }");
+		String offset = rule.put("/v1/dates", "{'date':'1970-01-01', 'dateTime':'1970-01-01T00:00:00Z', 'error':'ok' }");
 		assertEquals("{'date':'1970-01-01','dateTime':'1970-01-01T00:00:00Z','error':'ok\\n'}", offset);
 
-		String minus0 = rule.put("/v1/dates", "{'date':'1970-01-01', 'dateTime':'1970-01-01T00:00:00Z' }");
+		String minus0 = rule.put("/v1/dates", "{'date':'1970-01-01', 'dateTime':'1970-01-01T00:00:00Z', 'error':'ok' }");
 		assertEquals("{'date':'1970-01-01','dateTime':'1970-01-01T00:00:00Z','error':'ok\\n'}", minus0);
 
-		String zulu = rule.put("/v1/dates", "{'date':'1970-01-01', 'dateTime':'1970-01-01T00:00:00Z' }");
+		String zulu = rule.put("/v1/dates", "{'date':'1970-01-01', 'dateTime':'1970-01-01T00:00:00Z', 'error':'ok' }");
 		assertEquals("{'date':'1970-01-01','dateTime':'1970-01-01T00:00:00Z','error':'ok\\n'}", zulu);
 
 	}
@@ -70,13 +70,13 @@ public class DateTimeEncodingsTest extends Assert {
 		;
 		rule.add(new X());
 
-		String offset = rule.put("/v1/dates", "{'date':'1970-001', 'dateTime':'1970-01-01T00:00:00.000Z' }");
+		String offset = rule.put("/v1/dates", "{'date':'1970-001', 'dateTime':'1970-01-01T00:00:00.000Z', 'error':'ok' }");
 		assertEquals("{'date':'1970-001','dateTime':'1970-01-01T00:00:00.000Z','error':'ok\\n'}", offset);
 
-		String minus0 = rule.put("/v1/dates", "{'date':'1970-001', 'dateTime':'1970-01-01T00:00:00.000Z' }");
+		String minus0 = rule.put("/v1/dates", "{'date':'1970-001', 'dateTime':'1970-01-01T00:00:00.000Z', 'error':'ok' }");
 		assertEquals("{'date':'1970-001','dateTime':'1970-01-01T00:00:00.000Z','error':'ok\\n'}", minus0);
 
-		String zulu = rule.put("/v1/dates", "{'date':'1970-001', 'dateTime':'1970-01-01T00:00:00.000Z' }");
+		String zulu = rule.put("/v1/dates", "{'date':'1970-001', 'dateTime':'1970-01-01T00:00:00.000Z', 'error':'ok' }");
 		assertEquals("{'date':'1970-001','dateTime':'1970-01-01T00:00:00.000Z','error':'ok\\n'}", zulu);
 
 	}
@@ -102,13 +102,13 @@ public class DateTimeEncodingsTest extends Assert {
 		;
 		rule.add(new X());
 
-		String offset = rule.put("/v1/dates", "{'date':'1970-01-01', 'dateTime':'1970-01-01T00:00:00Z' }");
+		String offset = rule.put("/v1/dates", "{'date':'1970-01-01', 'dateTime':'1970-01-01T00:00:00Z', 'error':'ok' }");
 		assertEquals("{'date':'1970-01-01','dateTime':'1970-01-01T00:00:00.000Z','error':'ok\\n'}", offset);
 
-		String minus0 = rule.put("/v1/dates", "{'date':'1970-01-01', 'dateTime':'1970-01-01T00:00:00Z' }");
+		String minus0 = rule.put("/v1/dates", "{'date':'1970-01-01', 'dateTime':'1970-01-01T00:00:00Z', 'error':'ok' }");
 		assertEquals("{'date':'1970-01-01','dateTime':'1970-01-01T00:00:00.000Z','error':'ok\\n'}", minus0);
 
-		String zulu = rule.put("/v1/dates", "{'date':'1970-01-01', 'dateTime':'1970-01-01T00:00:00Z' }");
+		String zulu = rule.put("/v1/dates", "{'date':'1970-01-01', 'dateTime':'1970-01-01T00:00:00Z', 'error':'ok' }");
 		assertEquals("{'date':'1970-01-01','dateTime':'1970-01-01T00:00:00.000Z','error':'ok\\n'}", zulu);
 
 	}

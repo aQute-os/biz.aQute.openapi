@@ -1,0 +1,25 @@
+{
+	"swagger": "2.0",
+	"basePath": "/references",
+	"info": {
+    		"title": "Optional",
+    		"version": "1.0"
+    },
+    	"paths": {
+		"/primitives": {
+			"post": {
+				"operationId": "References",
+				"responses": {
+					"200": {
+						"schema": {
+							"$ref": "#/definitions/Missing"
+						}
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+	}
+
+}

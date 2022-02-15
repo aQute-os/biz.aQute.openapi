@@ -924,15 +924,15 @@ public class JSONTest extends TestCase {
 	}
 	
 	
-	public static class FooDTO {
-		public int foo;
-	}
-	public void testReferences() throws Exception {
-		String test = "{ 'foo':{'$ref': '#/bar'}, 'bar':4}".replace('\'','"');
-		FooDTO fooDTO = new JSONCodec().dec().from(test).get(FooDTO.class);
-		
-		assertEquals(fooDTO.foo, 4);
-	}
+//	public static class FooDTO {
+//		public int foo;
+//	}
+//	public void testReferences() throws Exception {
+//		String test = "{ 'foo':{'$ref': '#/bar'}, 'bar':4}".replace('\'','"');
+//		FooDTO fooDTO = new JSONCodec().dec().from(test).get(FooDTO.class);
+//		
+//		assertEquals(fooDTO.foo, 4);
+//	}
 }
 
 

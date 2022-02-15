@@ -16,8 +16,8 @@ public class ValidationTest {
 		ModbusDeviceData dd = new ValidationDeviceManagementModbusApi.ModbusDeviceData();
 		dd.ip = "192.168.76.203";
 		dd.mappingFileName = "foo";
-		dd.port = 1;
-		dd.unitId = 102;
+		dd.port = 1L;
+		dd.unitId = 102L;
 		dd.validate(context, "foo");
 	}
 
@@ -34,8 +34,8 @@ public class ValidationTest {
 		ModbusDeviceData dd = new ValidationDeviceManagementModbusApi.ModbusDeviceData();
 		dd.ip = "x192.168.76.203";
 		dd.mappingFileName = "foo";
-		dd.port = 1;
-		dd.unitId = 102;
+		dd.port = 1L;
+		dd.unitId = 102L;
 		dd.validate(context, "foo");
 	}
 
@@ -44,8 +44,8 @@ public class ValidationTest {
 		ModbusDeviceData dd = new ValidationDeviceManagementModbusApi.ModbusDeviceData();
 		dd.ip = "192.168.76.203";
 		dd.mappingFileName = "foo";
-		dd.port = 1;
-		dd.unitId = 10000000;
+		dd.port = 1L;
+		dd.unitId = 10000000L;
 		dd.name = Optional.of("Hello");
 		dd.validate(context, "foo");
 	}

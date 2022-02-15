@@ -32,7 +32,7 @@ public class AdditionalPropertiesTest {
 		rule.add(new AP());
 
 		
-		TaggedData go = rule.http.build().put().upload("{ \"_links\": {\"foo\":[ {\"href\":\"http://www.foo.com\"},{}]}}").asTag().go(rule.uri.resolve("/v1/additionalProperties"));
+		TaggedData go = rule.http.build().put().upload("{\"deviceId\":\"123\", \"_links\": {\"foo\":[ {\"href\":\"http://www.foo.com\"},{}]}}").asTag().go(rule.uri.resolve("/v1/additionalProperties"));
 		assertEquals(200, go.getResponseCode());
 
 	}

@@ -1,0 +1,275 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v1",
+    "title": "Demo"
+  },
+  "basePath": "/api/v1",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/demo/settings": {
+      "get": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "",
+        "operationId": "getDemoSettings",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/MySettings"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "",
+        "operationId": "putDemoSettings",
+        "consumes" : [
+          "application/json",
+          "text/json"
+        ],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MySettings"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/MySettings"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security" : [
+          {
+            "jwt" : [ ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "",
+        "operationId": "postDemoSettings",
+        "consumes" : [
+          "application/json",
+          "text/json"
+        ],
+        "produces": [ ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MySettings2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security" : [
+          {
+            "jwt" : [ ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "MySettings2": {
+      "type": "object",
+      "properties": {
+        "myString": {
+          "type": "string",
+          "maxLength": 32,
+          "minLength": 3
+        },
+        "myStringWithoutValidator": {
+          "type": "string"
+        },
+        "myInt": {
+          "type": "integer",
+          "maximum": 65535,
+          "minimum": 0
+        },
+        "myDouble": {
+          "type": "number",
+          "maximum": 65535.0,
+          "minimum": 0.0
+        }
+      },
+      "required": [
+        "myString",
+        "myInt",
+        "myDouble",
+        "myStringWithoutValidator"
+      ]
+    },
+    "MySettings": {
+      "type": "object",
+      "properties": {
+        "timeUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "general": {
+          "$ref": "#/definitions/GeneralSettings"
+        },
+        "myList": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10,
+          "items": {
+            "$ref": "#/definitions/MyListItem"
+          }
+        },
+        "myListWithoutValidatorButValidatorInEntries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MyListItem"
+          }
+        },
+        "optList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MyListItem"
+          }
+        },
+        "myListWithoutAnyValidator": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MyListItem2"
+          }
+        },
+        "myDouble": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "timeUtc",
+        "general",
+        "myList",
+        "myDouble",
+        "myListWithoutValidatorButValidatorInEntries",
+        "myListWithoutAnyValidator"
+      ]
+    },
+    "GeneralSettings": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "myDouble": {
+          "type": "number"
+        },
+        "myInt": {
+          "type": "integer"
+        },
+        "optDouble": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "myDouble",
+        "myInt"
+      ]
+    },
+    "MyListItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 32,
+          "minLength": 3
+        },
+        "myDouble": {
+          "type": "number"
+        },
+        "myInt": {
+          "type": "integer"
+        },
+        "optDouble": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "myDouble",
+        "myInt"
+      ]
+    },
+    "MyListItem2": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "myDouble": {
+          "type": "number"
+        },
+        "myInt": {
+          "type": "integer"
+        },
+        "optDouble": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "myDouble",
+        "myInt"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "jwt": {
+      "type": "apiKey",
+      "description": "Verify bearer token with JWT",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "jwt": []
+    }
+  ]
+}

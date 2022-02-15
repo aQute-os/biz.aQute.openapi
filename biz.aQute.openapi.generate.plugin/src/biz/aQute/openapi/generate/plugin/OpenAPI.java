@@ -95,6 +95,7 @@ public class OpenAPI implements Generator<OpenAPIOptions> {
 					}
 				} catch (Exception e) {
 					context.exception(e, "generate failed for %s : %s", path, Exceptions.causes(e));
+					return Optional.of(e.getMessage());
 				}
 		}
 		return Optional.empty();

@@ -640,6 +640,8 @@ public class JavaGenerator extends BaseSourceGenerator {
 			doDeclareEnumType((StringEnumType) type);
 		} else if (type.isObject()) {
 			doDeclareObjectType((SourceType.ObjectType) type);
+		} else {
+			// does not require code, built-in
 		}
 	}
 
@@ -676,23 +678,26 @@ public class JavaGenerator extends BaseSourceGenerator {
 		doTypeHeader(objectType.getClassName(), () -> {
 
 			String access = gen.getConfig().privateFields ? "private" : "public";
-
+			boolean requireCheck = false;
 			for (SourceProperty property : objectType.getProperties()) {
 				String init = "";
-				if (property.getType().isOptional())
+				if (property.getType().isOptional()) {
 					init = " = Optional.empty()";
-				format("    %s %s %s%s;\n", access, property.getType().reference(), property.getKey(), init);
+				} else
+					requireCheck = true;
+				String reference = toObject(property.getType().reference());
+
+				format("    %s %s %s%s;\n", access, reference, property.getKey(), init);
 			}
 
 			format("\n");
 
-			if (objectType.hasValidator()) {
+			if (objectType.hasValidator() || requireCheck) {
 				format("    public void validate(OpenAPIContext context, String name) {\n");
 				format("       context.begin(name);\n");
 
 				for (SourceProperty property : objectType.getProperties()) {
-
-					doValidators(property.getType(), "this." + property.getKey(), false);
+					doValidators(property.getType(), "this." + property.getKey(), !property.getType().isOptional());
 				}
 
 				format("     context.end();\n");
@@ -731,12 +736,31 @@ public class JavaGenerator extends BaseSourceGenerator {
 		});
 	}
 
-	private void doValidators(SourceType type, String reference, boolean required) {
-		String escaped = escapeString(reference);
-
-		if (required) {
-			format("       context.require(%s,%s);", reference, escaped);
+	private String toObject(String type) {
+		switch (type) {
+			case "boolean" :
+				return "Boolean";
+			case "byte" :
+				return "Byte";
+			case "short" :
+				return "Short";
+			case "char" :
+				return "Character";
+			case "int" :
+				return "Integer";
+			case "long" :
+				return "Long";
+			case "float" :
+				return "Float";
+			case "double" :
+				return "Double";
 		}
+		return type;
+	}
+
+	private void doValidators(SourceType type, String reference, boolean required) {
+		String tmp = reference.startsWith("this.") ? reference.substring(5) : reference;
+		String escaped = escapeString(tmp);
 
 		if (!type.hasValidator())
 			return;
@@ -747,7 +771,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 			type = ((OptionalType) type).getTarget();
 			reference = reference + ".get()";
 			close = true;
-		} else if (!type.isPrimitive()) {
+		} else {
 			format("       if  ( context.require(%s, %s) ) {\n", reference, escaped);
 			close = true;
 		}
