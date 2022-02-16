@@ -22,4 +22,4 @@ jobs:
           java-version: 1.8
       - name: Build
         shell: bash
-        run: ./gradlew --parallel release
+        run: ./gradlew --parallel test release
