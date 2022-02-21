@@ -54,7 +54,8 @@ public class GeneratorTest {
 		OpenAPIGenerator g = new OpenAPIGenerator(f, c);
 		File out = tmp.newFolder();
 		g.generate(out);
-		File base = IO.getFile(out, "org/example/openapi/GeneratedBase.java");
-
+		File base = IO.getFile(out, "org/example/openapi/demo/GeneratedDemo.java");
+		String collect = IO.collect(base);
+		System.out.println(collect);
 	}
 }

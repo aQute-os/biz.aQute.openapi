@@ -3,6 +3,7 @@ package aQute.openapi.provider;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -29,7 +30,8 @@ public class ValidateRequireTest {
 				+ "test myListWithoutAnyValidator=null FAILS:  required but not set\n"
 				+ "test myDouble=null FAILS:  required but not set\n"
 				+ "test myList=null FAILS:  required but not set\n"
-				+ "test myListWithoutValidatorButValidatorInEntries=null FAILS:  required but not set");
+				+ "test myListWithoutValidatorButValidatorInEntries=null FAILS:  required but not set\n"
+				+ "test timeUtc=null FAILS:  required but not set");
 		
 		gs.general=new GeneralSettings();
 		gs.myListWithoutAnyValidator=new ArrayList<>();
@@ -38,6 +40,7 @@ public class ValidateRequireTest {
 		gs.myDouble=3.14;
 		gs.myList=new ArrayList<>();
 		gs.myListWithoutValidatorButValidatorInEntries= new ArrayList<Validate_requireDemo.MyListItem>();
+		gs.timeUtc=Instant.now();
 		
 		test(gs::validate, 400, "400:test/general myDouble=null FAILS:  required but not set\n"
 				+ "test/general id=null FAILS:  required but not set\n"

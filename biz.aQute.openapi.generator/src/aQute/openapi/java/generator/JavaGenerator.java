@@ -762,7 +762,7 @@ public class JavaGenerator extends BaseSourceGenerator {
 		String tmp = reference.startsWith("this.") ? reference.substring(5) : reference;
 		String escaped = escapeString(tmp);
 
-		if (!type.hasValidator())
+		if (!type.hasValidator() && !required)
 			return;
 
 		boolean close = false;
@@ -772,6 +772,10 @@ public class JavaGenerator extends BaseSourceGenerator {
 			reference = reference + ".get()";
 			close = true;
 		} else {
+			if (!type.hasValidator()) {
+				format("           context.require(%s, %s);\n", reference, escaped);
+				return;
+			}
 			format("       if  ( context.require(%s, %s) ) {\n", reference, escaped);
 			close = true;
 		}
