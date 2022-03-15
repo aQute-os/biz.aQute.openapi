@@ -1,4 +1,4 @@
--dependson biz.aQute.json.util, biz.aQute.openapi.generator, biz.aQute.openapi.oauth2.provider, biz.aQute.openapi.provider
+-dependson biz.aQute.json.util, biz.aQute.openapi.generate.plugin, biz.aQute.openapi.oauth2.provider, biz.aQute.openapi.provider
 
 Require-Bundle org.apache.felix.gogo.runtime;resolution:=optional
 Import-Package \

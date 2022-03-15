@@ -43,6 +43,7 @@ public class OpenAPIRuntime {
 	final Map<String,Dispatcher>		dispatchers			= new ConcurrentHashMap<>();
 	final ThreadLocal<OpenAPIContext>	contexts			= new ThreadLocal<>();
 	int									delayOn404Timeout	= 30;
+	boolean								validationException	= true;
 	Configuration						configuration;
 
 	@Reference
@@ -95,6 +96,11 @@ public class OpenAPIRuntime {
 		 */
 		@AttributeDefinition(description = "Maximum request size")
 		long mp_maxRequestSize() default -1;
+
+		/**
+		 */
+		@AttributeDefinition(description = "Throw an exception when validation fails")
+		boolean validationException() default true;
 	}
 
 	class Tracker {
@@ -133,7 +139,7 @@ public class OpenAPIRuntime {
 	public void activate(BundleContext context, Configuration configuration)
 			throws ServletException, NamespaceException {
 		this.configuration = configuration;
-
+		this.validationException = configuration.validationException();
 		this.context = context;
 		tracker = new ServiceTracker<OpenAPIBase,Tracker>(context, OpenAPIBase.class, null) {
 			@Override

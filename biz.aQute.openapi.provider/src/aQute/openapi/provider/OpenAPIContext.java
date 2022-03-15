@@ -41,6 +41,7 @@ import aQute.openapi.util.WWWUtils;
 
 public class OpenAPIContext {
 	final static Logger				logger				= LoggerFactory.getLogger(OpenAPIRuntime.class);
+	final static Logger				validation			= LoggerFactory.getLogger("openapi.validation");
 
 	private static final String[]	EMPTY				= new String[0];
 
@@ -115,7 +116,8 @@ public class OpenAPIContext {
 		return response.getStatus() == beginStatus;
 	}
 
-	private void doHeaders() {}
+	private void doHeaders() {
+	}
 
 	private OutputStream getOutputStream() throws IOException {
 		return response.getOutputStream();
@@ -225,7 +227,9 @@ public class OpenAPIContext {
 		stack.remove(stack.size() - 1);
 		if (stack.isEmpty()) {
 			if (errors != null) {
-				throw new OpenAPIBase.BadRequestResponse(Strings.join("\n", errors));
+				validation.error("rq={} op={} target={}: {}", request, operation, target, errors);
+				if (runtime == null || runtime.validationException)
+					throw new OpenAPIBase.BadRequestResponse(Strings.join("\n", errors));
 			}
 		}
 	}
