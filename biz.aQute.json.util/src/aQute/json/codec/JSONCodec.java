@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import aQute.json.naming.NameCodec;
+import aQute.lib.exceptions.ConsumerWithException;
 
 /**
  * This is a simple JSON Coder and Encoder that uses the Java type system to
@@ -361,7 +362,7 @@ public class JSONCodec {
 			case '-':
 			case '+':
 			case '.':
-				return parseNumber(isr);
+				return parseNumber(isr,type);
 
 			default:
 				throw new IllegalArgumentException("Invalid character at begin of token: " + (char) c);
@@ -404,7 +405,9 @@ public class JSONCodec {
 		case '8':
 		case '9':
 		case '-':
-			return h.decode(isr, parseNumber(isr));
+		case '+':
+		case '.':
+			return h.decode(isr, parseNumber(isr,type));
 
 		default:
 			throw new IllegalArgumentException("Unexpected character in input stream: " + (char) c);
@@ -482,70 +485,117 @@ public class JSONCodec {
 		throw new IllegalArgumentException("Invalid hex character: " + c);
 	}
 
-	private Number parseNumber(Decoder r) throws Exception {
-		StringBuilder sb = new StringBuilder();
-		boolean d = false;
+	private Number parseNumber(Decoder r, Type type) throws Exception {
+		boolean positive = true;
+		long value = 0;
 
 		if (r.current() == '-') {
-			sb.append('-');
+			positive = false;
+			r.read();
+		}
+		if (r.current() == '+') {
+			positive = true;
 			r.read();
 		}
 
 		int c = r.current();
 		if (c == '0') {
-			sb.append('0');
 			c = r.read();
 		} else if (c >= '1' && c <= '9') {
-			sb.append((char) c);
+			value = c - '0';
 			c = r.read();
 
 			while (c >= '0' && c <= '9') {
-				sb.append((char) c);
+				value = value * 10 + c - '0';
 				c = r.read();
 			}
 		} else
 			throw new IllegalArgumentException("Expected digit");
 
-		if (c == '.') {
-			d = true;
-			sb.append('.');
-			c = r.read();
-			while (c >= '0' && c <= '9') {
-				sb.append((char) c);
+		value = positive ? value : -value;
+		
+		if (c == '.' || c == 'e' || c == 'E') {
+			double v = value;
+			if (c == '.') {
 				c = r.read();
+				double div = 10;
+				while (c >= '0' && c <= '9') {
+					v += (c-'0')/div;
+					div *=10;
+					c = r.read();
+				}
 			}
+			if (c == 'e' || c == 'E') {
+				boolean epos = true;
+				int exponent = 0;
+				c = r.read();
+				if (c == '+') {
+					c = r.read();
+				} else if (c == '-') {
+					epos = false;
+					c = r.read();
+				}
+				
+				while (c >= '0' && c <= '9') {
+					exponent = exponent * 10 + (c-'0');
+					c = r.read();
+				}
+				if ( !epos)
+					exponent = -exponent;
+				if ( exponent != 0) {
+					double pow = Math.pow(10,exponent);
+					v *= pow;
+				}
+			}
+			if (type == null || type==Object.class)
+				return v;
+			if (type == byte.class || type == Byte.class)
+				return (byte)v;
+			if (type == short.class || type == Short.class)
+				return (short)v;
+			if (type == char.class || type == Character.class)
+				return (short)v;
+			if (type == int.class || type == Integer.class)
+				return (int)v;
+			if (type == long.class || type == Long.class)
+				return (long)v;
+			if (type == float.class || type == Float.class)
+				return (float)v;
+			return v;
+		} else {
+			if (type == null || type==Object.class)
+				return (int) value;
+			if (type == byte.class || type == Byte.class)
+				return (byte)value;
+			if (type == int.class || type == Integer.class)
+				return (short)value;
+			if (type == short.class || type == Short.class)
+				return (short)value;
+			if (type == char.class || type == Character.class)
+				return (short)value;
+			if (type == double.class || type == Double.class)
+				return (double)value;
+			if (type == long.class || type == Long.class)
+				return (long)value;
+			if (type == float.class || type == Float.class)
+				return (float)value;
+			
+			return value;
 		}
-		if (c == 'e' || c == 'E') {
-			d = true;
-			sb.append('e');
-			c = r.read();
-			if (c == '+') {
-				sb.append('+');
-				c = r.read();
-			} else if (c == '-') {
-				sb.append('-');
-				c = r.read();
-			}
-			while (c >= '0' && c <= '9') {
-				sb.append((char) c);
-				c = r.read();
-			}
-		}
-		if (d)
-			return Double.parseDouble(sb.toString());
-		long l = Long.parseLong(sb.toString());
-		if (l > Integer.MAX_VALUE || l < Integer.MIN_VALUE)
-			return l;
-		return (int) l;
 	}
 
 	void parseArray(Collection<Object> list, Type componentType, Decoder r) throws Exception {
+		parseArray(r, dec -> {
+			Object o = decode(componentType, r);
+			list.add(o);
+		});
+	}
+
+	public void parseArray(Decoder r, ConsumerWithException<Decoder> component) throws Exception {
 		assert r.current() == '[';
 		int c = r.next();
 		while (START_CHARACTERS.indexOf(c) >= 0) {
-			Object o = decode(componentType, r);
-			list.add(o);
-
+			component.accept(r);
 			c = r.skipWs();
 			if (c == ']')
 				break;
@@ -563,7 +613,7 @@ public class JSONCodec {
 	}
 
 	@SuppressWarnings("rawtypes")
-	Class<?> getRawClass(Type type) {
+	static Class<?> getRawClass(Type type) {
 		if (type instanceof Class)
 			return (Class) type;
 

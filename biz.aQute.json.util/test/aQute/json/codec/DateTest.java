@@ -25,11 +25,11 @@ public class DateTest extends Assert {
 	@Test
 	public void testDateDecode() throws Exception {
 		WithDate d = new JSONCodec().dec().from(sample.replace('\'', '"')).get(WithDate.class);
+		assertEquals(Instant.ofEpochMilli(145678123124L), d.instant);
 		assertEquals(LocalDate.of(2017, 2, 22), d.date);
 		assertEquals(LocalDateTime.of(1985, 4, 12, 23, 20, 50, 0), d.time);
 		assertEquals(OffsetDateTime.of(1985, 4, 12, 23, 20, 50, 0, ZoneOffset.UTC), d.offset);
 		assertEquals(ZonedDateTime.of(1985, 4, 12, 23, 20, 50, 0, ZoneOffset.ofHours(1)), d.zoned);
-		assertEquals(Instant.ofEpochMilli(145678123124L), d.instant);
 	}
 
 	@Test

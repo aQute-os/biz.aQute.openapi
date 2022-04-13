@@ -344,6 +344,9 @@ public class JSONTest extends TestCase {
 	 */
 	public static void testPrimitiveArrays() throws Exception {
 		Decoder dec = new JSONCodec().dec();
+		assertTrue(Arrays.equals(new char[] {
+				'A', 'B'
+		}, dec.from(" [ 65,66 ] ").get(char[].class)));
 
 		assertTrue(Arrays.equals(new Boolean[] {
 				true, false
@@ -355,9 +358,6 @@ public class JSONTest extends TestCase {
 		assertTrue(Arrays.equals(new Character[] {
 				'A', 'B'
 		}, dec.from(" [ 65,66 ] ").get(Character[].class)));
-		assertTrue(Arrays.equals(new char[] {
-				'A', 'B'
-		}, dec.from(" [ 65,66 ] ").get(char[].class)));
 		assertTrue(Arrays.equals(new Short[] {
 				-1, -2
 		}, dec.from("[ -1 , -2 ]").get(Short[].class)));

@@ -31,4 +31,16 @@ public class BooleanHandler extends Handler {
 		return false;
 	}
 
+	public static boolean isTruthy(Object o) {
+		if ( o == null)
+			return false;
+		if ( o instanceof Boolean) {
+			return (Boolean) o;
+		}
+		if ( o instanceof Number) {
+			return ((Number) o).intValue() != 0;
+		}
+		return true;
+	}
+
 }

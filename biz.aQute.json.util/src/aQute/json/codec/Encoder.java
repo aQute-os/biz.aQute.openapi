@@ -196,4 +196,9 @@ public class Encoder implements Appendable, Closeable, Flushable {
 		this.writeDefaults = b;
 		return this;
 	}
+
+	public void appendChar(int c) throws IOException {
+		append((char)c);
+	}
+
 }

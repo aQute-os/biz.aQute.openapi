@@ -1,5 +1,9 @@
 package aQute.json.codec;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -12,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ObjectHandler extends Handler {
+	
 	@SuppressWarnings("rawtypes")
 	final Class	rawClass;
 	final FDesc	fields[];
@@ -40,8 +45,8 @@ public class ObjectHandler extends Handler {
 		Object template;
 
 		try {
-			template = c.newInstance();
-		} catch (Exception e1) {
+			template = rawClass.newInstance();
+		} catch (Throwable e1 ) {
 			template = null;
 		}
 
@@ -134,6 +139,7 @@ public class ObjectHandler extends Handler {
 	public Object decodeObject(Decoder r) throws Exception {
 		assert r.current() == '{';
 		Object targetObject = r.instantiate(rawClass);
+		
 
 		int c = r.next();
 		while (JSONCodec.START_CHARACTERS.indexOf(c) >= 0) {
