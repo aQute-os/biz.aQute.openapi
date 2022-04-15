@@ -10,19 +10,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import aQute.lib.exceptions.BiFunctionWithException;
 import aQute.lib.hex.Hex;
 
 @SuppressWarnings("rawtypes")
 public class ArrayHandler extends Handler {
 	static Lookup lookup = MethodHandles.lookup();
 
-	interface ForArray {
+	interface EncodeArray {
 		void array(Object array, Encoder enc, Map<Object, Type> visited) throws Exception;
 	}
 
-	final static Map<Class, ForArray>												encoders	= new HashMap<>();
-	final static Map<Class, BiFunctionWithException<Decoder, ArrayHandler, Object>>	decoders	= new HashMap<>();
+	interface DecodeArray {
+		Object array(Decoder dec, ArrayHandler h) throws Exception;
+	}
+
+	final static Map<Class, EncodeArray>		encoders	= new HashMap<>();
+	final static Map<Class, DecodeArray>	decoders	= new HashMap<>();
 	static {
 		encoders.put(boolean.class, ArrayHandler::booleanarray);
 		encoders.put(byte.class, ArrayHandler::bytearray);
@@ -42,11 +45,11 @@ public class ArrayHandler extends Handler {
 		decoders.put(double.class, ArrayHandler::decodeDouble);
 	}
 
-	final Type														componentType;
-	final ForArray													encoder;
-	final BiFunctionWithException<Decoder, ArrayHandler, Object>	decoder;
-	final Class														componentRawClass;
-	final Object													empty;
+	final Type			componentType;
+	final EncodeArray		encoder;
+	final DecodeArray	decoder;
+	final Class			componentRawClass;
+	final Object		empty;
 
 	ArrayHandler(Class<?> rawClass, Type componentType)
 			throws IllegalAccessException, NoSuchMethodException, SecurityException {
@@ -64,7 +67,7 @@ public class ArrayHandler extends Handler {
 
 	@Override
 	public Object decodeArray(Decoder r) throws Exception {
-		return decoder.apply(r, this);
+		return decoder.array(r, this);
 	}
 
 	private void objectarray(Object v, Encoder enc, Map<Object, Type> visited) throws Exception {
@@ -203,23 +206,24 @@ public class ArrayHandler extends Handler {
 	}
 
 	private static Object decodeBoolean(Decoder dec, ArrayHandler handler) throws Exception {
-		List<Object> list = getList(dec,boolean.class);
+		List<Object> list = getList(dec, boolean.class);
 		boolean[] array = new boolean[list.size()];
 		int n = 0;
-		for ( Object o : list) {
+		for (Object o : list) {
 			array[n++] = BooleanHandler.isTruthy(o);
 		}
 		return array;
 	}
-	
+
 	private static Object decodeByte(Decoder dec, ArrayHandler handler) throws Exception {
 		List<Object> list = getList(dec, byte.class);
 		byte[] array = new byte[list.size()];
 		int n = 0;
-		for ( Object o : list) {
+		for (Object o : list) {
 			long number = toLong(o);
-			if ( number < Byte.MIN_VALUE || number > Byte.MAX_VALUE) {
-				throw new IllegalArgumentException("destination is a byte array but the value is outside the byte range of -128,127: " + number);
+			if (number < Byte.MIN_VALUE || number > Byte.MAX_VALUE) {
+				throw new IllegalArgumentException(
+						"destination is a byte array but the value is outside the byte range of -128,127: " + number);
 			}
 			array[n++] = (byte) number;
 		}
@@ -230,31 +234,33 @@ public class ArrayHandler extends Handler {
 		List<Object> list = getList(dec, char.class);
 		char[] array = new char[list.size()];
 		int n = 0;
-		for ( Object o : list) {
+		for (Object o : list) {
 			array[n++] = (char) o;
 		}
 		return array;
 	}
-	
+
 	private static Object decodeShort(Decoder dec, ArrayHandler handler) throws Exception {
-		List<Object> list = getList(dec,short.class);
+		List<Object> list = getList(dec, short.class);
 		short[] array = new short[list.size()];
 		int n = 0;
-		for ( Object o : list) {
+		for (Object o : list) {
 			long number = toLong(o);
-			if ( number <Short.MIN_VALUE || number > Short.MAX_VALUE) {
-				throw new IllegalArgumentException("destination is a short array but the value is outside the short range of "+Short.MIN_VALUE+","+Short.MAX_VALUE+": " + number);
+			if (number < Short.MIN_VALUE || number > Short.MAX_VALUE) {
+				throw new IllegalArgumentException(
+						"destination is a short array but the value is outside the short range of " + Short.MIN_VALUE
+								+ "," + Short.MAX_VALUE + ": " + number);
 			}
 			array[n++] = (short) number;
 		}
 		return array;
 	}
-	
+
 	private static Object decodeInt(Decoder dec, ArrayHandler handler) throws Exception {
 		List<Object> list = getList(dec, int.class);
 		int[] array = new int[list.size()];
 		int n = 0;
-		for ( Object o : list) {
+		for (Object o : list) {
 			array[n++] = (int) o;
 		}
 		return array;
@@ -264,8 +270,8 @@ public class ArrayHandler extends Handler {
 		List<Object> list = getList(dec, long.class);
 		long[] array = new long[list.size()];
 		int n = 0;
-		for ( Object o : list) {
-			array[n++] = (long)o;
+		for (Object o : list) {
+			array[n++] = (long) o;
 		}
 		return array;
 	}
@@ -274,25 +280,26 @@ public class ArrayHandler extends Handler {
 		List<Object> list = getList(dec, float.class);
 		float[] array = new float[list.size()];
 		int n = 0;
-		for ( Object o : list) {
-			array[n++] = (float)o;
+		for (Object o : list) {
+			array[n++] = (float) o;
 		}
 		return array;
 	}
+
 	private static Object decodeDouble(Decoder dec, ArrayHandler handler) throws Exception {
 		List<Object> list = getList(dec, double.class);
 		double[] array = new double[list.size()];
 		int n = 0;
-		for ( Object o : list) {
-			array[n++] = (double)o;
+		for (Object o : list) {
+			array[n++] = (double) o;
 		}
 		return array;
 	}
 
 	private static long toLong(Object o) {
-		if ( o == null)
+		if (o == null)
 			return 0;
-		if ( o instanceof Number) {
+		if (o instanceof Number) {
 			return ((Number) o).longValue();
 		}
 		return 0;

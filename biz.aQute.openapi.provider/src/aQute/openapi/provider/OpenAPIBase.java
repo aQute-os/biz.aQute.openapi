@@ -2,7 +2,6 @@ package aQute.openapi.provider;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -19,11 +18,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.WeakHashMap;
-import java.util.function.Function;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,18 +31,7 @@ public abstract class OpenAPIBase {
 
 	final Map<Class< ? >,Object> securities = Collections.synchronizedMap(new WeakHashMap<>());
 
-	public interface Codec {
-		String encode(Object object, OutputStream out) throws Exception;
-
-		<T, X> T decode(Class<T> type, InputStream in, String mime, Function<Class<X>,X> instantiator) throws Exception;
-
-		<T, X> List<T> decodeList(Class<T> type, InputStream in, String mime, Function<Class<X>,X> instantiator)
-				throws Exception;
-
-		<T> void addStringHandler(Class<T> type, Function<T,String> toString, Function<String,T> fromString);
-
-		String getContentType();
-
+	public interface Codec extends aQute.openapi.codec.api.Codec {
 	}
 
 	public static class MimeWrapper {

@@ -11,5 +11,6 @@ Require-Capability: \
 
 Export-Package: \
 	aQute.openapi.security.environment.api,\
-	aQute.openapi.security.api,\
+    aQute.openapi.codec.api,\
+    aQute.openapi.security.api,\
 	aQute.openapi.util

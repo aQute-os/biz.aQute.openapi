@@ -8,11 +8,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import aQute.lib.converter.Converter;
-import aQute.lib.exceptions.BiConsumerWithException;
 
 public class NumberHandler extends Handler {
+	
+	interface Encode {
+		void encode(Encoder e, Object o) throws Exception;
+	}
+	
 	@SuppressWarnings("rawtypes")
-	final static Map<Class, BiConsumerWithException<Encoder, Object>> appenders = new HashMap<>();
+	final static Map<Class, Encode> appenders = new HashMap<>();
 	static {
 		appenders.put(Float.class, NumberHandler::appendFloat);
 		appenders.put(Double.class, NumberHandler::appendDouble);
@@ -24,7 +28,7 @@ public class NumberHandler extends Handler {
 	final boolean									doubles;
 	final boolean									floats;
 
-	final BiConsumerWithException<Encoder, Object>	encoder;
+	final Encode	encoder;
 
 	NumberHandler(Class<?> clazz) {
 		this.type = clazz;
@@ -35,7 +39,7 @@ public class NumberHandler extends Handler {
 
 	@Override
 	public void encode(Encoder app, Object object, Map<Object, Type> visited) throws Exception {
-		encoder.accept(app, object);
+		encoder.encode(app, object);
 	}
 
 	@Override

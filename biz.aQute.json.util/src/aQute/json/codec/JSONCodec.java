@@ -40,7 +40,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import aQute.json.naming.NameCodec;
-import aQute.lib.exceptions.ConsumerWithException;
 
 /**
  * This is a simple JSON Coder and Encoder that uses the Java type system to
@@ -94,6 +93,10 @@ public class JSONCodec {
 	boolean											log					= true;
 	Function<Field, String>							renamer				= NameCodec::decode;
 
+	
+	interface ConsumerWithException<T> {
+		void accept( T t) throws Exception;
+	}
 	public JSONCodec() {
 		addStringHandler(Period.class, Period::toString, Period::parse);
 		addStringHandler(Duration.class, Duration::toString, Duration::parse);

@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import aQute.lib.converter.Converter;
 import aQute.lib.io.IO;
 import aQute.lib.strings.Strings;
+import aQute.openapi.codec.api.Codec;
 import aQute.openapi.provider.OpenAPIBase.Method;
 import aQute.openapi.provider.OpenAPIBase.MimeWrapper;
 import aQute.openapi.security.api.Authentication;
@@ -83,33 +84,6 @@ public class OpenAPIContext {
 
 	public void pathParameter(String key, String value) {
 		pathParameters.put(key, value);
-	}
-
-	public void setResult(Object result, int resultCode) throws IOException {
-		if (isBeginStatus())
-			response.setStatus(resultCode);
-
-		doHeaders();
-
-		if (result != null) {
-			if (result instanceof File) {
-				IO.copy((File) result, getOutputStream());
-			} else if (result instanceof MimeWrapper) {
-				MimeWrapper w = (MimeWrapper) result;
-				response.setContentType(w.mimeType);
-				OutputStream out = getOutputStream();
-				out.write(w.data);
-			} else {
-				String mime = target.codec_().getContentType();
-				response.setContentType(mime);
-				OutputStream out = getOutputStream();
-				try {
-					target.codec_().encode(result, out);
-				} catch (Exception e) {
-					log.error("failed to serialize output for " + operation);
-				}
-			}
-		}
 	}
 
 	protected boolean isBeginStatus() {
@@ -194,13 +168,72 @@ public class OpenAPIContext {
 
 	public <T> T body(Class<T> type) throws Exception {
 		InputStream in = request.getInputStream();
-		T t = target.codec_().decode(type, in, request.getContentType(), target::instantiate_);
-		return t;
+		Codec c = getCodec();
+		return c.decode(type, in, request.getContentType(), target::instantiate_);
 	}
 
 	public <T> List<T> listBody(Class<T> componentType) throws Exception {
 		InputStream in = request.getInputStream();
-		return target.codec_().decodeList(componentType, in, request.getContentType(), target::instantiate_);
+		Codec c = getCodec();
+		return c.decodeList(componentType, in, request.getContentType(), target::instantiate_);
+	}
+
+	private Codec getCodec() {
+		aQute.openapi.provider.OpenAPIBase.Codec codec = target.codec_();
+
+		switch (runtime.codecType) {
+			default :
+			case CLASSIC :
+				return codec;
+
+			case SERVICE :
+				if (codec != OpenAPIRuntime.deflt) {
+					return codec;
+				}
+				int n = 10;
+				while (n-- > 0) {
+					Codec serviceCodec = runtime.getServiceCodec().orElse(null);
+					if (serviceCodec != null)
+						return serviceCodec;
+
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+						throw new IllegalStateException(
+								"Codec type is set to service but no service is found in 10secs & we got an interrupt");
+					}
+				}
+				throw new IllegalStateException("Codec type is set to service but no service is found in 10secs");
+		}
+	}
+
+	public void setResult(Object result, int resultCode) throws IOException {
+		if (isBeginStatus())
+			response.setStatus(resultCode);
+
+		doHeaders();
+
+		if (result != null) {
+			if (result instanceof File) {
+				IO.copy((File) result, getOutputStream());
+			} else if (result instanceof MimeWrapper) {
+				MimeWrapper w = (MimeWrapper) result;
+				response.setContentType(w.mimeType);
+				OutputStream out = getOutputStream();
+				out.write(w.data);
+			} else {
+				String mime = getCodec().getContentType();
+				response.setContentType(mime);
+				OutputStream out = getOutputStream();
+				try {
+					Codec c = getCodec();
+					c.encode(result, out);
+				} catch (Exception e) {
+					log.error("failed to serialize output for " + operation);
+				}
+			}
+		}
 	}
 
 	public void begin(String name) {

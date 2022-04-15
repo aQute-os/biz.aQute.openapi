@@ -20,7 +20,7 @@ public class InstantiateSpecialTypeTest extends Assert {
 	public void testOverridingInstantiating() throws Exception {
 		class X extends InstantiationDates {
 
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings({ "unchecked"})
 			@Override
 			public <T> T instantiate_(Class<T> type) {
 				if (type == Dates.class)

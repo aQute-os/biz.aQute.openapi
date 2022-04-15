@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.Servlet;
@@ -27,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import aQute.json.codec.JSONCodec;
+import aQute.openapi.codec.api.Codec;
 import aQute.openapi.provider.OpenAPIRuntime.Configuration;
 import aQute.openapi.provider.resources.ResourceDomain;
 import aQute.openapi.security.environment.api.OpenAPISecurityEnvironment;
@@ -45,6 +47,7 @@ public class OpenAPIRuntime {
 	int									delayOn404Timeout	= 30;
 	boolean								validationException	= true;
 	Configuration						configuration;
+	CodecType							codecType			= CodecType.CLASSIC;
 
 	@Reference
 	CORS								cors;
@@ -53,6 +56,12 @@ public class OpenAPIRuntime {
 	OpenAPISecurityEnvironment			security;
 	@Reference
 	ResourceDomain						resources;
+	@Reference
+	volatile Codec						serviceCodec;
+
+	public enum CodecType {
+		CLASSIC, SERVICE
+	}
 
 	@ObjectClassDefinition
 	public @interface Configuration {
@@ -101,6 +110,9 @@ public class OpenAPIRuntime {
 		 */
 		@AttributeDefinition(description = "Throw an exception when validation fails")
 		boolean validationException() default true;
+
+		@AttributeDefinition(description = "The codec to use")
+		CodecType codecType() default CodecType.CLASSIC;
 	}
 
 	class Tracker {
@@ -139,6 +151,7 @@ public class OpenAPIRuntime {
 	public void activate(BundleContext context, Configuration configuration)
 			throws ServletException, NamespaceException {
 		this.configuration = configuration;
+		this.codecType = configuration.codecType();
 		this.validationException = configuration.validationException();
 		this.context = context;
 		tracker = new ServiceTracker<OpenAPIBase,Tracker>(context, OpenAPIBase.class, null) {
@@ -227,5 +240,9 @@ public class OpenAPIRuntime {
 			logger.info("Unregistering servlet {}", alias);
 			registration.unregister();
 		};
+	}
+
+	Optional<Codec> getServiceCodec() {
+		return Optional.ofNullable(serviceCodec);
 	}
 }
