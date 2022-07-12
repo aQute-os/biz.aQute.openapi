@@ -26,7 +26,8 @@ public class Encoder implements Appendable, Closeable, Flushable {
 	String			indent			= "";
 	boolean			keepOpen		= false;
 	boolean			closed			= false;
-	private boolean	log;
+	boolean			log;
+	String			id;
 
 	Encoder(JSONCodec codec) {
 		this.codec = codec;
@@ -198,7 +199,12 @@ public class Encoder implements Appendable, Closeable, Flushable {
 	}
 
 	public void appendChar(int c) throws IOException {
-		append((char)c);
+		append((char) c);
+	}
+
+	public Encoder id(String id) {
+		this.id = id;
+		return this;
 	}
 
 }

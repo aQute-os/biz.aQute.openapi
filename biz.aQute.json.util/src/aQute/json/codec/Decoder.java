@@ -19,18 +19,21 @@ import java.util.zip.InflaterInputStream;
 
 public class Decoder implements Closeable {
 	final JSONCodec			codec;
+
 	Reader					reader;
 	int						current;
 	MessageDigest			digest;
 	Map<String, Object>		extra;
 	String					encoding	= "UTF-8";
 
-	boolean					strict;
+	boolean					strict		= false;
+
 	boolean					inflate;
 	boolean					keepOpen	= false;
 	private boolean			resolve;
 	Function<Class<?>, ?>	instantiator;
 	boolean					log;
+	String					id;
 
 	Decoder(JSONCodec codec) {
 		this.codec = codec;
@@ -38,7 +41,7 @@ public class Decoder implements Closeable {
 	}
 
 	public Decoder from(File file) throws Exception {
-		return from(new FileInputStream(file));
+		return from(new FileInputStream(file)).id(file.getName());
 	}
 
 	public Decoder from(InputStream in) throws Exception {
@@ -233,5 +236,34 @@ public class Decoder implements Closeable {
 		if (isLog()) {
 			JSONCodec.log(format, args);
 		}
+	}
+
+	public double checkInvalidRange(double v, Type type, double min, double max) {
+		if (v < min) {
+			String msg = String.format("%s too small for %s, must be in [%s,%s] for %s", v, type, min, max, this);
+			log(msg);
+			if (strict) {
+				throw new IllegalArgumentException(msg);
+			}
+		} else if (v > max) {
+			String msg = String.format("%s too large for %s, must be in [%s,%s] for %s", v, type, min, max, this);
+			log(msg);
+			if (strict) {
+				throw new IllegalArgumentException(msg);
+			}
+		}
+		return v;
+	}
+
+	public long checkInvalidRange(long v, Type type, double min, double max) {
+		if (v < min || v > max) {
+			checkInvalidRange((double) v, type, min, max);
+		}
+		return v;
+	}
+
+	public Decoder id(String id) {
+		this.id = id;
+		return this;
 	}
 }

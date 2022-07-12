@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -76,6 +77,7 @@ public class JSONCodec {
 
 	// Handlers
 	private final static WeakHashMap<Type, Handler>	handlers			= new WeakHashMap<Type, Handler>();
+	final AtomicLong								idgen				= new AtomicLong();
 	private static StringHandler					sh					= new StringHandler();
 	private static BooleanHandler					bh					= new BooleanHandler();
 	private static CharacterHandler					ch					= new CharacterHandler();
@@ -93,10 +95,10 @@ public class JSONCodec {
 	boolean											log					= true;
 	Function<Field, String>							renamer				= NameCodec::decode;
 
-	
 	interface ConsumerWithException<T> {
-		void accept( T t) throws Exception;
+		void accept(T t) throws Exception;
 	}
+
 	public JSONCodec() {
 		addStringHandler(Period.class, Period::toString, Period::parse);
 		addStringHandler(Duration.class, Duration::toString, Duration::parse);
@@ -129,7 +131,9 @@ public class JSONCodec {
 	 * @return an Encoder
 	 */
 	public Encoder enc() {
-		return new Encoder(this);
+		Encoder encoder = new Encoder(this);
+		encoder.id(Long.toString(idgen.getAndIncrement()));
+		return encoder;
 	}
 
 	/**
@@ -138,7 +142,9 @@ public class JSONCodec {
 	 * @return a Decoder
 	 */
 	public Decoder dec() {
-		return new Decoder(this);
+		Decoder decoder = new Decoder(this);
+		decoder.id(Long.toString(idgen.getAndIncrement()));
+		return decoder;
 	}
 
 	/*
@@ -365,7 +371,7 @@ public class JSONCodec {
 			case '-':
 			case '+':
 			case '.':
-				return parseNumber(isr,type);
+				return parseNumber(isr, type);
 
 			default:
 				throw new IllegalArgumentException("Invalid character at begin of token: " + (char) c);
@@ -410,7 +416,7 @@ public class JSONCodec {
 		case '-':
 		case '+':
 		case '.':
-			return h.decode(isr, parseNumber(isr,type));
+			return h.decode(isr, parseNumber(isr, type));
 
 		default:
 			throw new IllegalArgumentException("Unexpected character in input stream: " + (char) c);
@@ -488,16 +494,15 @@ public class JSONCodec {
 		throw new IllegalArgumentException("Invalid hex character: " + c);
 	}
 
-	private Number parseNumber(Decoder r, Type type) throws Exception {
+	Number parseNumber(Decoder r, Type type) throws Exception {
 		boolean positive = true;
 		long value = 0;
+		double overflow = 1;
 
 		if (r.current() == '-') {
 			positive = false;
 			r.read();
-		}
-		if (r.current() == '+') {
-			positive = true;
+		} else if (r.current() == '+') {
 			r.read();
 		}
 
@@ -509,22 +514,29 @@ public class JSONCodec {
 			c = r.read();
 
 			while (c >= '0' && c <= '9') {
-				value = value * 10 + c - '0';
+				long temp = value * 10 + c - '0';
+				if (overflow != 1 || temp < 0) {
+					overflow *= 10;
+				} else {
+					value = temp;
+				}
 				c = r.read();
 			}
 		} else
 			throw new IllegalArgumentException("Expected digit");
 
 		value = positive ? value : -value;
-		
+
 		if (c == '.' || c == 'e' || c == 'E') {
 			double v = value;
+			v *= overflow;
+
 			if (c == '.') {
 				c = r.read();
 				double div = 10;
 				while (c >= '0' && c <= '9') {
-					v += (c-'0')/div;
-					div *=10;
+					v += (c - '0') / div;
+					div *= 10;
 					c = r.read();
 				}
 			}
@@ -538,52 +550,79 @@ public class JSONCodec {
 					epos = false;
 					c = r.read();
 				}
-				
+
 				while (c >= '0' && c <= '9') {
-					exponent = exponent * 10 + (c-'0');
+					exponent = exponent * 10 + (c - '0');
 					c = r.read();
 				}
-				if ( !epos)
+				if (!epos)
 					exponent = -exponent;
-				if ( exponent != 0) {
-					double pow = Math.pow(10,exponent);
+				if (exponent != 0) {
+					double pow = Math.pow(10, exponent);
 					v *= pow;
 				}
 			}
-			if (type == null || type==Object.class)
+
+			if (type == Double.class || type == double.class)
 				return v;
-			if (type == byte.class || type == Byte.class)
-				return (byte)v;
-			if (type == short.class || type == Short.class)
-				return (short)v;
-			if (type == char.class || type == Character.class)
-				return (short)v;
-			if (type == int.class || type == Integer.class)
-				return (int)v;
-			if (type == long.class || type == Long.class)
-				return (long)v;
+
 			if (type == float.class || type == Float.class)
-				return (float)v;
+				return (float) r.checkInvalidRange(v, type, -Float.MAX_VALUE, Float.MAX_VALUE);
+
+			if (type == null)
+				type = Double.class;
+
+			long rounded = Math.round(r.checkInvalidRange(v, type, Long.MIN_VALUE, Long.MAX_VALUE));
+
+			if (type == Object.class || type == Integer.class || type == int.class)
+				return (int) r.checkInvalidRange(v, type, Integer.MIN_VALUE, Integer.MAX_VALUE);
+
+			if (type == byte.class || type == Byte.class) {
+				return (byte) r.checkInvalidRange(rounded, type, Byte.MIN_VALUE, Byte.MAX_VALUE);
+			}
+
+			if (type == short.class || type == Short.class || type == char.class || type == Character.class) {
+				return (short) r.checkInvalidRange(rounded, type, Short.MIN_VALUE, Short.MAX_VALUE);
+			}
+
+			if (type == long.class || type == Long.class)
+				return rounded;
+
 			return v;
 		} else {
 			if (type == null || type==Object.class)
-				return (int) value;
-			if (type == byte.class || type == Byte.class)
-				return (byte)value;
-			if (type == int.class || type == Integer.class)
-				return (short)value;
-			if (type == short.class || type == Short.class)
-				return (short)value;
-			if (type == char.class || type == Character.class)
-				return (short)value;
-			if (type == double.class || type == Double.class)
-				return (double)value;
-			if (type == long.class || type == Long.class)
-				return (long)value;
+				type = Integer.class;
+
+			if (overflow == 1) {
+				if (type == Long.class || type == long.class)
+					return value;
+
+				if (type == Integer.class || type == int.class)
+					return (int) r.checkInvalidRange(value, type, Integer.MIN_VALUE, Integer.MAX_VALUE);
+
+				if (type == byte.class || type == Byte.class) {
+					return (byte) r.checkInvalidRange(value, type, Byte.MIN_VALUE, Byte.MAX_VALUE);
+				}
+
+				if (type == short.class || type == Short.class || type == char.class || type == Character.class) {
+					return (short) r.checkInvalidRange(value, type, Short.MIN_VALUE, Short.MAX_VALUE);
+				}
+				
+				if (type == float.class || type == Float.class)
+					return (float) value;
+
+				if (type == double.class || type == Double.class)
+					return (double) value;
+
+				return value;
+			}
+
+			double v = ((double) value) * overflow;
+
 			if (type == float.class || type == Float.class)
-				return (float)value;
-			
-			return value;
+				return (float) r.checkInvalidRange(value, type, -Float.MAX_VALUE, Short.MAX_VALUE);
+
+			return v;
 		}
 	}
 
@@ -723,7 +762,7 @@ public class JSONCodec {
 		return this;
 	}
 
-	public static void log(String format, Object[] args) {
+	public static void log(String format, Object... args) {
 		String formatted = String.format(format, args);
 		synchronized (logger) {
 			boolean added = JSONCodec.alreadyLogged.add(formatted.hashCode());

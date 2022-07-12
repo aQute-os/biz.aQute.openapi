@@ -503,8 +503,8 @@ public class JSONTest extends TestCase {
 		assertEquals(49d, dec.from("49").get(Double.class));
 		assertEquals(49.3d, dec.from("49.3").get(Double.class));
 		assertEquals((Byte) (byte) 49, dec.from("49.3").get(Byte.class));
-		assertEquals((Byte) (byte) 49, dec.from("49.9999").get(Byte.class));
-		assertEquals((Short) (short) 49, dec.from("49.9999").get(Short.class));
+		assertEquals((Byte) (byte) 50, dec.from("49.9999").get(Byte.class));
+		assertEquals((Short) (short) 50, dec.from("49.9999").get(Short.class));
 		assertEquals(49.9999f, dec.from("49.9999").get(Float.class));
 		assertEquals((Character) '0', dec.from("48").get(Character.class));
 		assertEquals((Boolean) true, dec.from("48").get(Boolean.class));
