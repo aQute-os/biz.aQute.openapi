@@ -18,6 +18,7 @@ import org.osgi.annotation.bundle.Capability;
 import org.osgi.annotation.bundle.Requirement;
 
 import aQute.lib.io.IO;
+import aQute.openapi.generator.Configuration;
 import aQute.openapi.generator.OpenAPIGenerator;
 import aQute.openapi.generator.SourceArgument;
 import aQute.openapi.generator.SourceFile;
@@ -227,8 +228,9 @@ public class JavaGenerator extends BaseSourceGenerator {
 	protected void doConverterMethod() {
 
 		String methodName = method.getName() + "_" + method.getMethod() + "_";
-		doMethod(Modifier.PRIVATE, "void", methodName).parameter("OpenAPIContext", "context").throws_("Exception").body(
-				() -> {
+		doMethod(Modifier.PRIVATE, "void", methodName).parameter("OpenAPIContext", "context")
+				.throws_("Exception")
+				.body(() -> {
 					OperationObject operation = method.getOperation();
 					format("    context.setOperation(%s);\n", escapeString(operation.operationId));
 
@@ -633,7 +635,8 @@ public class JavaGenerator extends BaseSourceGenerator {
 		format("  /*****************************************************************/\n\n");
 	}
 
-	protected void doAbstractMethodAnnotatons(SourceMethod m) {}
+	protected void doAbstractMethodAnnotatons(SourceMethod m) {
+	}
 
 	protected void doDeclareType(SourceType type) {
 		if (type instanceof StringEnumType) {
@@ -724,14 +727,14 @@ public class JavaGenerator extends BaseSourceGenerator {
 							property.getKey(), property.getKey());
 
 				} else {
-					format("    public %s %s(%s %s){ this.%s=%s; return this; }\n", objectType.getClassName(), propertySetName,
-							property.getType().reference(), property.getKey(), property.getKey(), property.getKey());
+					format("    public %s %s(%s %s){ this.%s=%s; return this; }\n", objectType.getClassName(),
+							propertySetName, property.getType().reference(), property.getKey(), property.getKey(),
+							property.getKey());
 				}
 
 				format("    public %s %s(){ return this.%s; }\n\n", property.getType().reference(), propertyGetName,
 						property.getKey());
 			}
-
 
 		});
 	}
@@ -772,25 +775,33 @@ public class JavaGenerator extends BaseSourceGenerator {
 			reference = reference + ".get()";
 			close = true;
 		} else {
+			boolean doRequire = !gen.getConfig().options.contains(Configuration.Options.NOREQUIREMENT);
 			if (!type.hasValidator()) {
-				format("           context.require(%s, %s);\n", reference, escaped);
+				if (doRequire)
+					format("           context.require(%s, %s);\n", reference, escaped);
 				return;
 			}
-			format("       if  ( context.require(%s, %s) ) {\n", reference, escaped);
+
+			if (doRequire) {
+				format("       if  ( context.require(%s, %s) ) {\n", reference, escaped);
+			} else {
+				format("       if  (%s != null) {\n", reference);
+			}
 			close = true;
 		}
+		if (!gen.getConfig().options.contains(Configuration.Options.NOVALIDATION)) {
 
-		if (type instanceof SourceType.NummericType) {
-			doNummericValidator((SourceType.NummericType) type, reference);
-		} else if (type instanceof SourceType.SimpleType) {
-			doSimpleTypeValidator((SourceType.SimpleType) type, reference);
-		} else if (type instanceof SourceType.ObjectType) {
-			format("       %s.validate(context, %s);\n", reference, escaped);
-		} else if (type instanceof SourceType.ArrayType) {
-			doArrayTypeValidator((SourceType.ArrayType) type, reference);
-		} else
-			gen.error("Unknown type %s with a validator?", type);
-
+			if (type instanceof SourceType.NummericType) {
+				doNummericValidator((SourceType.NummericType) type, reference);
+			} else if (type instanceof SourceType.SimpleType) {
+				doSimpleTypeValidator((SourceType.SimpleType) type, reference);
+			} else if (type instanceof SourceType.ObjectType) {
+				format("       %s.validate(context, %s);\n", reference, escaped);
+			} else if (type instanceof SourceType.ArrayType) {
+				doArrayTypeValidator((SourceType.ArrayType) type, reference);
+			} else
+				gen.error("Unknown type %s with a validator?", type);
+		}
 		if (close)
 			format("       }\n");
 	}

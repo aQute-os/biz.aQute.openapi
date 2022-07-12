@@ -45,9 +45,10 @@ public class OpenAPIRuntime {
 	final Map<String,Dispatcher>		dispatchers			= new ConcurrentHashMap<>();
 	final ThreadLocal<OpenAPIContext>	contexts			= new ThreadLocal<>();
 	int									delayOn404Timeout	= 30;
-	boolean								validationException	= true;
 	Configuration						configuration;
 	CodecType							codecType			= CodecType.CLASSIC;
+	boolean								require				= true;
+	boolean								validate			= true;
 
 	@Reference
 	CORS								cors;
@@ -107,9 +108,16 @@ public class OpenAPIRuntime {
 		long mp_maxRequestSize() default -1;
 
 		/**
+		 * Check the requirements. If this is false, the requirements will not
+		 * be checked.
 		 */
-		@AttributeDefinition(description = "Throw an exception when validation fails")
-		boolean validationException() default true;
+		@AttributeDefinition(description = "Check the requirements")
+		boolean checkRequirements() default true;
+
+		/**
+		 */
+		@AttributeDefinition(description = "Run the validation")
+		boolean checkValidate() default true;
 
 		@AttributeDefinition(description = "The codec to use")
 		CodecType codecType() default CodecType.CLASSIC;
@@ -152,8 +160,9 @@ public class OpenAPIRuntime {
 			throws ServletException, NamespaceException {
 		this.configuration = configuration;
 		this.codecType = configuration.codecType();
-		this.validationException = configuration.validationException();
 		this.context = context;
+		this.require = configuration.checkRequirements();
+		this.validate = configuration.checkValidate();
 		tracker = new ServiceTracker<OpenAPIBase,Tracker>(context, OpenAPIBase.class, null) {
 			@Override
 			public Tracker addingService(ServiceReference<OpenAPIBase> reference) {

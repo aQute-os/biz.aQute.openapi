@@ -245,15 +245,19 @@ public class OpenAPIContext {
 	}
 
 	public boolean validate(boolean expression, Object value, String reference, String validation) {
-		if (expression)
+		if (expression || !isValidate())
 			return true;
 
 		String format = String.format("%s %s=%s FAILS: %s", Strings.join("/", stack), reference, value, validation);
+		doError(format);
+		return false;
+	}
+
+	private void doError(String msg) {
 		if (errors == null)
 			errors = new ArrayList<>();
 
-		errors.add(format);
-		return false;
+		errors.add(msg);
 	}
 
 	public void end() {
@@ -261,8 +265,7 @@ public class OpenAPIContext {
 		if (stack.isEmpty()) {
 			if (errors != null) {
 				validation.error("rq={} op={} target={}: {}", request, operation, target, errors);
-				if (runtime == null || runtime.validationException)
-					throw new OpenAPIBase.BadRequestResponse(Strings.join("\n", errors));
+				throw new OpenAPIBase.BadRequestResponse(Strings.join("\n", errors));
 			}
 		}
 	}
@@ -354,7 +357,20 @@ public class OpenAPIContext {
 	}
 
 	public boolean require(Object value, String name) {
-		return validate(value != null, value, name, " required but not set");
+		boolean result = value != null;
+		if (!result && isRequire()) {
+			String format = String.format("no present %s && required", name);
+			doError(format);
+		}
+		return result;
+	}
+
+	boolean isRequire() {
+		return (target == null || target.require) && (runtime == null || runtime.require);
+	}
+
+	boolean isValidate() {
+		return (target == null || target.validate) && (runtime == null || runtime.validate);
 	}
 
 	public char[] toPassword(String value) {

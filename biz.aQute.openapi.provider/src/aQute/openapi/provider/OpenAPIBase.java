@@ -343,6 +343,8 @@ public abstract class OpenAPIBase {
 	final ThreadLocal<OpenAPIContext>	contexts	= new ThreadLocal<>();
 	final String[]						ops;
 	final Class< ? extends OpenAPIBase>	parent;
+	protected boolean					validate	= true;
+	protected boolean					require		= true;
 
 	public abstract boolean dispatch_(OpenAPIContext context, String[] segments, int index) throws Exception;
 

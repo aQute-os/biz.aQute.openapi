@@ -26,12 +26,12 @@ public class ValidateRequireTest {
 	public void testBasicValidationOk() {
 		MySettings gs = new Validate_requireDemo.MySettings();
 
-		test(gs::validate, 400, "400:test general=null FAILS:  required but not set\n"
-				+ "test myListWithoutAnyValidator=null FAILS:  required but not set\n"
-				+ "test myDouble=null FAILS:  required but not set\n"
-				+ "test myList=null FAILS:  required but not set\n"
-				+ "test myListWithoutValidatorButValidatorInEntries=null FAILS:  required but not set\n"
-				+ "test timeUtc=null FAILS:  required but not set");
+		test(gs::validate, 400, "400:no present general && required\n"
+				+ "no present myListWithoutAnyValidator && required\n"
+				+ "no present myDouble && required\n"
+				+ "no present myList && required\n"
+				+ "no present myListWithoutValidatorButValidatorInEntries && required\n"
+				+ "no present timeUtc && required");
 		
 		gs.general=new GeneralSettings();
 		gs.myListWithoutAnyValidator=new ArrayList<>();
@@ -42,12 +42,12 @@ public class ValidateRequireTest {
 		gs.myListWithoutValidatorButValidatorInEntries= new ArrayList<Validate_requireDemo.MyListItem>();
 		gs.timeUtc=Instant.now();
 		
-		test(gs::validate, 400, "400:test/general myDouble=null FAILS:  required but not set\n"
-				+ "test/general id=null FAILS:  required but not set\n"
-				+ "test/general myInt=null FAILS:  required but not set\n"
-				+ "test/0/item_ myDouble=null FAILS:  required but not set\n"
-				+ "test/0/item_ id=null FAILS:  required but not set\n"
-				+ "test/0/item_ myInt=null FAILS:  required but not set\n"
+		test(gs::validate, 400, "400:no present myDouble && required\n"
+				+ "no present id && required\n"
+				+ "no present myInt && required\n"
+				+ "no present myDouble && required\n"
+				+ "no present id && required\n"
+				+ "no present myInt && required\n"
 				+ "test this.myList=[] FAILS: this.myList.size() >= 1");
 		
 		it1.myDouble=3.0d;
@@ -62,9 +62,9 @@ public class ValidateRequireTest {
 		
 		MyListItem a = new MyListItem();
 		gs.myList.add(a);
-		test(gs::validate, 400, "400:test/0/item_ myDouble=null FAILS:  required but not set\n"
-				+ "test/0/item_ id=null FAILS:  required but not set\n"
-				+ "test/0/item_ myInt=null FAILS:  required but not set");
+		test(gs::validate, 400, "400:no present myDouble && required\n"
+				+ "no present id && required\n"
+				+ "no present myInt && required");
 
 		a.myDouble = 30d;
 		a.id="x";
@@ -76,9 +76,9 @@ public class ValidateRequireTest {
 
 		MyListItem it2 = new MyListItem();
 		gs.myListWithoutValidatorButValidatorInEntries.add(it2);
-		test(gs::validate, 400, "400:test/0/item_ myDouble=null FAILS:  required but not set\n"
-				+ "test/0/item_ id=null FAILS:  required but not set\n"
-				+ "test/0/item_ myInt=null FAILS:  required but not set");
+		test(gs::validate, 400, "400:no present myDouble && required\n"
+				+ "no present id && required\n"
+				+ "no present myInt && required");
 		it2.myDouble=3.0d;
 		it2.id="ab";
 		it2.myInt=42L;
@@ -89,19 +89,19 @@ public class ValidateRequireTest {
 		gs.optList = Optional.of( new ArrayList<>());
 		MyListItem it3 = new MyListItem();
 		gs.optList.get().add(it3);
-		test(gs::validate, 400, "400:test/0/item_ myDouble=null FAILS:  required but not set\n"
-				+ "test/0/item_ id=null FAILS:  required but not set\n"
-				+ "test/0/item_ myInt=null FAILS:  required but not set");
+		test(gs::validate, 400, "400:no present myDouble && required\n"
+				+ "no present id && required\n"
+				+ "no present myInt && required");
 		it3.id="abcd";
 		it3.myDouble=3.0d;
 		it3.myInt=42L;
 		gs.validate(context, "test");
 		
 		MySettings2 ms = new MySettings2();
-		test(ms::validate, 400, "400:test myString=null FAILS:  required but not set\n"
-				+ "test myDouble=null FAILS:  required but not set\n"
-				+ "test myInt=null FAILS:  required but not set\n"
-				+ "test myStringWithoutValidator=null FAILS:  required but not set");
+		test(ms::validate, 400, "400:no present myString && required\n"
+				+ "no present myDouble && required\n"
+				+ "no present myInt && required\n"
+				+ "no present myStringWithoutValidator && required");
 		
 		ms.myDouble=-3.0d;
 		ms.myInt=0x10_0000L;

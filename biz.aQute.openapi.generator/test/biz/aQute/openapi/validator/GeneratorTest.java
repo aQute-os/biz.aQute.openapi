@@ -56,6 +56,39 @@ public class GeneratorTest {
 		g.generate(out);
 		File base = IO.getFile(out, "org/example/openapi/demo/GeneratedDemo.java");
 		String collect = IO.collect(base);
+		assertThat(collect).contains("context.require");
+		assertThat(collect).contains("validate(context");
+		System.out.println(collect);
+	}
+
+	@Test
+	public void testNoRequirements() throws Exception {
+		Configuration c = new Configuration();
+		c.option("norequirement");
+		File f = IO.getFile("resources/gen/validate_require.json");
+		OpenAPIGenerator g = new OpenAPIGenerator(f, c);
+		File out = tmp.newFolder();
+		g.generate(out);
+		File base = IO.getFile(out, "org/example/openapi/demo/GeneratedDemo.java");
+		String collect = IO.collect(base);
+		assertThat(collect).doesNotContain("context.require");
+		assertThat(collect).contains("validate(context");
+		System.out.println(collect);
+	}
+
+	@Test
+	public void testNoValidationAndRequirement() throws Exception {
+		Configuration c = new Configuration();
+		c.option("norequirement");
+		c.option("novalidation");
+		File f = IO.getFile("resources/gen/validate_require.json");
+		OpenAPIGenerator g = new OpenAPIGenerator(f, c);
+		File out = tmp.newFolder();
+		g.generate(out);
+		File base = IO.getFile(out, "org/example/openapi/demo/GeneratedDemo.java");
+		String collect = IO.collect(base);
+		assertThat(collect).doesNotContain("context.require");
+		assertThat(collect).doesNotContain("validate(context");
 		System.out.println(collect);
 	}
 }
