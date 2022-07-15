@@ -36,7 +36,7 @@ public class OAuth2Test {
 		fw.close();
 	}
 
-	@Test
+	//@Test using bndtools.COM ??? seems to exist now.
 	public void testAccess() throws Exception {
 
 		runtime.runtime.activate(fw.getBundleContext(), getConfig());

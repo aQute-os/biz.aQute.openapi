@@ -3,7 +3,8 @@ Provide-Capability: \
 
 Export-Package: \
 	aQute.openapi.provider,\
-	aQute.openapi.util,\
+    aQute.openapi.util,\
+	aQute.openapi.codec.api,\
 	aQute.openapi.security.api,\
 	aQute.openapi.security.environment.api,\
 	aQute.json.codec,\

@@ -18,6 +18,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.http.NamespaceException;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
@@ -57,7 +58,7 @@ public class OpenAPIRuntime {
 	OpenAPISecurityEnvironment			security;
 	@Reference
 	ResourceDomain						resources;
-	@Reference
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
 	volatile Codec						serviceCodec;
 
 	public enum CodecType {
