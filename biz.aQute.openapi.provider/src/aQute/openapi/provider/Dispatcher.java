@@ -112,11 +112,11 @@ public class Dispatcher extends HttpServlet {
 					runtime.contexts.remove();
 				}
 			} catch (OpenAPIBase.Response e) {
-				response.setStatus(e.resultCode);
+				Object result = e.getResult();
+				context.setResult(result, e.resultCode);
 				for (Entry<String,String> entry : e.headers.entrySet()) {
 					response.addHeader(entry.getKey(), entry.getValue());
 				}
-				Object result = e.getResult();
 				context.report(e);
 				doFinalHeaders(request, response);
 			} catch (OpenAPIBase.DoNotTouchResponse e) {
