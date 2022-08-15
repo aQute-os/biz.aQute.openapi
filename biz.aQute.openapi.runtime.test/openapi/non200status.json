@@ -29,6 +29,30 @@
 					}
 				}
 			}
+		},
+		"/responsemessage": { 
+			"get": {
+				"operationId": "responsemessage",
+				"responses": {
+					"204": { 
+						"schema": { 
+							"type": "string"
+						}
+					},
+					"404" : {
+						"schema": {
+							"type" : "object",
+							"required": [  "message" ],
+							"properties": { 
+								"message": { 
+									"type": "string",
+									"description": "error message"
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
