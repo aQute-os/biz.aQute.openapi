@@ -1,0 +1,38 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v1",
+    "title": "simple"
+  },
+  "basePath": "/v1",
+  "paths": {
+    "/simple": {
+      "get": {
+        "operationId": "simple",
+        "responses": {
+          "200": {},
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/HTTPError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "HTTPError": {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "human readable error message"
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,6 @@
 package aQute.openapi.provider;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,7 +19,7 @@ public class Non200StatusTest extends Assert {
 
 			@Override
 			protected void non200statusexception() throws Exception {
-				throw new Response(204, (Object) null);
+				throw new Response(410, (Object)"really bad, bad, bad request");
 			}
 
 			@Override
@@ -31,8 +32,9 @@ public class Non200StatusTest extends Assert {
 		TaggedData go = rule.http.build().get().asTag().go(rule.uri.resolve("/non200status/non200status"));
 		assertEquals(204, go.getResponseCode());
 
-		go = rule.http.build().get().asTag().go(rule.uri.resolve("/non200status/non200statusexception"));
-		assertEquals(204, go.getResponseCode());
+		go = rule.http.build().retries(0).get().asTag().go(rule.uri.resolve("/non200status/non200statusexception"));
+		assertEquals(410, go.getResponseCode());
+		Assertions.assertThat(go.toString()).contains("really bad, bad, bad request");
 	}
 
 	@Test
