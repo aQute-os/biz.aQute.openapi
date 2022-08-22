@@ -1,0 +1,67 @@
+{
+	"swagger": "2.0",
+	"basePath": "/requiredactualtype",
+	"info": {
+    		"title": "Optional",
+    		"version": "1.0"
+    },
+    "paths": {
+		"/recursive": {
+			"get": {
+				"operationId": "getRequiredActualType",
+				"responses": {
+					"200" : {
+						"schema": {
+						  "$ref": "#/definitions/RecursiveResponse"
+						}
+					}
+				}
+			}
+		},
+		"/enum": {
+			"get": {
+				"operationId": "getEnumType",
+				"responses": {
+					"200" : {
+						"schema": {
+						  "$ref": "#/definitions/EnumResponse"
+						}
+					}
+				}
+			}
+		}
+	},
+	
+	"definitions": {
+	  "RecursiveResponse": {
+	    "type": "object",
+        "x-actualType": "biz.aQute.openapi.runtime.test.requiredactualtype.ActualTypeTest",
+        "required": [ "id", "value", "children" ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          },
+          "children": { 
+          	"type" : "array",
+	        "items" : {
+	          "$ref" : "#/definitions/RecursiveResponse"
+	        }
+          }
+        }
+	  },
+	  "EnumResponse": { 
+	  	"type": "object",
+	  	"x-actualType": "biz.aQute.openapi.runtime.test.requiredactualtype.EnumWrapperActualTypeTest",
+	  	"required": [ "season" ],
+	  	"properties": { 
+	  		"season": { 
+		  		"type": "object",
+		        "x-actualType": "biz.aQute.openapi.runtime.test.requiredactualtype.EnumActualTypeTest"
+	  		}
+	  	}
+	  }
+	}
+}
