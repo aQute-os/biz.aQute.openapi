@@ -36,9 +36,10 @@ public class GeneratorTest {
 		g.generate(out);
 		File base = IO.getFile(out, "org/example/openapi/GeneratedBase.java");
 		String content = IO.collect(base);
-		assertThat(content).contains("protected abstract biz.aQute.openapi.validator.Foo references()");
+		assertThat(content).contains(
+				"protected abstract biz.aQute.openapi.validator.Foo references(biz.aQute.openapi.validator.Foo request) throws Exception;");
+		assertThat(content).doesNotContain("request_.validate(context, \"request_\");");
 	}
-
 	@Test
 	public void testMissingReference() throws Exception {
 		Configuration c = new Configuration();

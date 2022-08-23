@@ -9,6 +9,16 @@
 		"/primitives": {
 			"post": {
 				"operationId": "References",
+                "parameters": [
+                  {
+                    "in": "body",
+                    "name": "request",
+                    "required": true,
+                    "schema": {
+                      "$ref": "#/definitions/References"
+                    }
+                  }
+                ],
 				"responses": {
 					"200": {
 						"schema": {

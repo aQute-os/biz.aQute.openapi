@@ -709,12 +709,16 @@ public abstract class SourceType {
 		@Override
 		public boolean hasValidator() {
 			if (hasValidator == null) {
-				hasValidator = !isOptional();
-				hasValidator |= properties.values()
-						.stream()
-						.filter(p -> p.getType().hasValidator())
-						.findAny()
-						.isPresent();
+				if (actualType != null) {
+					this.hasValidator = false;
+				} else {
+					hasValidator = !isOptional();
+					hasValidator |= properties.values()
+							.stream()
+							.filter(p -> p.getType().hasValidator())
+							.findAny()
+							.isPresent();
+				}
 			}
 			return hasValidator;
 		}
@@ -782,7 +786,8 @@ public abstract class SourceType {
 		return arrayType;
 	}
 
-	public void addTypes(SourceFile sourceFile) {}
+	public void addTypes(SourceFile sourceFile) {
+	}
 
 	public boolean isVoid() {
 		return false;

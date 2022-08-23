@@ -10,9 +10,10 @@ import java.util.Map;
 
 import org.junit.After;
 import org.junit.Rule;
-import org.junit.Test;
 import org.osgi.framework.ServiceRegistration;
 
+import aQute.launchpad.Launchpad;
+import aQute.launchpad.LaunchpadBuilder;
 import aQute.lib.converter.Converter;
 import aQute.openapi.oauth2.provider.OAuth2AuthenticationProvider;
 import aQute.openapi.oauth2.provider.OAuth2Configuration;
@@ -21,8 +22,6 @@ import aQute.openapi.security.api.OpenAPIAuthenticator;
 import aQute.openapi.util.WWWUtils;
 import aQute.www.http.util.HttpRequest;
 import gen.oauth2.Oauth2Base;
-import aQute.launchpad.Launchpad;
-import aQute.launchpad.LaunchpadBuilder;
 
 @SuppressWarnings("restriction")
 public class OAuth2Test {
